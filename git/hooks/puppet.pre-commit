@@ -3,6 +3,7 @@
 # If a JavaScript file is trying to be committed and it fails linting
 # then fail the commit
 
+EXIT_CODE=0
 COLOR_RED="\x1B[31m"
 COLOR_GREEN="\x1B[32m"
 COLOR_NONE="\x1B[0m"
@@ -15,16 +16,16 @@ for file in $( exec git diff-index --cached --name-only HEAD ); do
 
         if [[ $status != D* ]]; then
             puppet parser validate $file
+            EXIT_CODE=$((${EXIT_CODE} + $?))
         fi
     fi
 done
 
-
-echo "$?"
-if [[ $? -ne 0 ]]; then
+echo ""
+if [[ ${EXIT_CODE} -ne 0 ]]; then
     echo "${COLOR_RED}✘ puppet syntax detected problems.${COLOR_NONE}"
 else
     echo "${COLOR_GREEN}✔ puppet syntax detected no errors.${COLOR_NONE}"
 fi
 
-exit $?
+exit $((${EXIT_CODE}))
