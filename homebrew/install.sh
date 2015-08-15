@@ -15,4 +15,7 @@ fi
 # Install homebrew packages
 brew install grc coreutils spark
 
+# Needed for my :Ag search in Vim
+brew install the_silver_searcher
+
 exit 0
