@@ -1,0 +1,30 @@
+#!/bin/sh
+# JSHint Pre-Commit
+# If a JavaScript file is trying to be committed and it fails linting
+# then fail the commit
+
+COLOR_RED="\x1B[31m"
+COLOR_GREEN="\x1B[32m"
+COLOR_NONE="\x1B[0m"
+
+repo=$( git rev-parse --show-toplevel )
+
+for file in $( exec git diff-index --cached --name-only HEAD ); do
+    if [[ $file =~ \.pp$ ]]; then
+        status=$( exec git status --porcelain $file )
+
+        if [[ $status != D* ]]; then
+            puppet parser validate $file
+        fi
+    fi
+done
+
+
+echo "$?"
+if [[ $? -ne 0 ]]; then
+    echo "${COLOR_RED}✘ puppet syntax detected problems.${COLOR_NONE}"
+else
+    echo "${COLOR_GREEN}✔ puppet syntax detected no errors.${COLOR_NONE}"
+fi
+
+exit $?
