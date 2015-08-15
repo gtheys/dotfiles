@@ -1,2 +1,2 @@
 alias reload!='. ~/.zshrc'
-alias dots="vim ~/.dotfiles"
+alias dots="mvim ~/.dotfiles"
