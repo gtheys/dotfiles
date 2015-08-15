@@ -1,0 +1,64 @@
+root = true
+
+[3_space.txt]
+indent_style = space
+indent_size = 3
+tab_width = 3
+
+[4_space.py]
+indent_style = space
+indent_size = 4
+tab_width = 8
+
+[space.txt]
+indent_style = space
+indent_size = tab
+
+[tab.txt]
+indent_style = tab
+
+[4_tab.txt]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+
+[4_tab_width_of_8.txt]
+indent_style = tab
+indent_size = 4
+tab_width = 8
+
+[lf.txt]
+end_of_line = lf
+
+[crlf.txt]
+end_of_line = crlf
+
+[cr.txt]
+end_of_line = cr
+
+[utf-8.txt]
+charset = utf-8
+
+[utf-8-bom.txt]
+charset = utf-8-bom
+
+[utf-16be.txt]
+charset = utf-16be
+
+[utf-16le.txt]
+charset = utf-16le
+
+[latin1.txt]
+charset = latin1
+
+[with_newline.txt]
+insert_final_newline = true
+
+[without_newline.txt]
+insert_final_newline = false
+
+[trim.txt]
+trim_trailing_whitespace = true
+
+[no_trim.txt]
+trim_trailing_whitespace = false

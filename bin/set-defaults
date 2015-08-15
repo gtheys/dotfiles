@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Sets OS X defaults by running $CZSH/osx/set-defaults.sh.
+
+exec $CZSH/osx/set-defaults.sh

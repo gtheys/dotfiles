@@ -1,0 +1,72 @@
+	# want my zsh plugins connected too
+# Changed ZSH to CZSH because it conflicts with oh-my-zsh
+# added ZSH for oh-my-zsh
+export ZSH=/Users/gtheys/.oh-my-zsh
+
+source $ZSH/oh-my-zsh.sh
+
+plugins=(bundler rbenv pow brew git osx vagrant aws)
+
+# shortcut to this dotfiles path is $CZSH
+export CZSH=$HOME/.dotfiles
+
+# your project folder that we can `c [tab]` to
+export PROJECTS=~/Code
+
+# Some docker exports.
+export DOCKER_HOST=tcp://192.168.59.103:2376
+export DOCKER_CERT_PATH=/Users/gtheys/.boot2docker/certs/boot2docker-vm
+export DOCKER_TLS_VERIFY=1
+
+# Some Locales
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# Android studio stuff
+export STUDIO_JDK=/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk
+
+# Set the editor to 
+export EDITOR='mvim -w'
+
+# use .localrc for SUPER SECRET CRAP that you don't
+# want in your public, versioned repo.
+if [[ -a ~/.localrc ]]
+then
+  source ~/.localrc
+fi
+
+# all of our zsh files
+typeset -U config_files
+config_files=($CZSH/**/*.zsh)
+
+# load the path files
+for file in ${(M)config_files:#*/path.zsh}
+do
+  source $file
+done
+
+# load everything but the path and completion files
+for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
+do
+  source $file
+done
+
+# initialize autocomplete here, otherwise functions won't be loaded
+autoload -U compinit
+compinit
+
+# load every completion after autocomplete loads
+for file in ${(M)config_files:#*/completion.zsh}
+do
+  source $file
+done
+
+unset config_files
+
+source ~/.fresh/build/shell.sh
+
+# should be working with the plugin aws but doesn't so hardcoded this for the moment! Need to get work done!
+source /usr/local/bin/aws_zsh_completer.sh
+
+# added by travis gem
+[ -f /Users/gtheys/.travis/travis.sh ] && source /Users/gtheys/.travis/travis.sh

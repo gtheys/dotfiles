@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+
+if [ $1 ]; then
+ open -a /Applications/Marked\ 2.app/ $1 
+else 
+ open -a /Applications/Marked\ 2.app/
+fi 

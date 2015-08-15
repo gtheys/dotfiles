@@ -1,0 +1,54 @@
+# Change prefix to less finger-wrecking combination (on AZERTY)
+# Also unloads the C-b keystroke
+set -g prefix C-q
+unbind C-b
+
+# You want C-q to pass through to other applications as well
+bind C-q send-prefix
+
+# This is a delay between prefix and command
+set -sg escape-time 1
+
+# Note that xterm-256color on OSX works, but screws up bg-colors in Vim.
+set -g default-terminal "screen-256color"
+
+# This fixes Ctrl + arrow key navigation in shell on OSX with iTerm2 + tmux
+set-window-option -g xterm-keys on
+
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Statusline
+set -g status-left-length 40
+set -g status-fg blue
+set -g status-bg colour234
+set -g status-left "#[fg=brightgreen] [#S]"
+set -g status-right ""
+
+# Window list / active window.
+setw -g window-status-current-attr bright
+
+# Sets the color of command / message line
+set -g message-fg black
+set -g message-bg yellow
+
+# Refreshes the statusline every 60 seconds
+#set -g status-interval 60
+
+# Enable activity alerts (flash the statusline on output)
+#setw -g monitor-activity on
+#set -g visual-activity on
+
+# Move through panes like in my vimrc for windows.
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R# Smart pane switching with awareness of vim splits
+bind -n C-k run-shell 'tmux-vim-select-pane -U'
+bind -n C-j run-shell 'tmux-vim-select-pane -D'
+bind -n C-h run-shell 'tmux-vim-select-pane -L'
+bind -n C-l run-shell 'tmux-vim-select-pane -R'
+bind -n "C-\\" run-shell 'tmux-vim-select-pane -l'
+
+# Bring back clear screen under tmux prefix
+bind C-l send-keys 'C-l'
