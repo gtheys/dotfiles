@@ -42,6 +42,8 @@ Plug 'tpope/vim-sleuth' " detect indent style (tabs vs. spaces)
 Plug 'sickill/vim-pasta' " context-aware pasting
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' } " distraction-free writing
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " focus tool. Good for presentating with vim
+Plug 'airblade/vim-gitgutter'
+Plug 'bling/vim-bufferline'
 
 " language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
