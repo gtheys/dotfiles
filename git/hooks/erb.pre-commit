@@ -1,7 +1,11 @@
 #!/bin/sh
-# JSHint Pre-Commit
-# If a JavaScript file is trying to be committed and it fails linting
-# then fail the commit
+# pre-commit git hook to check the validity of a puppet manifest
+#
+# I stole this from 
+#   * https://github.com/nicknisi/dotfiles/blob/master/git/hooks/jshint.pre-commit
+#   * https://github.com/mattiasgeniar/puppet-pre-commit-hook/blob/master/pre-commit
+#
+
 
 EXIT_CODE=0
 COLOR_RED="\x1B[31m"
@@ -15,7 +19,7 @@ for file in $( exec git diff-index --cached --name-only HEAD ); do
         status=$( exec git status --porcelain $file )
 
         if [[ $status != D* ]]; then
-            puppet parser validate $file
+            erb -P -x -T '-' $file | ruby -c
             EXIT_CODE=$((${EXIT_CODE} + $?))
         fi
     fi
@@ -23,9 +27,9 @@ done
 
 echo ""
 if [[ ${EXIT_CODE} -ne 0 ]]; then
-    echo "${COLOR_RED}✘ puppet syntax detected problems.${COLOR_NONE}"
+    echo "${COLOR_RED}✘ ruby erb syntax detected problems.${COLOR_NONE}"
 else
-    echo "${COLOR_GREEN}✔ puppet syntax detected no errors.${COLOR_NONE}"
+    echo "${COLOR_GREEN}✔ ruby erb syntax detected no errors.${COLOR_NONE}"
 fi
 
 exit $((${EXIT_CODE}))
