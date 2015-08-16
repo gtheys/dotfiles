@@ -59,7 +59,7 @@ Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 Plug 'juvenn/mustache.vim', { 'for': 'mustache' }
 Plug 'digitaltoad/vim-jade', { 'for': 'jade' }
 Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
-Plug 'wavded/vim-stylus', { 'for': 'stylus' }
+Plug 'wavded/vim-stylus'
 Plug 'groenewege/vim-less', { 'for': 'less' }
 Plug 'ap/vim-css-color', { 'for': 'css' }
 Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
