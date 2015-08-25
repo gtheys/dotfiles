@@ -1,11 +1,11 @@
-	# want my zsh plugins connected too
+# want my zsh plugins connected too
 # Changed ZSH to CZSH because it conflicts with oh-my-zsh
 # added ZSH for oh-my-zsh
 export ZSH=/Users/gtheys/.oh-my-zsh
 
-source $ZSH/oh-my-zsh.sh
-
 plugins=(bundler rbenv pow brew git osx vagrant aws jump)
+
+source $ZSH/oh-my-zsh.sh
 
 # shortcut to this dotfiles path is $CZSH
 export CZSH=$HOME/.dotfiles
