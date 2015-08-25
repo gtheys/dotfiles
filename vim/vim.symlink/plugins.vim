@@ -7,8 +7,8 @@ call plug#begin('~/.vim/plugged')
 " Plugin 'gmarik/vundle'
 "
 " colorschemes
-"Plug 'chriskempson/base16-vim'
-Plug 'crusoexia/vim-monokai'
+Plug 'chriskempson/base16-vim'
+"Plug 'crusoexia/vim-monokai'
 
 
 " utilities
@@ -43,7 +43,8 @@ Plug 'sickill/vim-pasta' " context-aware pasting
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' } " distraction-free writing
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " focus tool. Good for presentating with vim
 Plug 'airblade/vim-gitgutter'
-Plug 'bling/vim-bufferline'
+"Plug 'bling/vim-bufferline'
+Plug 'godlygeek/tabular'
 
 " language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
@@ -64,7 +65,8 @@ Plug 'groenewege/vim-less', { 'for': 'less' }
 Plug 'ap/vim-css-color', { 'for': 'css' }
 Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
 Plug 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' }
-Plug 'tpope/vim-markdown', { 'for': 'markdown' }
+"Plug 'tpope/vim-markdown', { 'for': 'markdown' }
+Plug 'plasticboy/vim-markdown'
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'timcharper/textile.vim', { 'for': 'textile' }
 Plug 'rodjek/vim-puppet', { 'for': 'puppet'}

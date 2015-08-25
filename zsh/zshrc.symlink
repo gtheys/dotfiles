@@ -5,7 +5,7 @@ export ZSH=/Users/gtheys/.oh-my-zsh
 
 source $ZSH/oh-my-zsh.sh
 
-plugins=(bundler rbenv pow brew git osx vagrant aws)
+plugins=(bundler rbenv pow brew git osx vagrant aws jump)
 
 # shortcut to this dotfiles path is $CZSH
 export CZSH=$HOME/.dotfiles
@@ -70,3 +70,15 @@ source /usr/local/bin/aws_zsh_completer.sh
 
 # added by travis gem
 [ -f /Users/gtheys/.travis/travis.sh ] && source /Users/gtheys/.travis/travis.sh
+
+# Base16 Shell
+# if [ -z "$THEME" ]; then
+    export THEME="base16-monokai"
+# fi
+if [ -z "$BACKGROUND" ]; then
+    export BACKGROUND="dark"
+fi
+
+BASE16_SHELL="$DOTFILES/.config/base16-shell/$THEME.$BACKGROUND.sh"
+# [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+source $BASE16_SHELL

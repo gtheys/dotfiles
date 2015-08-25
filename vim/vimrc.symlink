@@ -57,7 +57,8 @@ if has('autocmd') && !exists('autocommands_loaded')
     autocmd FileType html setlocal ts=4 sts=4 sw=4 noexpandtab indentkeys-=*<return>
     autocmd FileType jade setlocal ts=2 sts=2 sw=2 noexpandtab
     autocmd FileType *.md.js :call SyntasticReset<cr>
-    autocmd FileType markdown,textile setlocal textwidth=0 wrapmargin=0 wrap spell
+    autocmd FileType markdown,textile let b:loaded_delimitMate = 1
+    autocmd FileType markdown setlocal textwidth=0 wrapmargin=0 wrap spell
     autocmd FileType .xml exe ":silent %!xmllint --format --recover - 2>/dev/null"
     "autocmd WinEnter * setlocal cursorline
     "autocmd WinLeave * setlocal nocursorline
@@ -131,8 +132,8 @@ set encoding=utf8
 let base16colorspace=256  " Access colors present in 256 colorspace"
 set t_Co=256 " Explicitly tell vim that the terminal supports 256 colors"
 execute "set background=".$BACKGROUND
-"execute "colorscheme ".$THEME
-colorscheme monokai
+execute "colorscheme ".$THEME
+"colorscheme monokai
 
 " set number " show line numbers
 set relativenumber " show relative line numbers
@@ -265,6 +266,15 @@ nmap \t :set ts=4 sts=4 sw=4 noet<cr>
 nmap \s :set ts=4 sts=4 sw=4 et<cr>
 
 nmap <leader>w :setf textile<cr> :Goyo<cr>
+
+if exists(":Tabularize")
+    nmap <Leader>a= :Tabularize /=<CR>
+    vmap <Leader>a= :Tabularize /=<CR>
+    nmap <Leader>a: :Tabularize /:\zs<CR>
+    vmap <Leader>a: :Tabularize /:\zs<CR>
+endif
+
+let g:vim_markdown_frontmatter=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Functions
@@ -455,8 +465,19 @@ endif
 " bind K to grep word under cursor
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
+" bind \ (backward slash) to grep shortcut
+command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+nnoremap \ :Ag<SPACE>
+
 " search the nearest ancestor that contains .git, .hg, .svn
 let g:ctrlp_working_path_mode = 2
+
+if exists(":Tabularize")
+	nmap <Leader>a= :Tabularize /=<CR>
+	vmap <Leader>a= :Tabularize /=<CR>
+	nmap <Leader>a: :Tabularize /:\zs<CR>
+	vmap <Leader>a: :Tabularize /:\zs<CR>
+endif
 
 
 " airline options
@@ -474,12 +495,13 @@ let g:SuperTabCrMapping = 0
 if (has("gui_running"))
     set guioptions=egmrt
     set background=light
-    colorscheme monokai
-    set guifont=Monaco:h16
+    colorscheme base16-solarized
+    "set guifont=Inconsolata\ 12
+    set guifont=Monaco:h14
     let g:airline_left_sep=''
     let g:airline_right_sep=''
     let g:airline_powerline_fonts=0
-    let g:airline_theme='molokai'
+    let g:airline_theme='solarized'
 endif
 
 call ApplyLocalSettings(expand('.'))
