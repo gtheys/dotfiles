@@ -3,7 +3,7 @@
 # added ZSH for oh-my-zsh
 export ZSH=/Users/gtheys/.oh-my-zsh
 
-plugins=(bundler rbenv pow brew git osx vagrant aws jump)
+plugins=(bundler pow brew git osx vagrant aws jump)
 
 source $ZSH/oh-my-zsh.sh
 
