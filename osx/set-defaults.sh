@@ -9,6 +9,9 @@
 #
 # Run ./set-defaults.sh and you'll be good to go.
 
+# Fix macvim full screen yosemite
+defaults write org.vim.MacVim MMNativeFullScreen 0
+
 # Disable press-and-hold for keys in favor of key repeat.
 defaults write -g ApplePressAndHoldEnabled -bool false
 
