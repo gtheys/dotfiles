@@ -9,6 +9,9 @@
 #
 # Run ./set-defaults.sh and you'll be good to go.
 
+# Don't save automatically to icloud!
+defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+
 # Fix macvim full screen yosemite
 defaults write org.vim.MacVim MMNativeFullScreen 0
 
