@@ -484,7 +484,7 @@ endif
 let g:airline_powerline_fonts=1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
-let g:airline_theme='molokai'
+let g:airline_theme='base16'
 
 " don't hide quotes in json files
 let g:vim_json_syntax_conceal = 0
@@ -494,14 +494,14 @@ let g:SuperTabCrMapping = 0
 
 if (has("gui_running"))
     set guioptions=egmrt
-    set background=light
-    colorscheme base16-solarized
+    set background=dark
+    colorscheme base16-ocean
     "set guifont=Inconsolata\ 12
     set guifont=Monaco:h14
     let g:airline_left_sep=''
     let g:airline_right_sep=''
     let g:airline_powerline_fonts=0
-    let g:airline_theme='solarized'
+    let g:airline_theme='base16'
 endif
 
 call ApplyLocalSettings(expand('.'))
