@@ -472,14 +472,6 @@ nnoremap \ :Ag<SPACE>
 " search the nearest ancestor that contains .git, .hg, .svn
 let g:ctrlp_working_path_mode = 2
 
-if exists(":Tabularize")
-	nmap <Leader>a= :Tabularize /=<CR>
-	vmap <Leader>a= :Tabularize /=<CR>
-	nmap <Leader>a: :Tabularize /:\zs<CR>
-	vmap <Leader>a: :Tabularize /:\zs<CR>
-endif
-
-
 " airline options
 let g:airline_powerline_fonts=1
 let g:airline_left_sep=''
@@ -495,7 +487,8 @@ let g:SuperTabCrMapping = 0
 if (has("gui_running"))
     set guioptions=egmrt
     set background=dark
-    colorscheme base16-ocean
+    set transparency=5
+    colorscheme base16-monokai
     "set guifont=Inconsolata\ 12
     set guifont=Monaco:h14
     let g:airline_left_sep=''
