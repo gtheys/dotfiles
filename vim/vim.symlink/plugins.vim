@@ -45,6 +45,7 @@ Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " focus tool. Good for pres
 Plug 'airblade/vim-gitgutter'
 "Plug 'bling/vim-bufferline'
 Plug 'godlygeek/tabular'
+Plug 'fisadev/vim-ctrlp-cmdpalette'
 
 " language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
