@@ -79,6 +79,8 @@ macro index o "<shell-escape>offlineimap -qf INBOX<enter>" "run offlineimap to s
 macro index C "<copy-message>?<toggle-mailboxes>" "copy a message to a mailbox"
 macro index M "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
 
+macro pager \Cu "|urlview<enter>" "call urlview to open links"
+
 # Sidebar Navigation ---------------------------------
 bind index,pager k   sidebar-next
 bind index,pager j     sidebar-prev
