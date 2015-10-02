@@ -21,11 +21,13 @@ disabled/enabled easily.
 * Compile your package with `:GoBuild`, install it with `:GoInstall`
 * Quickly execute your current file/files with `:GoRun`
 * Run `:GoTest` and see any errors in the quickfix window
-* Automatic `GOPATH` detection based on the directory structure (i.e. `godep`
-  vendored projects)
+* Automatic `GOPATH` detection based on the directory structure (i.e. `gb`
+  projects, `godep` vendored projects)
 * Change or display `GOPATH` with `:GoPath`
 * Create a coverage profile and display annotated source code in browser to see
   which functions are covered with `:GoCoverage`
+* Call `gometalinter`, which is a tool that invokes all possible linters
+  (golint, vet, errcheck, deadcode, etc..) and shows the warnings/errors
 * Lint your code with `:GoLint`
 * Run your code through `:GoVet` to catch static errors
 * Advanced source analysis tools utilizing oracle, such as `:GoImplements`,

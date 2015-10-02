@@ -19,6 +19,7 @@ VimuxRunLastCommand	vimux.txt	/*VimuxRunLastCommand*
 VimuxRunnerType	vimux.txt	/*VimuxRunnerType*
 VimuxSendKeys	vimux.txt	/*VimuxSendKeys*
 VimuxSendText	vimux.txt	/*VimuxSendText*
+VimuxTmuxCommand	vimux.txt	/*VimuxTmuxCommand*
 VimuxTslimeReplacement	vimux.txt	/*VimuxTslimeReplacement*
 VimuxUsage	vimux.txt	/*VimuxUsage*
 VimuxZoomRunner	vimux.txt	/*VimuxZoomRunner*

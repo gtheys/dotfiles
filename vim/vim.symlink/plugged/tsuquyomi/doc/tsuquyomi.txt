@@ -1,6 +1,6 @@
 *tsuquyomi* is a Vim plugin for TypeScript.
 
-Version: 0.4.2
+Version: 0.5.0
 Author : Quramy <yosuke.kurami@gmail.com>
 License: MIT license  {{{
     Permission is hereby granted, free of charge, to any person obtaining
@@ -183,6 +183,17 @@ COMMANDS					*tsuquyomi-commands*
 		So, the changes of `tsconfig.json` are reflected in the
 		TSServer
 
+						*:TsuquyomiGeterr*
+						*:TsuGeterr*
+:TsuquyomiGeterr
+		Show compilation errors of current buffer in QuickFix window.
+
+						*:TsuquyomiGeterrProject*
+						*:TsuGeterrProject*
+:TsuquyomiGeterrProject
+		Show all compilation errors of your project in QuickFix window.
+		This command requires TypeScript@v1.6.0 or later.
+
 Todo
 
 ------------------------------------------------------------------------------
@@ -249,6 +260,10 @@ g:tsuquyomi_definition_split	(default 0)
 g:tsuquyomi_completion_case_sensitive	(default 0)
 		Whether to search completion case-sensitively when
 		|tsuquyomi#complete|.
+
+						*g:tsuquyomi_disable_default_mappings*
+g:tsuquyomi_disable_default_mappings	(default 0)
+		If set no keys are mapped.
 
 						*g:tsuquyomi_disable_quickfix*
 g:tsuquyomi_disable_quickfix	(default 0)

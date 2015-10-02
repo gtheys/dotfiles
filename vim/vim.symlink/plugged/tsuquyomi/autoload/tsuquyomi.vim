@@ -72,26 +72,6 @@ endfunction
 function! s:is_valid_identifier(symbol_str)
   return a:symbol_str =~ '[A-Za-z_\$][A-Za-z_\$0-9]*'
 endfunction
-
-let s:complete_call_count = 0
-let s:start_time = reltime()
-let s:time_arr = []
-function! s:debug_time(name)
-  if 0
-    call add(s:time_arr, {'name': a:name, 'count': s:complete_call_count, 'elapse': reltime(s:start_time)})
-  endif
-endfunction
-function! tsuquyomi#getTime()
-  let num_row = len(s:time_arr)
-  let j = len(s:time_arr) - num_row + 1
-  while j < num_row
-    let t = s:time_arr[j]
-    let prev = s:time_arr[j - 1]
-    echo reltimestr(t.elapse) t.count t.name reltimestr(reltime(prev.elapse, t.elapse))
-    let j = j + 1
-  endwhile
-endfunction
-
 " ### Utilites }}}
 
 " ### Public functions {{{
@@ -130,7 +110,7 @@ endfunction
 
 function! s:openFromList(filelist)
   for file in a:filelist
-    if file == ''
+    if file == '' || tsuquyomi#bufManager#isOpened(file)
       continue
     endif
     call tsuquyomi#tsClient#tsOpen(file)
@@ -177,10 +157,14 @@ function! tsuquyomi#reload(...)
 endfunction
 
 function! tsuquyomi#reloadProject()
-  let filelist = values(map(tsuquyomi#bufManager#openedFiles(), 'v:val.bufname'))
-  if len(filelist)
-    call s:closeFromList(filelist)
-    call s:openFromList(filelist)
+  if tsuquyomi#config#isHigher(160)
+    call tsuquyomi#tsClient#tsReloadProjects()
+  else
+    let filelist = values(map(tsuquyomi#bufManager#openedFiles(), 'v:val.bufname'))
+    if len(filelist)
+      call s:closeFromList(filelist)
+      call s:openFromList(filelist)
+    endif
   endif
 endfunction
 
@@ -194,6 +178,29 @@ function! tsuquyomi#dump(...)
 endfunction
 " #### File operations }}}
 
+" #### Project information {{{
+function! tsuquyomi#projectInfo(file)
+  if !tsuquyomi#config#isHigher(160)
+    echom '[Tsuquyomi] This feature requires TypeScript@1.6.0 or higher'
+    return {}
+  endif
+  if len(s:checkOpenAndMessage([a:file])[1])
+    return {}
+  endif
+  let l:result = tsuquyomi#tsClient#tsProjectInfo(a:file, 1)
+  let l:result.filteredFileNames = []
+  if has_key(l:result, 'fileNames')
+    for fileName in l:result.fileNames
+      if fileName =~ 'typescript/lib/lib.d.ts$'
+      else
+        call add(l:result.filteredFileNames, fileName)
+      endif
+    endfor
+  endif
+  return l:result
+endfunction
+" }}}
+
 " #### Complete {{{
 "
 function! tsuquyomi#setPreviewOption()
@@ -203,9 +210,9 @@ function! tsuquyomi#setPreviewOption()
 endfunction
 
 function! tsuquyomi#makeCompleteMenu(file, line, offset, entryNames)
-  "call s:debug_time('tsCompletionEntryDetail')
+  call tsuquyomi#perfLogger#record('tsCompletionEntryDetail')
   let res_list = tsuquyomi#tsClient#tsCompletionEntryDetails(a:file, a:line, a:offset, a:entryNames)
-  "call s:debug_time('tsCompletionEntryDetail_done')
+  call tsuquyomi#perfLogger#record('tsCompletionEntryDetail_done')
   let display_texts = []
   for result in res_list
     call add(display_texts, s:joinPartsIgnoreBreak(result.displayParts, '{...}'))
@@ -252,10 +259,6 @@ function! tsuquyomi#makeCompleteInfo(file, line, offset)
 endfunction
 
 function! tsuquyomi#complete(findstart, base)
-
-  let s:complete_call_count = s:complete_call_count + 1
-  let s:start_time = reltime()
-
   if len(s:checkOpenAndMessage([expand('%:p')])[1])
     return
   endif
@@ -271,20 +274,20 @@ function! tsuquyomi#complete(findstart, base)
   endwhile
 
   if(a:findstart)
-    "call s:debug_time('before_flash')
+    call tsuquyomi#perfLogger#record('before_flash')
     call s:flash()
-    "call s:debug_time('after_flash')
+    call tsuquyomi#perfLogger#record('after_flash')
     return l:start - 1
   else
     let l:file = expand('%:p')
     let l:res_dict = {'words': []}
-    "call s:debug_time('before_tsCompletions')
+    call tsuquyomi#perfLogger#record('before_tsCompletions')
     let l:res_list = tsuquyomi#tsClient#tsCompletions(l:file, l:line, l:start, a:base)
-    "call s:debug_time('after_tsCompletions')
+    call tsuquyomi#perfLogger#record('after_tsCompletions')
     let enable_menu = stridx(&completeopt, 'menu') != -1
     let length = strlen(a:base)
     if enable_menu
-      call s:debug_time('start_menu')
+      call tsuquyomi#perfLogger#record('start_menu')
       let [has_info, siginfo] = tsuquyomi#makeCompleteInfo(l:file, l:line, l:start)
       let size = g:tsuquyomi_completion_chank_size
       let j = 0
@@ -302,9 +305,9 @@ function! tsuquyomi#complete(findstart, base)
             call add(items, l:item)
           endif
         endfor
-        "call s:debug_time('before_completeMenu'.j)
+        call tsuquyomi#perfLogger#record('before_completeMenu'.j)
         let menus = tsuquyomi#makeCompleteMenu(l:file, l:line, l:start, entries)
-        "call s:debug_time('after_completeMenu'.j)
+        call tsuquyomi#perfLogger#record('after_completeMenu'.j)
         let idx = 0
         for menu in menus
           let items[idx].menu = menu
@@ -422,14 +425,35 @@ endfunction
 " #### References }}}
 
 " #### Geterr {{{
-function! tsuquyomi#geterr()
-  if g:tsuquyomi_disable_quickfix
-    return
+
+function! tsuquyomi#createQuickFixListFromEvents(event_list)
+  if !len(a:event_list)
+    return []
   endif
+  let quickfix_list = []
+  for event_item in a:event_list
+    if has_key(event_item, 'type') && event_item.type ==# 'event' && (event_item.event ==# 'syntaxDiag' || event_item.event ==# 'semanticDiag')
+      for diagnostic in event_item.body.diagnostics
+        let item = {}
+        let item.filename = event_item.body.file
+        let item.lnum = diagnostic.start.line
+        if(has_key(diagnostic.start, 'offset'))
+          let item.col = diagnostic.start.offset
+        endif
+        let item.text = diagnostic.text
+        let item.type = 'E'
+        call add(quickfix_list, item)
+      endfor
+    endif
+  endfor
+  return quickfix_list
+endfunction
+
+function! tsuquyomi#geterr()
+
   if len(s:checkOpenAndMessage([expand('%:p')])[1])
     return
   endif
-
   call s:flash()
 
   let l:files = [expand('%:p')]
@@ -438,35 +462,43 @@ function! tsuquyomi#geterr()
   " 1. Fetch error information from TSServer.
   let result = tsuquyomi#tsClient#tsGeterr(l:files, l:delayMsec)
 
-  let quickfix_list = []
   " 2. Make a quick fix list for `setqflist`.
-  if(has_key(result, 'semanticDiag'))
-    for diagnostic in result.semanticDiag.diagnostics
-      let item = {}
-      let item.filename = result.semanticDiag.file
-      let item.lnum = diagnostic.start.line
-      if(has_key(diagnostic.start, 'offset'))
-        let item.col = diagnostic.start.offset
-      endif
-      let item.text = diagnostic.text
-      let item.type = 'E'
-      call add(quickfix_list, item)
-    endfor
+  let quickfix_list = tsuquyomi#createQuickFixListFromEvents(result)
+
+  call setqflist(quickfix_list, 'r')
+  if len(quickfix_list) > 0
+    cwindow
+  else
+    cclose
+  endif
+endfunction
+
+function! tsuquyomi#geterrProject()
+
+  if !tsuquyomi#config#isHigher(160)
+    echom '[Tsuquyomi] This feature requires TypeScript@1.6.0 or higher'
+    return
   endif
 
-  if(has_key(result, 'syntaxDiag'))
-    for diagnostic in result.syntaxDiag.diagnostics
-      let item = {}
-      let item.filename = result.syntaxDiag.file
-      let item.lnum = diagnostic.start.line
-      if(has_key(diagnostic.start, 'offset'))
-        let item.col = diagnostic.start.offset
-      endif
-      let item.text = diagnostic.text
-      let item.type = 'E'
-      call add(quickfix_list, item)
-    endfor
+  if len(s:checkOpenAndMessage([expand('%:p')])[1])
+    return
   endif
+
+  call s:flash()
+  let l:file = expand('%:p')
+
+  " 1. Fetch Project info for event count.
+  let l:pinfo = tsuquyomi#projectInfo(l:file)
+  if !has_key(l:pinfo, 'filteredFileNames') || !len(l:pinfo.filteredFileNames)
+    return
+  endif
+
+  " 2. Fetch error information from TSServer.
+  let l:delayMsec = 50 "TODO export global option
+  let l:result = tsuquyomi#tsClient#tsGeterrForProject(l:file, l:delayMsec, len(l:pinfo.filteredFileNames))
+
+  " 3. Make a quick fix list for `setqflist`.
+  let quickfix_list = tsuquyomi#createQuickFixListFromEvents(result)
 
   call setqflist(quickfix_list, 'r')
   if len(quickfix_list) > 0
@@ -479,7 +511,6 @@ endfunction
 function! tsuquyomi#reloadAndGeterr()
   if tsuquyomi#tsClient#statusTss() != 'undefined'
     return tsuquyomi#geterr()
-    "return tsuquyomi#reload() && tsuquyomi#geterr()
   endif
 endfunction
 

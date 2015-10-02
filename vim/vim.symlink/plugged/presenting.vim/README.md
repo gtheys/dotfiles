@@ -27,11 +27,13 @@ Use [pathogen][3] or [vundle][4] to install presenting.vim.
 Simply write your presentation in your favorite markup language. Every slide
 is separated by a markup language specific marker.
 
-| Filetype | Slide Separator |
-| -------- | --------------- |
-| markdown | `# heading`     |
-| rst      | `~~~~`          |
-| orgmode  | `#----`         |
+|   Filetype   | Slide Separator |
+| ------------ | --------------- |
+| markdown     | `# heading`     |
+| rst          | `~~~~`          |
+| orgmode      | `#----`         |
+| GoLang slide | `* title`       |
+
 
 These can be overridden or extended by setting `b:presenting_slide_separator`
 for your preferred filetype in your `.vimrc`. For example, set the `.rst` slide
@@ -63,6 +65,7 @@ For examples of presenting.vim presentations, see:
   * [PresentingExample.markdown](https://github.com/sotte/presenting.vim/blob/master/examples/PresentingDemo.markdown)
   * [PresentingExample.rst](https://github.com/sotte/presenting.vim/blob/master/examples/PresentingDemo.org)
   * [PresentingExample.org](https://github.com/sotte/presenting.vim/blob/master/examples/PresentingDemo.rst)
+  * [PresentingExample.slide](https://github.com/sotte/presenting.vim/blob/master/examples/PresentingDemo.slide)
 
 Of course you can configure the slide separators.
 

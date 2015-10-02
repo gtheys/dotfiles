@@ -1,6 +1,8 @@
 :TsuClose	tsuquyomi.txt	/*:TsuClose*
 :TsuDefinition	tsuquyomi.txt	/*:TsuDefinition*
 :TsuDump	tsuquyomi.txt	/*:TsuDump*
+:TsuGeterr	tsuquyomi.txt	/*:TsuGeterr*
+:TsuGeterrProject	tsuquyomi.txt	/*:TsuGeterrProject*
 :TsuGoBack	tsuquyomi.txt	/*:TsuGoBack*
 :TsuOpen	tsuquyomi.txt	/*:TsuOpen*
 :TsuReferences	tsuquyomi.txt	/*:TsuReferences*
@@ -14,6 +16,8 @@
 :TsuquyomiClose	tsuquyomi.txt	/*:TsuquyomiClose*
 :TsuquyomiDefinition	tsuquyomi.txt	/*:TsuquyomiDefinition*
 :TsuquyomiDump	tsuquyomi.txt	/*:TsuquyomiDump*
+:TsuquyomiGeterr	tsuquyomi.txt	/*:TsuquyomiGeterr*
+:TsuquyomiGeterrProject	tsuquyomi.txt	/*:TsuquyomiGeterrProject*
 :TsuquyomiGoBack	tsuquyomi.txt	/*:TsuquyomiGoBack*
 :TsuquyomiOpen	tsuquyomi.txt	/*:TsuquyomiOpen*
 :TsuquyomiReferences	tsuquyomi.txt	/*:TsuquyomiReferences*
@@ -32,6 +36,7 @@
 g:tsuquyomi_auto_open	tsuquyomi.txt	/*g:tsuquyomi_auto_open*
 g:tsuquyomi_completion_case_sensitive	tsuquyomi.txt	/*g:tsuquyomi_completion_case_sensitive*
 g:tsuquyomi_definition_split	tsuquyomi.txt	/*g:tsuquyomi_definition_split*
+g:tsuquyomi_disable_default_mappings	tsuquyomi.txt	/*g:tsuquyomi_disable_default_mappings*
 g:tsuquyomi_disable_quickfix	tsuquyomi.txt	/*g:tsuquyomi_disable_quickfix*
 g:tsuquyomi_nodejs_path	tsuquyomi.txt	/*g:tsuquyomi_nodejs_path*
 g:tsuquyomi_save_onrename	tsuquyomi.txt	/*g:tsuquyomi_save_onrename*

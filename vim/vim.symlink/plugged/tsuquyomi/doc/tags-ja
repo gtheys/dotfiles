@@ -2,6 +2,8 @@
 :TsuClose	tsuquyomi.jax	/*:TsuClose*
 :TsuDefinition	tsuquyomi.jax	/*:TsuDefinition*
 :TsuDump	tsuquyomi.jax	/*:TsuDump*
+:TsuGeterr	tsuquyomi.jax	/*:TsuGeterr*
+:TsuGeterrProject	tsuquyomi.jax	/*:TsuGeterrProject*
 :TsuGoBack	tsuquyomi.jax	/*:TsuGoBack*
 :TsuOpen	tsuquyomi.jax	/*:TsuOpen*
 :TsuReferences	tsuquyomi.jax	/*:TsuReferences*
@@ -15,6 +17,8 @@
 :TsuquyomiClose	tsuquyomi.jax	/*:TsuquyomiClose*
 :TsuquyomiDefinition	tsuquyomi.jax	/*:TsuquyomiDefinition*
 :TsuquyomiDump	tsuquyomi.jax	/*:TsuquyomiDump*
+:TsuquyomiGeterr	tsuquyomi.jax	/*:TsuquyomiGeterr*
+:TsuquyomiGeterrProject	tsuquyomi.jax	/*:TsuquyomiGeterrProject*
 :TsuquyomiGoBack	tsuquyomi.jax	/*:TsuquyomiGoBack*
 :TsuquyomiOpen	tsuquyomi.jax	/*:TsuquyomiOpen*
 :TsuquyomiReferences	tsuquyomi.jax	/*:TsuquyomiReferences*
@@ -33,6 +37,7 @@
 g:tsuquyomi_auto_open	tsuquyomi.jax	/*g:tsuquyomi_auto_open*
 g:tsuquyomi_completion_case_sensitive	tsuquyomi.jax	/*g:tsuquyomi_completion_case_sensitive*
 g:tsuquyomi_definition_split	tsuquyomi.jax	/*g:tsuquyomi_definition_split*
+g:tsuquyomi_disable_default_mappings	tsuquyomi.jax	/*g:tsuquyomi_disable_default_mappings*
 g:tsuquyomi_disable_quickfix	tsuquyomi.jax	/*g:tsuquyomi_disable_quickfix*
 g:tsuquyomi_nodejs_path	tsuquyomi.jax	/*g:tsuquyomi_nodejs_path*
 g:tsuquyomi_save_onrename	tsuquyomi.jax	/*g:tsuquyomi_save_onrename*

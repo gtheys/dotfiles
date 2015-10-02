@@ -97,10 +97,12 @@ function! tsuquyomi#tsClient#sendRequest(line, delay, retry_count, response_leng
       while l:retry < a:retry_count
         let [out, err, type] = s:P.read_wait(s:tsq, retry_delay, ['Content-Length: \d\+'])
         if type == 'matched'
+          call tsuquyomi#perfLogger#record('tssMatched')
           "call s:debugLog('retry: '.l:retry.', length: '.len(response_list))
           break
         endif
         let l:retry = l:retry + 1
+        call tsuquyomi#perfLogger#record('tssRetry:'.l:retry)
       endwhile
     endif
 
@@ -129,7 +131,9 @@ endfunction
 " RETURNS: {list<dictionary>}
 function! tsuquyomi#tsClient#sendCommandSyncResponse(cmd, args)
   let l:input = s:JSON.encode({'command': a:cmd, 'arguments': a:args, 'type': 'request', 'seq': s:request_seq})
-  let l:stdout_list = tsuquyomi#tsClient#sendRequest(l:input, 0.01, 10, 1)
+  call tsuquyomi#perfLogger#record('beforeCmd:'.a:cmd)
+  let l:stdout_list = tsuquyomi#tsClient#sendRequest(l:input, 0.0001, 10, 1)
+  call tsuquyomi#perfLogger#record('afterCmd:'.a:cmd)
   let l:length = len(l:stdout_list)
   if l:length == 1
     let res = s:JSON.decode(l:stdout_list[0])
@@ -137,6 +141,7 @@ function! tsuquyomi#tsClient#sendCommandSyncResponse(cmd, args)
     "  echom '[Tsuquyomi] TSServer command fail. command: '.res.command.', message: '.res.message
     "endif
     let s:request_seq = s:request_seq + 1
+    call tsuquyomi#perfLogger#record('afterDecode:'.a:cmd)
     return [res]
   else
     return []
@@ -317,23 +322,28 @@ function! tsuquyomi#tsClient#tsFormationkey(file, line, offset, key)
   call s:error('not implemented!')
 endfunction
 
-" Geterr = "geterr";
+" Get error for files.
+" PARAM: {list<string>} files List of filename
 " PARAM: {int} delay Delay time [msec].
+" PARAM: {list<dict>} error event list
 function! tsuquyomi#tsClient#tsGeterr(files, delay)
   let l:args = {'files': a:files, 'delay': a:delay}
   let l:delaySec = a:delay * 1.0 / 1000.0
-  let l:result = tsuquyomi#tsClient#sendCommandSyncEvents('geterr', l:args, l:delaySec, 2)
-  if(len(l:result) > 0)
-    let l:bodies = {}
-    for res in l:result
-      if(has_key(res, 'body') && has_key(res, 'event'))
-        let l:bodies[res.event] = res.body
-      endif
-    endfor
-    return l:bodies
-  else
-    return {}
-  endif
+  let l:result = tsuquyomi#tsClient#sendCommandSyncEvents('geterr', l:args, l:delaySec, len(a:files) * 2)
+  return l:result
+endfunction
+
+" Get errors for project.
+" This command is available only at tsserver ~v.1.6
+" PARAM: {string} file File name in target project.
+" PARAM: {int} delay Delay time [msec].
+" PARAM: {count} count The number of files in the project(you can fetch this from tsProjectInfo).
+" PARAM: {list<dict>} error event list
+function! tsuquyomi#tsClient#tsGeterrForProject(file, delay, count)
+  let l:args = {'file': a:file, 'delay': a:delay}
+  let l:delaySec = a:delay * 1.0 / 1000.0
+  let l:result = tsuquyomi#tsClient#sendCommandSyncEvents('geterrForProject', l:args, l:delaySec, a:count * 2)
+  return l:result
 endfunction
 
 " Fetch navigation list from TSServer.
@@ -474,6 +484,44 @@ endfunction
 function! tsuquyomi#tsClient#tsBrace(file, line, offset)
   call s:error('not implemented!')
 endfunction
+
+function! tsuquyomi#tsClient#tsTypeDefinition(file, line, offset)
+  call s:error('not implemented!')
+endfunction
+
+" This command is available only at tsserver ~v.1.6
+function! tsuquyomi#tsClient#tsDocumentHighlights(file, line, offset, filesToSearch)
+  call s:error('not implemented!')
+endfunction
+
+" Fetch project information.
+" This command is available only at tsserver ~v.1.6
+" PARAM: {string} file File name.
+" PARAM: {0|1} needFileNameList Whether include list of files in response.
+" RETURNS: dict Project information dictionary.
+"   e.g.:
+"     {
+"       'configFileName': '/samplePrjs/prj001/tsconfig.json',
+"       'fileNames': [
+"         '/PATH_TO_TYPESCRIPT/node_modules/typescript/lib/lib.d.ts',
+"         '/samplePrjs/prj001/main.ts'
+"       ]
+"     }
+function! tsuquyomi#tsClient#tsProjectInfo(file, needFileNameList)
+  let l:arg = {'file': a:file,
+        \ 'needFileNameList': a:needFileNameList ? s:JSON.true : s:JSON.false
+        \ }
+  let l:result = tsuquyomi#tsClient#sendCommandSyncResponse('projectInfo', l:arg)
+  return tsuquyomi#tsClient#getResponseBodyAsDict(l:result)
+endfunction
+
+" Reload prjects.
+" This command is available only at tsserver ~v.1.6
+" This command does not return any response.
+function! tsuquyomi#tsClient#tsReloadProjects()
+  return tsuquyomi#tsClient#sendCommandOneWay('reloadProjects', {})
+endfunction
+
 
 " ### TSServer command wrappers }}}
 

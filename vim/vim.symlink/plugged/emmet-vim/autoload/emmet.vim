@@ -108,7 +108,7 @@ endfunction
 function! emmet#expandAbbrIntelligent(feedkey) abort
   if !emmet#isExpandable()
     return a:feedkey
-  endif 
+  endif
   return "\<plug>(emmet-expand-abbr)"
 endfunction
 
@@ -290,6 +290,10 @@ function! emmet#getResource(type, name, default) abort
   if exists('b:emmet_' . a:name)
     return get(b:, 'emmet_' . a:name)
   endif
+  let global = {}
+  if has_key(s:emmet_settings, '*') && has_key(s:emmet_settings['*'], a:name)
+    let global = extend(global, s:emmet_settings['*'][a:name])
+  endif
 
   for type in split(a:type, '\.')
     if !has_key(s:emmet_settings, type)
@@ -323,11 +327,18 @@ function! emmet#getResource(type, name, default) abort
       endif
     endif
     if !empty(ret)
+      if type(ret) ==# 3 || type(ret) ==# 4
+        let ret = extend(global, ret)
+      endif
       return ret
     endif
   endfor
 
-  return a:default
+  let ret = a:default
+  if type(ret) ==# 3 || type(ret) ==# 4
+    let ret = extend(global, ret)
+  endif
+  return ret
 endfunction
 
 function! emmet#getFileType(...) abort
@@ -496,8 +507,12 @@ function! emmet#expandAbbr(mode, abbr) range abort
         let spl = ''
       endif
       let items = emmet#parseIntoTree(query, type).child
+      let itemno = 0
       for item in items
-        let expand .= emmet#toString(item, rtype, 0, filters, 0, indent)
+        let inner = emmet#toString(item, rtype, 0, filters, 0, indent)
+        let inner = substitute(inner, '\$#', '$line'.(itemno*(a:lastline - a:firstline + 1)/len(items)+1).'$', 'g')
+        let expand .= inner
+        let itemno = itemno + 1
       endfor
       if emmet#useFilter(filters, 'e')
         let expand = substitute(expand, '&', '\&amp;', 'g')
@@ -674,7 +689,7 @@ function! emmet#expandAbbr(mode, abbr) range abort
   if g:emmet_debug > 1
     call getchar()
   endif
-  if search('\ze\$\(cursor\|select\)\$')
+  if search('\ze\$\(cursor\|select\)\$', 'c')
     let oldselection = &selection
     let &selection = 'inclusive'
     if foldclosed(line('.')) !=# -1
@@ -682,20 +697,26 @@ function! emmet#expandAbbr(mode, abbr) range abort
     endif
     let pos = emmet#util#getcurpos()
     let use_selection = emmet#getResource(type, 'use_selection', 0)
-    if use_selection && getline('.')[col('.')-1:] =~# '^\$select'
-      let pos[2] += 1
-      silent! s/\$select\$//
-      let next = searchpos('.\ze\$select\$', 'nW')
-      silent! %s/\$\(cursor\|select\)\$//g
-      call emmet#util#selectRegion([pos[1:2], next])
-      return "\<esc>gv"
-    else
-      silent! %s/\$\(cursor\|select\)\$//g
-      silent! call setpos('.', pos)
-      if col('.') < col('$')
-        return "\<right>"
+    try
+      let l:gdefault = &gdefault
+      let &gdefault = 0
+      if use_selection && getline('.')[col('.')-1:] =~# '^\$select'
+        let pos[2] += 1
+        silent! s/\$select\$//
+        let next = searchpos('.\ze\$select\$', 'nW')
+        silent! %s/\$\(cursor\|select\)\$//g
+        call emmet#util#selectRegion([pos[1:2], next])
+        return "\<esc>gv"
+      else
+        silent! %s/\$\(cursor\|select\)\$//g
+        silent! call setpos('.', pos)
+        if col('.') < col('$')
+          return "\<right>"
+        endif
       endif
-    endif
+    finally
+      let &gdefault = l:gdefault
+    endtry
     let &selection = oldselection
   endif
   return ''
@@ -1787,6 +1808,55 @@ let s:emmet_settings = {
 \    'html.django_template': {
 \        'extends': 'html',
 \    },
+\    'jade': {
+\        'indentation': '  ',
+\        'extends': 'html',
+\        'snippets': {
+\            '!!!': "doctype html\n",
+\            '!!!4t': "doctype HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"\n",
+\            '!!!4s': "doctype HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\"\n",
+\            '!!!xt': "doctype transitional\n",
+\            '!!!xs': "doctype strict\n",
+\            '!!!xxs': "doctype 1.1\n",
+\            'c': "\/\/ |${child}",
+\            'html:4t': "doctype HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"\n"
+\                    ."html(lang=\"${lang}\")\n"
+\                    ."\thead\n"
+\                    ."\t\tmeta(http-equiv=\"Content-Type\", content=\"text/html;charset=${charset}\")\n"
+\                    ."\t\ttitle\n"
+\                    ."\tbody\n\t\t${child}|",
+\            'html:4s': "doctype HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\"\n"
+\                    ."html(lang=\"${lang}\")\n"
+\                    ."\thead\n"
+\                    ."\t\tmeta(http-equiv=\"Content-Type\", content=\"text/html;charset=${charset}\")\n"
+\                    ."\t\ttitle\n"
+\                    ."\tbody\n\t\t${child}|",
+\            'html:xt': "doctype transitional\n"
+\                    ."html(xmlns=\"http://www.w3.org/1999/xhtml\", xml:lang=\"${lang}\")\n"
+\                    ."\thead\n"
+\                    ."\t\tmeta(http-equiv=\"Content-Type\", content=\"text/html;charset=${charset}\")\n"
+\                    ."\t\ttitle\n"
+\                    ."\tbody\n\t\t${child}|",
+\            'html:xs': "doctype strict\n"
+\                    ."html(xmlns=\"http://www.w3.org/1999/xhtml\", xml:lang=\"${lang}\")\n"
+\                    ."\thead\n"
+\                    ."\t\tmeta(http-equiv=\"Content-Type\", content=\"text/html;charset=${charset}\")\n"
+\                    ."\t\ttitle\n"
+\                    ."\tbody\n\t\t${child}|",
+\            'html:xxs': "doctype 1.1\n"
+\                    ."html(xmlns=\"http://www.w3.org/1999/xhtml\", xml:lang=\"${lang}\")\n"
+\                    ."\thead\n"
+\                    ."\t\tmeta(http-equiv=\"Content-Type\", content=\"text/html;charset=${charset}\")\n"
+\                    ."\t\ttitle\n"
+\                    ."\tbody\n\t\t${child}|",
+\            'html:5': "doctype html\n"
+\                    ."html(lang=\"${lang}\")\n"
+\                    ."\thead\n"
+\                    ."\t\tmeta(charset=\"${charset}\")\n"
+\                    ."\t\ttitle\n"
+\                    ."\tbody\n\t\t${child}|",
+\        },
+\    },
 \    'xsl': {
 \        'extends': 'html',
 \        'default_attributes': {
@@ -1873,7 +1943,7 @@ let s:emmet_settings = {
 \                    ."\t<xsd:element name=\"\" type=\"\"/>\n"
 \                    ."</xsd:schema>\n"
 \        }
-\    }
+\    },
 \}
 
 if exists('g:user_emmet_settings')
