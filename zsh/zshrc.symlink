@@ -1,7 +1,7 @@
 # want my zsh plugins connected too
 # Changed ZSH to CZSH because it conflicts with oh-my-zsh
 # added ZSH for oh-my-zsh
-export ZSH=/Users/gtheys/.oh-my-zsh
+export ZSH=/Users/geert/.oh-my-zsh
 
 plugins=(bundler pow brew git osx vagrant aws jump)
 
