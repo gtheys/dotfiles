@@ -22,9 +22,19 @@ brew linkapps macvim
 # Needed for my :Ag search in Vim
 brew install the_silver_searcher
 
+brew install virtualbox
+brew install vagrant
+brew install ansible
+brew install terraform
+brew install packer
+
+# Install brew cask
+brew install caskroom/cask/brew-cask
+
 brew cask install --appdir="/Applications" airmail
 brew cask install --appdir="/Applications" skype
 brew cask install --appdir="/Applications" slack
 brew cask install --appdir="/Applications" skitch
+brew cask install --appdir="/Applications" google-chrome
 
 exit 0
