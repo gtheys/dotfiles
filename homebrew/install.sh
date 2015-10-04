@@ -15,7 +15,16 @@ fi
 # Install homebrew packages
 brew install grc coreutils spark
 
+# This how I Install vim (need xcode installed)
+brew install macvim --with-cscope --with-lua --override-system-vim --with-luajit --with-python3
+brew linkapps macvim
+
 # Needed for my :Ag search in Vim
 brew install the_silver_searcher
+
+brew cask install --appdir="/Applications" airmail
+brew cask install --appdir="/Applications" skype
+brew cask install --appdir="/Applications" slack
+brew cask install --appdir="/Applications" skitch
 
 exit 0
