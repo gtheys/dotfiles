@@ -1,1 +1,2 @@
-easy_install SpoofMAC
+pip install awscli
+pip install saws
