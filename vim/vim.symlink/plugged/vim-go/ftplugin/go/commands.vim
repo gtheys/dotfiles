@@ -1,5 +1,5 @@
 " gorename
-command! -nargs=? GoRename call go#rename#Rename(<f-args>)
+command! -nargs=? GoRename call go#rename#Rename(<bang>0,<f-args>)
 
 " oracle
 command! -nargs=* -complete=customlist,go#package#Complete GoOracleScope call go#oracle#Scope(<f-args>)
@@ -47,7 +47,7 @@ command! -nargs=1 -bang -complete=customlist,go#package#Complete GoImport call g
 command! -nargs=* -bang -complete=customlist,go#package#Complete GoImportAs call go#import#SwitchImport(1, <f-args>, '<bang>')
 
 " -- linters
-command! -nargs=* GoMetaLinter call go#lint#Gometa('')
+command! -nargs=* GoMetaLinter call go#lint#Gometa(<f-args>)
 command! -nargs=* GoLint call go#lint#Golint(<f-args>)
 command! -nargs=* -bang GoVet call go#lint#Vet(<bang>0, <f-args>)
 command! -nargs=* -complete=customlist,go#package#Complete GoErrCheck call go#lint#Errcheck(<f-args>)

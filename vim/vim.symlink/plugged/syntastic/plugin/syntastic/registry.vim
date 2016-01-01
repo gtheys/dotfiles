@@ -8,7 +8,7 @@ let g:loaded_syntastic_registry = 1
 let s:_DEFAULT_CHECKERS = {
         \ 'actionscript':  ['mxmlc'],
         \ 'ada':           ['gcc'],
-        \ 'apiblueprint':  ['snowcrash'],
+        \ 'apiblueprint':  ['drafter'],
         \ 'applescript':   ['osacompile'],
         \ 'asciidoc':      ['asciidoc'],
         \ 'asm':           ['gcc'],
@@ -95,6 +95,7 @@ let s:_DEFAULT_CHECKERS = {
         \ 'xhtml':         ['tidy'],
         \ 'xml':           ['xmllint'],
         \ 'xslt':          ['xmllint'],
+        \ 'xquery':        ['basex'],
         \ 'yacc':          ['bison'],
         \ 'yaml':          ['jsyaml'],
         \ 'z80':           ['z80syntaxchecker'],
