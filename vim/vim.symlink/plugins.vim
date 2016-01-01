@@ -9,6 +9,9 @@ call plug#begin('~/.vim/plugged')
 " colorschemes
 Plug 'chriskempson/base16-vim'
 "Plug 'crusoexia/vim-monokai'
+"
+" Ledger tooling
+Plug 'ledger/vim-ledger'
 
 
 " utilities

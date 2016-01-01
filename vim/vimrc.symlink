@@ -81,6 +81,7 @@ if has('autocmd') && !exists('autocommands_loaded')
     autocmd BufNewFile,BufReadPost *.md set filetype=markdown
     autocmd BufNewFile,BufReadPost *.markdown setlocal spell
     let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'json=javascript', 'stylus', 'html']
+     au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
 
     " autocmd! BufEnter * call ApplyLocalSettings(expand('<afile>:p:h'))
 endif
@@ -492,8 +493,8 @@ if (has("gui_running"))
     set background=dark
     set transparency=5
     colorscheme base16-monokai
-    "set guifont=Inconsolata\ 12
-    set guifont=Monaco:h14
+	set guifont=InconsolataGo:h18
+    "set guifont=Monaco:h14
     let g:airline_left_sep=''
     let g:airline_right_sep=''
     let g:airline_powerline_fonts=0
