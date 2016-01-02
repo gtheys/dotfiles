@@ -81,7 +81,12 @@ if has('autocmd') && !exists('autocommands_loaded')
     autocmd BufNewFile,BufReadPost *.md set filetype=markdown
     autocmd BufNewFile,BufReadPost *.markdown setlocal spell
     let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'json=javascript', 'stylus', 'html']
-     au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
+    
+    "Ledger stuff
+    au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
+    let g:ledger_default_commodity='€'
+    au FileType ledger map <Leader>lda :LedgerAlign<CR>
+    au FileType ledger map <C-y> :call ledger#align_amount_at_cursor()<CR>
 
     " autocmd! BufEnter * call ApplyLocalSettings(expand('<afile>:p:h'))
 endif
