@@ -16,6 +16,7 @@ Plug 'ledger/vim-ledger'
 
 " utilities
 Plug 'kien/ctrlp.vim'
+Plug 'hashivim/vim-terraform'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } | Plug 'Xuyuanp/nerdtree-git-plugin' | Plug 'ryanoasis/vim-devicons'
 Plug 'mileszs/ack.vim'
 Plug 'Raimondi/delimitMate'
