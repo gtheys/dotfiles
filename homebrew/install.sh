@@ -28,6 +28,9 @@ brew install ansible
 brew install terraform
 brew install packer
 
+# install neovim
+brew install neovim/neovim/neovim
+
 # Install brew cask
 brew install caskroom/cask/brew-cask
 
