@@ -9,6 +9,9 @@
 #
 # Run ./set-defaults.sh and you'll be good to go.
 
+# Disable Motion sensor
+sudo pmset -a sms 0
+
 # Don't save automatically to icloud!
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
