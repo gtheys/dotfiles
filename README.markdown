@@ -8,6 +8,8 @@ I'm no longer using a fork of his dotfiles as I'm personalising my dotfiles more
 
 But still a lot of credit to Holman!
 
+I have to give additional credit to [Nick Nisi](https://github.com/nicknisi) because his dotfiles are great for vim and tmux. Using his githooks as example for puppet and yaml checking.
+
 ## install
 
 Run this:
