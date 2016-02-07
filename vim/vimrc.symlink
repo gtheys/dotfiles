@@ -498,7 +498,8 @@ if (has("gui_running"))
     set background=dark
     set transparency=5
     colorscheme base16-monokai
-	set guifont=InconsolataGo:h18
+    "set guifont=Inconsolata\ for\ Powerline:h15
+    set guifont=Droid\ Sans\ Mono\ For\ Powerline\ Plus\ Nerd\ File\ Types:h18
     "set guifont=Monaco:h14
     let g:airline_left_sep=''
     let g:airline_right_sep=''
