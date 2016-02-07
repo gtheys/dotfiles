@@ -17,7 +17,8 @@ Plug 'tpope/vim-surround'
 Plug 'benmills/vimux'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" Plug 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
+Plug 'godlygeek/tabular'
 Plug 'benekastah/neomake'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -64,6 +65,7 @@ Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'timcharper/textile.vim', { 'for': 'textile' }
 " Plug 'tclem/vim-arduino'
 " Plug 'davidoc/taskpaper.vim'
+Plug 'rodjek/vim-puppet', { 'for': 'puppet'}
 
 call plug#end()
 
