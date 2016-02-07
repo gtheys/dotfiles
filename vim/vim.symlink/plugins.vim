@@ -17,7 +17,6 @@ Plug 'ledger/vim-ledger'
 " utilities
 Plug 'elazar/visSum.vim'
 Plug 'kien/ctrlp.vim'
-Plug 'hashivim/vim-terraform'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } | Plug 'Xuyuanp/nerdtree-git-plugin' | Plug 'ryanoasis/vim-devicons'
 Plug 'mileszs/ack.vim'
 Plug 'Raimondi/delimitMate'
@@ -53,6 +52,7 @@ Plug 'godlygeek/tabular'
 Plug 'fisadev/vim-ctrlp-cmdpalette'
 
 " language-specific plugins
+Plug 'hashivim/vim-terraform'
 Plug 'mattn/emmet-vim', { 'for': 'html' }
 Plug 'gregsexton/MatchTag', { 'for': 'html' }
 Plug 'othree/html5.vim', { 'for': 'html' }
