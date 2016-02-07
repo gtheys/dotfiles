@@ -12,6 +12,9 @@
 # Disable Motion sensor
 sudo pmset -a sms 0
 
+# Disable smart quotes and smart dashes
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 # Don't save automatically to icloud!
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
