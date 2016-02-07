@@ -1,3 +1,9 @@
 vim/vim.symlink/.netrwhist
 .DS_Store
 temp
+
+config/nvim/spell
+config/nvim/shada
+config/nvim/plugged
+vim/vim.symlink/spell/
+vim/vim.symlink/plugged/
