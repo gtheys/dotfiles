@@ -75,6 +75,6 @@ if [ -z "$BACKGROUND" ]; then
     export BACKGROUND="dark"
 fi
 
-#BASE16_SHELL="$CZSH/.config/base16-shell/$THEME.$BACKGROUND.sh"
-# [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
-#source $BASE16_SHELL
+BASE16_SHELL="$CZSH/.config/base16-shell/$THEME.$BACKGROUND.sh"
+ [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+source $BASE16_SHELL
