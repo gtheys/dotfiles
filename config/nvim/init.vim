@@ -1,4 +1,4 @@
-call plug#begin('~/.config/nvim/plugged')
+call plug#begin('~/.nvim/plugged')
 
 " colorschemes
 Plug 'chriskempson/base16-vim'
@@ -66,6 +66,8 @@ Plug 'timcharper/textile.vim', { 'for': 'textile' }
 " Plug 'tclem/vim-arduino'
 " Plug 'davidoc/taskpaper.vim'
 Plug 'rodjek/vim-puppet', { 'for': 'puppet'}
+Plug 'hashivim/vim-terraform'
+
 
 call plug#end()
 
