@@ -1,5 +1,5 @@
 alias reload!='. ~/.zshrc'
-alias dots="mvim ~/.dotfiles"
+alias dots="nvim ~/.dotfiles"
 
 alias g="jump"
 alias s="mark"
