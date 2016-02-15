@@ -73,6 +73,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'Shougo/deoplete.nvim'
 Plug 'fatih/vim-go'
 Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'reedes/vim-pencil'
 
 call plug#end()
 
@@ -164,6 +165,13 @@ if has('autocmd') && !exists('autocommands_loaded')
     autocmd BufNewFile,BufRead,BufWrite *.md syntax match Comment /\%^---\_.\{-}---$/
 
     autocmd! BufWritePost * Neomake
+
+    augroup pencil
+        autocmd!
+        autocmd FileType markdown,mkd call pencil#init()
+        autocmd FileType text         call pencil#init()
+augroup END
+
 endif
 
 " code folding settings
@@ -532,8 +540,11 @@ let g:vim_json_syntax_conceal = 0
 let g:deoplete#enable_at_startup = 1
 
 " tagbar config
-
 nmap <F8> :TagbarToggle<CR>
+
+" some pencil stuff
+let g:pencil#conceallevel = 3     " 0=disable, 1=onechar, 2=hidechar, 3=hideall (def)
+let g:pencil#concealcursor = 'c'  " n=normal, v=visual, i=insert, c=command (def)
 
 let g:SuperTabCrMapping = 0
 
