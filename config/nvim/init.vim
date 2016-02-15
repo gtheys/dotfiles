@@ -38,6 +38,7 @@ Plug 'tpope/vim-sleuth' " detect indent style (tabs vs. spaces)
 Plug 'sickill/vim-pasta' " context-aware pasting
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' } " distraction-free writing
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " focus tool. Good for presentating with vim
+Plug 'Shougo/deoplete.nvim'
 
 " language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
@@ -67,6 +68,7 @@ Plug 'timcharper/textile.vim', { 'for': 'textile' }
 " Plug 'davidoc/taskpaper.vim'
 Plug 'rodjek/vim-puppet', { 'for': 'puppet'}
 Plug 'hashivim/vim-terraform'
+Plug 'Shougo/deoplete.nvim'
 
 
 call plug#end()
@@ -523,6 +525,8 @@ let g:airline_theme='base16'
 " don't hide quotes in json files
 let g:vim_json_syntax_conceal = 0
 
+" enable deoplete
+let g:deoplete#enable_at_startup = 1
 
 let g:SuperTabCrMapping = 0
 
