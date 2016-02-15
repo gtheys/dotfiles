@@ -40,6 +40,7 @@ Plug 'junegunn/goyo.vim', { 'on': 'Goyo' } " distraction-free writing
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " focus tool. Good for presentating with vim
 Plug 'Shougo/deoplete.nvim'
 Plug 'airblade/vim-gitgutter'
+Plug 'majutsushi/tagbar'
 
 " language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
@@ -71,7 +72,7 @@ Plug 'rodjek/vim-puppet', { 'for': 'puppet'}
 Plug 'hashivim/vim-terraform'
 Plug 'Shougo/deoplete.nvim'
 Plug 'fatih/vim-go'
-
+Plug 'zchee/deoplete-go', { 'do': 'make'}'
 
 call plug#end()
 
@@ -529,6 +530,10 @@ let g:vim_json_syntax_conceal = 0
 
 " enable deoplete
 let g:deoplete#enable_at_startup = 1
+
+" tagbar config
+
+nmap <F8> :TagbarToggle<CR>
 
 let g:SuperTabCrMapping = 0
 
