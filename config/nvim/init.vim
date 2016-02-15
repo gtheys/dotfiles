@@ -72,7 +72,7 @@ Plug 'rodjek/vim-puppet', { 'for': 'puppet'}
 Plug 'hashivim/vim-terraform'
 Plug 'Shougo/deoplete.nvim'
 Plug 'fatih/vim-go'
-Plug 'zchee/deoplete-go', { 'do': 'make'}'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
 
 call plug#end()
 
