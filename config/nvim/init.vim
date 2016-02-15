@@ -39,6 +39,7 @@ Plug 'sickill/vim-pasta' " context-aware pasting
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' } " distraction-free writing
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " focus tool. Good for presentating with vim
 Plug 'Shougo/deoplete.nvim'
+Plug 'airblade/vim-gitgutter'
 
 " language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
@@ -69,6 +70,7 @@ Plug 'timcharper/textile.vim', { 'for': 'textile' }
 Plug 'rodjek/vim-puppet', { 'for': 'puppet'}
 Plug 'hashivim/vim-terraform'
 Plug 'Shougo/deoplete.nvim'
+Plug 'fatih/vim-go'
 
 
 call plug#end()
