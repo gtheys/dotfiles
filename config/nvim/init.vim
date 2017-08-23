@@ -41,6 +41,7 @@ Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " focus tool. Good for pres
 Plug 'Shougo/deoplete.nvim'
 Plug 'airblade/vim-gitgutter'
 Plug 'majutsushi/tagbar'
+Plug 'rking/ag.vim'
 
 " language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
@@ -74,6 +75,7 @@ Plug 'Shougo/deoplete.nvim'
 Plug 'fatih/vim-go'
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'reedes/vim-pencil'
+Plug 'ledger/vim-ledger'
 
 call plug#end()
 
@@ -165,6 +167,12 @@ if has('autocmd') && !exists('autocommands_loaded')
     autocmd BufNewFile,BufRead,BufWrite *.md syntax match Comment /\%^---\_.\{-}---$/
 
     autocmd! BufWritePost * Neomake
+
+    "Ledger stuff
+    au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
+    let g:ledger_default_commodity='€'
+    au FileType ledger map <Leader>lda :LedgerAlign<CR>
+    au FileType ledger map <C-y> :call ledger#align_amount_at_cursor()<CR>
 
     augroup pencil
         autocmd!
@@ -526,6 +534,9 @@ let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclu
 " search the nearest ancestor that contains .git, .hg, .svn
 let g:ctrlp_working_path_mode = 2
 
+" bind ,a to grep shortcut
+command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+nnoremap <leader>a :Ag<space>
 
 " airline options
 let g:airline_powerline_fonts=1

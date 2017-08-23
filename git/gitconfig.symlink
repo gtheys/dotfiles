@@ -4,8 +4,8 @@
 [hub]
         protocol = https
 [user]
-        name = Geert Theys
-        email = geert.theys@gmail.com
+	name = Geert Theys
+	email = geert.theys@gmail.com
 [github]
     user = gtheys
 [init]
@@ -84,3 +84,5 @@
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
+[include]
+	path = ~/.gitconfig.reflow
