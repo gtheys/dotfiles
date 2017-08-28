@@ -10,7 +10,7 @@ if test ! $(which ruby-build)
 then
   echo "  Installing ruby-build for you."
   brew install ruby-build > /tmp/ruby-build-install.log
-  brew install rbenv-gem-rehash rbenv-default-gems
+  brew install rbenv-default-gems
   echo 'puppet' >> "$(brew --prefix rbenv)/default-gems"
   echo 'puppet-lint' >> "$(brew --prefix rbenv)/default-gems"
   echo 'bundler' >> "$(brew --prefix rbenv)/default-gems"
