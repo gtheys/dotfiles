@@ -27,6 +27,7 @@ brew install vagrant
 brew install ansible
 brew install terraform
 brew install packer
+brew install fzf
 
 # install neovim
 brew install neovim/neovim/neovim

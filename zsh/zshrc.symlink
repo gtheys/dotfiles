@@ -1,3 +1,10 @@
+# INTERNAL UTILITY FUNCTIONS {{{1
+
+# Returns whether the given command is executable or aliased.
+_has() {
+  return $( whence $1 >/dev/null )
+}
+
 # want my zsh plugins connected too
 # Changed ZSH to CZSH because it conflicts with oh-my-zsh
 # added ZSH for oh-my-zsh
@@ -91,3 +98,17 @@ function code {
         open -a "Visual Studio Code" "$argPath"
     fi
   }
+
+# fzf + ag configuration
+# This file is generated when setup
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+if _has fzf && _has ag; then
+  export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_DEFAULT_OPTS='
+  --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
+  --color info:108,prompt:109,spinner:108,pointer:168,marker:168
+  '
+fi

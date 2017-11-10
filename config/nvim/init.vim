@@ -7,6 +7,7 @@ Plug 'chriskempson/base16-vim'
 " utilities
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] } | Plug 'Xuyuanp/nerdtree-git-plugin' | Plug 'ryanoasis/vim-devicons'
+Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-commentary'
@@ -346,8 +347,7 @@ nnoremap <leader>/ "fyiw :/<c-r>f<cr>
 
 " inoremap <tab> <c-r>=Smart_TabComplete()<CR>
 
-map <leader>r :call RunCustomCommand()<cr>
-" map <leader>s :call SetCustomCommand()<cr>
+map <leader>s :call SetCustomCommand()<cr>
 let g:silent_custom_command = 0
 
 " helpers for dealing with other people's code
@@ -495,12 +495,17 @@ nmap <silent> <leader>k :NERDTreeToggle<cr>
 " expand to the path of the file in the current buffer
 nmap <silent> <leader>y :NERDTreeFind<cr>
 
-" map fuzzyfinder (CtrlP) plugin
-" nmap <silent> <leader>t :CtrlP<cr>
-nmap <silent> <leader>r :CtrlPBuffer<cr>
-let g:ctrlp_map='<leader>t'
-let g:ctrlp_dotfiles=1
-let g:ctrlp_working_path_mode = 'ra'
+" FZF (replaces Ctrl-P, FuzzyFinder and Command-T)
+set rtp+=/usr/local/opt/fzf
+set rtp+=~/.fzf
+nmap ; :Buffers<CR>
+nmap <Leader>r :Tags<CR>
+nmap <Leader>t :Files<CR>
+nmap <Leader>a :Ag<CR>
+nmap <Leader>ag :Ag<space>
+
+" Tell ack.vim to use ag (the Silver Searcher) instead
+let g:ackprg = 'ag --vimgrep'
 
 " Colorscheme for Lightline
 let g:lightline = {
@@ -555,9 +560,6 @@ let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclu
 " search the nearest ancestor that contains .git, .hg, .svn
 let g:ctrlp_working_path_mode = 2
 
-" bind ,a to grep shortcut
-command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-nnoremap <leader>a :Ag<space>
 
 " don't hide quotes in json files
 let g:vim_json_syntax_conceal = 0
