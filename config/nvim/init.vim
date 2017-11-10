@@ -15,6 +15,7 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-ragtag'
 Plug 'tpope/vim-surround'
 Plug 'itchyny/lightline.vim'
+Plug 'daviesjamie/vim-base16-lightline'
 Plug 'benmills/vimux'
 Plug 'scrooloose/syntastic'
 Plug 'godlygeek/tabular'
@@ -505,6 +506,11 @@ nmap <silent> <leader>r :CtrlPBuffer<cr>
 let g:ctrlp_map='<leader>t'
 let g:ctrlp_dotfiles=1
 let g:ctrlp_working_path_mode = 'ra'
+
+" Colorscheme for Lightline
+let g:lightline = {
+\   'colorscheme': 'base16'
+\ }
 
 " Fugitive Shortcuts
 nmap <silent> <leader>gs :Gstatus<cr>
