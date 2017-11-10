@@ -15,8 +15,6 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-ragtag'
 Plug 'tpope/vim-surround'
 Plug 'benmills/vimux'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/syntastic'
 Plug 'godlygeek/tabular'
 Plug 'benekastah/neomake'
@@ -538,12 +536,6 @@ let g:ctrlp_working_path_mode = 2
 command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 nnoremap <leader>a :Ag<space>
 
-" airline options
-let g:airline_powerline_fonts=1
-"let g:airline_left_sep=''
-"let g:airline_right_sep=''
-let g:airline_theme='base16'
-
 " don't hide quotes in json files
 let g:vim_json_syntax_conceal = 0
 
@@ -563,10 +555,6 @@ if (has("gui_running"))
     set guioptions=egmrt
     set background=light
     colorscheme solarized
-    let g:airline_left_sep=''
-    let g:airline_right_sep=''
-    let g:airline_powerline_fonts=0
-    let g:airline_theme='solarized'
 endif
 
 call ApplyLocalSettings(expand('.'))
