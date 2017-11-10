@@ -14,6 +14,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-ragtag'
 Plug 'tpope/vim-surround'
+Plug 'itchyny/lightline.vim'
 Plug 'benmills/vimux'
 Plug 'scrooloose/syntastic'
 Plug 'godlygeek/tabular'
@@ -83,6 +84,8 @@ call plug#end()
 
 " load plugins from vundle
 " source ~/.vim/plugins.vim
+
+set t_Co=256 " Didn't put no gui running check as I don't use gui
 
 " Abbreviations
 abbr funciton function
