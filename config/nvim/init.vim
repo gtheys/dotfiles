@@ -83,11 +83,6 @@ call plug#end()
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" load plugins from vundle
-" source ~/.vim/plugins.vim
-
-set t_Co=256 " Didn't put no gui running check as I don't use gui
-
 " Abbreviations
 abbr funciton function
 abbr teh the
