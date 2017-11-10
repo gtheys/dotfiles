@@ -9,6 +9,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] } | Plug 'Xuyuanp/nerdtree-git-plugin' | Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
+Plug 'w0rp/ale'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-unimpaired'
@@ -18,9 +19,7 @@ Plug 'tpope/vim-surround'
 Plug 'itchyny/lightline.vim'
 Plug 'daviesjamie/vim-base16-lightline'
 Plug 'benmills/vimux'
-Plug 'scrooloose/syntastic'
 Plug 'godlygeek/tabular'
-Plug 'benekastah/neomake'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'garbas/vim-snipmate'
@@ -163,8 +162,6 @@ if has('autocmd') && !exists('autocommands_loaded')
     " autocmd! BufEnter * call ApplyLocalSettings(expand('<afile>:p:h'))
 
     autocmd BufNewFile,BufRead,BufWrite *.md syntax match Comment /\%^---\_.\{-}---$/
-
-    autocmd! BufWritePost * Neomake
 
     "Ledger stuff
     au BufNewFile,BufRead *.ldg,*.ledger setf ledger | comp ledger
@@ -507,21 +504,64 @@ nmap <Leader>ag :Ag<space>
 " Tell ack.vim to use ag (the Silver Searcher) instead
 let g:ackprg = 'ag --vimgrep'
 
+" ALE
+let g:ale_sign_warning = '▲'
+let g:ale_sign_error = '✗'
+highlight link ALEWarningSign String
+highlight link ALEErrorSign Title
+
 " Colorscheme for Lightline
+" Lightline
 let g:lightline = {
-\   'colorscheme': 'base16',
-  \   'active': {
-  \     'left':[ [ 'mode', 'paste' ],
-  \              [ 'gitbranch', 'readonly', 'filename', 'modified' ]
-  \     ]
-  \   },
-	\   'component': {
-	\     'lineinfo': ' %3l:%-2v',
-	\   },
-  \   'component_function': {
-  \     'gitbranch': 'fugitive#head',
-  \   }
-  \ }
+\ 'colorscheme': 'base16',
+\ 'active': {
+\   'left': [['mode', 'paste'], ['gitbranch', 'filename', 'modified']],
+\   'right': [['lineinfo'], ['percent'], ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
+\ },
+\ 'component': {
+\  'lineinfo': ' %3l:%-2v',
+\ },
+\ 'component_function': {
+\  'gitbranch': 'fugitive#head',
+\  },
+\ 'component_expand': {
+\   'linter_warnings': 'LightlineLinterWarnings',
+\   'linter_errors': 'LightlineLinterErrors',
+\   'linter_ok': 'LightlineLinterOK'
+\ },
+\ 'component_type': {
+\   'readonly': 'error',
+\   'linter_warnings': 'warning',
+\   'linter_errors': 'error'
+\ },
+\ }
+
+function! LightlineLinterWarnings() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d ◆', all_non_errors)
+endfunction
+function! LightlineLinterErrors() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d ✗', all_errors)
+endfunction
+function! LightlineLinterOK() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '✓ ' : ''
+endfunction
+
+" Update and show lightline but only if it's visible (e.g., not in Goyo)
+autocmd User ALELint call s:MaybeUpdateLightline()
+function! s:MaybeUpdateLightline()
+  if exists('#lightline')
+    call lightline#update()
+  end
+endfunction
 
 let g:lightline.separator = {
 	\   'left': '', 'right': ''
@@ -542,24 +582,6 @@ nmap <leader>mq :MarkedQuit<cr>
 
 " toggle Limelight
 nmap <leader>f :Limelight!!<cr>
-
-let g:neomake_javascript_jshint_maker = {
-    \ 'args': ['--verbose'],
-    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
-\ }
-autocmd FileType javascript let g:neomake_javascript_enabled_makers = findfile('.jshintrc', '.;') != '' ? ['jshint'] : ['eslint']
-
-" CtrlP ignore patterns
-" let g:ctrlp_custom_ignore = {
-"             \ 'dir': '\.git$\|node_modules$\|bower_components$\|\.hg$\|\.svn$',
-"             \ 'file': '\.exe$\|\.so$'
-"             \ }
-" only show files that are not ignored by git
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-
-" search the nearest ancestor that contains .git, .hg, .svn
-let g:ctrlp_working_path_mode = 2
-
 
 " don't hide quotes in json files
 let g:vim_json_syntax_conceal = 0
