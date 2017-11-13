@@ -42,6 +42,7 @@ Plug 'Shougo/deoplete.nvim'
 Plug 'airblade/vim-gitgutter'
 Plug 'majutsushi/tagbar'
 Plug 'rking/ag.vim'
+Plug 'wakatime/vim-wakatime'
 
 " language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
