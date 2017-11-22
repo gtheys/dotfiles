@@ -77,6 +77,7 @@ Plug 'fatih/vim-go'
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'reedes/vim-pencil'
 Plug 'ledger/vim-ledger'
+Plug 'posva/vim-vue'
 
 call plug#end()
 
