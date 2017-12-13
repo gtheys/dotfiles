@@ -177,6 +177,16 @@ if has('autocmd') && !exists('autocommands_loaded')
         autocmd FileType text         call pencil#init()
 augroup END
 
+    au FileType go nmap <leader>gt :GoDeclsDir<cr>
+    au Filetype go nmap <leader>ga <Plug>(go-alternate-edit)
+    au Filetype go nmap <leader>gah <Plug>(go-alternate-split)
+    au Filetype go nmap <leader>gav <Plug>(go-alternate-vertical)
+
+    
+    au FileType go nmap <F9> :GoCoverageToggle -short<cr>
+    au FileType go nmap <F10> :GoTest -short<cr>
+    au FileType go nmap <F12> <Plug>(go-def)
+
 endif
 
 " code folding settings
