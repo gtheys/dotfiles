@@ -67,6 +67,7 @@ Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
 Plug 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' }
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'sebdah/vim-delve', { 'for': 'go' }
 Plug 'timcharper/textile.vim', { 'for': 'textile' }
 " Plug 'tclem/vim-arduino'
 " Plug 'davidoc/taskpaper.vim'
