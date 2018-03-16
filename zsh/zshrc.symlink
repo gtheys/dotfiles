@@ -71,9 +71,6 @@ done
 
 unset config_files
 
-# should be working with the plugin aws but doesn't so hardcoded this for the moment! Need to get work done!
-source /usr/local/bin/aws_zsh_completer.sh
-
 # Base16 Shell
 # if [ -z "$THEME" ]; then
     export THEME="base16-monokai"
