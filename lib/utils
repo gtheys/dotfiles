@@ -2,7 +2,7 @@
 
 # Logging to the prompt
 e_info () {
-  printf "  [ \033[00;34m..\033[0m ] $1"
+  printf "  [ \033[00;34m..\033[0m ] $1\n"
 }
 
 e_user () {

@@ -4,7 +4,7 @@
 
 DOTFILES_ROOT="`pwd`"
 
-source ${DOTFILES_ROOT}/lib/utils
+source $DOTFILES_ROOT/lib/utils
 
 set -e
 
@@ -35,6 +35,16 @@ else
   e_info "Installing Git..."
   brew install git
   e_user "New git version will be used after you close the terminal :("
+fi
+
+# Check If I need to fetch this submodule
+# Use this for my colorschemes
+if [ -d $DOTFILES_ROOT/.config/base16-shell ]; then
+  git submodule update --recursive --quiet
+  e_info "Update Base16 colorscheme"
+else
+  git submodule update --recursive --init --quiet
+  e_success "Initialized base 16 colorscheme"
 fi
 
 echo ''
