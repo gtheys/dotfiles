@@ -4,7 +4,7 @@
 
 DOTFILES_ROOT="`pwd`"
 
-source ./lib/utils
+source ${DOTFILES_ROOT}/lib/utils
 
 set -e
 
@@ -15,10 +15,27 @@ echo ''
 # Before relying on Homebrew, check that packages can be compiled
 if ! type_exists 'gcc'; then
     e_error "The XCode Command Line Tools must be installed first."
-    printf "  Run in a terminal gcc and follow instructions for installation\n"
-    printf "  Then run: bash ~/.dotfiles/script/bootstrap\n"
+    e_info "  Run in a terminal gcc and follow instructions for installation"
+    e_info "  Then run: bash ~/.dotfiles/script/bootstrap"
     exit 1
 fi
 
+# Check for Homebrew
+if ! type_exists 'brew'; then
+    e_info "Installing Homebrew..."
+    ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
+fi
+
+# Check if git comes from Homebrew and install if needed
+if brew list | grep --quiet git; then
+  e_info "Homebrew version of git already installed!"
+else
+  e_info "Updating Homebrew..."
+  brew update
+  e_info "Installing Git..."
+  brew install git
+  e_user "New git version will be used after you close the terminal :("
+fi
+
 echo ''
-echo '  All installed!'
+echo 'All installed!'

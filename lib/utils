@@ -1,23 +1,22 @@
 #!/usr/bin/env bash
 
-# Header logging
-e_header() {
-    printf "\n$(tput setaf 7)%s$(tput sgr0)\n" "$@"
+# Logging to the prompt
+e_info () {
+  printf "  [ \033[00;34m..\033[0m ] $1"
 }
 
-# Success logging
-e_success() {
-    printf "$(tput setaf 64)✓ %s$(tput sgr0)\n" "$@"
+e_user () {
+  printf "\r  [ \033[0;33m?\033[0m ] $1 "
 }
 
-# Error logging
-e_error() {
-    printf "$(tput setaf 1)x %s$(tput sgr0)\n" "$@"
+e_success () {
+  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
 }
 
-# Warning logging
-e_warning() {
-    printf "$(tput setaf 136)! %s$(tput sgr0)\n" "$@"
+e_fail () {
+  printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
+  echo ''
+  exit
 }
 
 
