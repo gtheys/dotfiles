@@ -51,7 +51,6 @@ e_info -e "\\n\\nRunning Neovim Python install"
 pip2 install --user neovim
 pip3 install --user neovim
 
-
 # Check If I need to fetch this submodule
 # Use this for my colorschemes
 if [ -d $DOTFILES_ROOT/.config/base16-shell ]; then
@@ -61,6 +60,9 @@ else
   git submodule update --recursive --init --quiet
   e_success "Initialized base 16 colorscheme"
 fi
+
+# Install App store application
+source $DOTFILES_ROOT/script/vscode.sh
 
 echo ''
 echo 'All installed!'
