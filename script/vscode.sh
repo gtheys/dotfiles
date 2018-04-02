@@ -30,6 +30,7 @@ EXTENSIONS=(
     "sidneys1.gitconfig" \
     "vscodevim.vim" \
     "zhuangtongfa.Material-theme" \
+    "hack.font" \
 )
 
 for VARIANT in "code"
