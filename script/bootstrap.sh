@@ -64,5 +64,9 @@ fi
 # Install App store application
 source $DOTFILES_ROOT/script/vscode.sh
 
+# Switch to Oh My SZH
+e_info "Install Oh my ZSH"
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
 echo ''
 echo 'All installed!'
