@@ -80,18 +80,6 @@ BASE16_SHELL="$CZSH/.config/base16-shell/$THEME.$BACKGROUND.sh"
  [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 source $BASE16_SHELL
 
-# Visual Studio 
-
-function code {
-    if [[ $# = 0 ]]
-    then
-        open -a "Visual Studio Code"
-    else
-        local argPath="$1"
-        [[ $1 = /* ]] && argPath="$1" || argPath="$PWD/${1#./}"
-        open -a "Visual Studio Code" "$argPath"
-    fi
-  }
 
 # fzf + ag configuration
 # This file is generated when setup
@@ -107,6 +95,8 @@ if _has fzf && _has ag; then
   '
 fi
 
+# For the moment I setup NVM via my main zshrc
+# Move to topic
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
