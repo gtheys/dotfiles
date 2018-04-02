@@ -6,8 +6,6 @@ DOTFILES_ROOT="`pwd`"
 
 source $DOTFILES_ROOT/lib/utils
 
-set -e
-
 echo ''
 echo 'Bootstrapping local environment'
 echo ''
@@ -36,6 +34,23 @@ else
   brew install git
   e_user "New git version will be used after you close the terminal :("
 fi
+
+# run brew bundle and install most of our tools
+e_info "Updating Homebrew..."
+#brew bundle
+
+# Install App store application
+source $DOTFILES_ROOT/script/mas.sh
+
+# After the install, setup fzf
+e_info "\\n\\nRunning fzf install script..."
+/usr/local/opt/fzf/install --all --no-bash --no-fish
+
+# after hte install, install neovim python libraries
+e_info -e "\\n\\nRunning Neovim Python install"
+pip2 install --user neovim
+pip3 install --user neovim
+
 
 # Check If I need to fetch this submodule
 # Use this for my colorschemes
