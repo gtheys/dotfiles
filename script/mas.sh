@@ -4,9 +4,7 @@
 
 mas signout
 
-read -r -t 60 -p "What is yout Apple ID?: " appleid
 login_to_Mac_App_Store
-#mas signin --dialog "$appleid"
 
 # Mac App Store apps to install
 apps=(
