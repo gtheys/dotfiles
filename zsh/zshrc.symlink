@@ -30,9 +30,6 @@ export TERM=xterm-256color
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-# Android studio stuff
-export STUDIO_JDK=/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk
-
 # Set the editor to 
 export EDITOR='nvim -w'
 
