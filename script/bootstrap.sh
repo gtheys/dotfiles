@@ -17,9 +17,16 @@ echo ''
 echo 'Bootstrapping local environment'
 echo ''
 
-# Inialize submodule(s)"
-echo "Initializing submodule(s)"
-git submodule update --init --recursive
+# Check If I need to fetch this submodule
+# Use this for my colorschemes
+echo 'Install/Update submodules'
+if [ -d $DOTFILES_ROOT/.config/base16-shell ]; then
+  git submodule update --recursive --quiet
+  echo "Update Base16 colorscheme"
+else
+  git submodule update --recursive --init --quiet
+  echo "Initialized base 16 colorscheme"
+fi
 
 source install/link.sh
 
@@ -69,16 +76,6 @@ echo "\\n\\nRunning fzf install script..."
 echo -e "\\n\\nRunning Neovim Python install"
 pip2 install --user neovim
 pip3 install --user neovim
-
-# Check If I need to fetch this submodule
-# Use this for my colorschemes
-if [ -d $DOTFILES_ROOT/.config/base16-shell ]; then
-  git submodule update --recursive --quiet
-  echo "Update Base16 colorscheme"
-else
-  git submodule update --recursive --init --quiet
-  echo "Initialized base 16 colorscheme"
-fi
 
 # Install App store application
 source $DOTFILES_ROOT/script/vscode.sh
