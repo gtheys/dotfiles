@@ -27,6 +27,10 @@ brew 'ansible'
 brew 'terraform'
 brew 'packer'
 
+# Programming
+brew 'python'
+brew 'rbenv'
+
 # install neovim
 brew 'neovim', args: ['HEAD']
 
