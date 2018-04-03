@@ -55,6 +55,12 @@ brew bundle
 # Install App store application
 source $DOTFILES_ROOT/script/mas.sh
 
+# After install setup default gems
+# Used in my git hooks
+echo 'puppet' >> "$(brew --prefix rbenv)/default-gems"
+echo 'puppet-lint' >> "$(brew --prefix rbenv)/default-gems"
+echo 'bundler' >> "$(brew --prefix rbenv)/default-gems"
+
 # After the install, setup fzf
 echo "\\n\\nRunning fzf install script..."
 /usr/local/opt/fzf/install --all --no-bash --no-fish
