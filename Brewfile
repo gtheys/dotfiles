@@ -30,6 +30,7 @@ brew 'packer'
 # Programming
 brew 'python'
 brew 'rbenv'
+brew 'go'
 brew 'ruby-build'
 brew 'rbenv-default-gems'
 
