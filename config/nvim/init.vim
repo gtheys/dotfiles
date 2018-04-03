@@ -386,8 +386,12 @@ call plug#begin('~/.config/nvim/plugged')
 
     " Open selection in carbon.now.sh
     Plug 'kristijanhusak/vim-carbon-now-sh'
+
 	" a simple tool for presenting slides in vim based on text files
 	Plug 'sotte/presenting.vim', { 'for': 'markdown' }
+
+	" Add wakatime
+	Plug 'wakatime/vim-wakatime'
 
 	" Close buffers but keep splits
 	Plug 'moll/vim-bbye'
@@ -504,6 +508,11 @@ call plug#begin('~/.config/nvim/plugged')
 		nmap <silent><leader>gr :Gread<cr>
 		nmap <silent><leader>gb :Gblame<cr>
 	" }}}
+
+	" vim-gutentags {{{
+		Plug 'ludovicchabant/vim-gutentags' " extension to load tags for a project
+	" }}}
+
 
 	" ALE {{{
 		Plug 'w0rp/ale' " Asynchonous linting engine
