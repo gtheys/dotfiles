@@ -521,6 +521,11 @@ call plug#begin('~/.config/nvim/plugged')
 		let g:ale_fixers['javascript'] = ['prettier']
 		let g:ale_javascript_prettier_use_local_config = 1
 		let g:ale_fix_on_save = 0
+
+		nmap <silent> <leader>aj :ALENext<cr>
+		nmap <silent> <leader>ak :ALEPrevious<cr>
+		nmap <silent> <leader>af :ALEFix<cr>
+		
 	" }}}
 
 	" UltiSnips {{{
