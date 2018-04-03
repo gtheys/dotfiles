@@ -2,13 +2,9 @@
 
 ## dotfiles
 
-I used [Holmans](https://github.com/holman/) dotfiles for a long time. But my dotfiles were getting more and more personal. I liked his topical organisation and his bootstrapping/install method.
+Over time you copy dotfiles and more and more you adapt them. Adding things you see in other dotfiles or even adding your own flavors.
 
-I'm no longer using a fork of his dotfiles as I'm personalising my dotfiles more and more.
-
-But still a lot of credit to Holman!
-
-I have to give additional credit to [Nick Nisi](https://github.com/nicknisi) because his dotfiles are great for vim and tmux. Using his githooks as example for puppet and yaml checking.
+Credit to [Holmans](https://github.com/holman/) and [Nick Nisi](https://github.com/nicknisi).
 
 ## install
 
@@ -17,17 +13,14 @@ Run this:
 ```sh
 git clone https://github.com/gtheys/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-script/bootstrap
+script/bootstrap.sh
 ```
 
 This will symlink the appropriate files in `.dotfiles` to your home directory.
 Everything is configured and tweaked within `~/.dotfiles`.
 
-The main file you'll want to change right off the bat is `zsh/zshrc.symlink`,
-which sets up a few paths that'll be different on your particular machine.
-
-`dot` is a simple script that installs some dependencies, sets sane OS X
-defaults, and so on. Tweak this script, and occasionally run `dot` from
+`update` is a simple script that installs some dependencies, sets sane OS X
+defaults, and so on. Tweak this script, and occasionally run `update` from
 time to time to keep your environment fresh and up-to-date. You can find
 this script in `bin/`.
 
@@ -38,6 +31,12 @@ forked dotfiles — say, "Java" — you can simply add a `java` directory and pu
 files in there. Anything with an extension of `.zsh` will get automatically
 included into your shell. Anything with an extension of `.symlink` will get
 symlinked without extension into `$HOME` when you run `script/bootstrap`.
+
+## Brew and MAS
+
+As I stopped using linux on my workstation since 2010. I run MacOSX and have a great Brew and MAS bootstrap. It runs also when `script/bootstrap.sh` is executed. You can run it seperate by `script/mas.sh` for mas and `update` for brew.
+
+Before you run the `script/mash.sh` make sure to update the App store ID's.
 
 ## what's inside
 
@@ -61,4 +60,4 @@ There's a few special files in the hierarchy.
 - **topic/\*.symlink**: Any files ending in `*.symlink` get symlinked into
   your `$HOME`. This is so you can keep all of those versioned in your dotfiles
   but still keep those autoloaded files in your home directory. These get
-  symlinked in when you run `script/bootstrap`.
+  symlinked in when you run `script/link.sh`.
