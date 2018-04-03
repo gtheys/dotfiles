@@ -44,3 +44,33 @@ do
     done
   fi
 done
+
+# Make symbolic link even if file exists
+function lnif(){
+  if [ -e "$1" ]; then
+    info "Linking $1 to $2"
+    if ( ! is_dir_exists `dirname "$2"` ); then
+      mkdir -p `dirname "$2"`
+    fi;
+    rm -rf "$2"
+    ln -s "$1" "$2"
+  fi;
+}
+
+function is_dir_exists(){
+  [[ -d "$1" ]] && return 0 || return 1
+}
+
+vscode_path="$HOME/Library/Application Support/Code"
+
+echo "Installing vscode configs ..."
+
+mkdir -p "$vscode_path/User"
+
+lnif "$DOTFILES_ROOT/vscode/settings.json" \
+      "$vscode_path/User/settings.json"
+
+lnif "$DOTFILES_ROOT/vscode/keybindings.json" \
+      "$vscode_path/User/keybindings.json"
+
+echo "Successfully installed vscode configs."

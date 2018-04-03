@@ -1,0 +1,24 @@
+{
+    "editor.fontFamily": "Hack, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontSize": 16,
+    "terminal.integrated.fontFamily": "Hack, Menlo, Monaco, 'Courier New', monospace",
+    "terminal.integrated.fontSize":16,
+    "editor.minimap.enabled": false,
+    "vim.disableAnnoyingNeovimMessage": true,
+    "workbench.sideBar.location": "right",
+    "[markdown]": {},
+    "gitlens.keymap": "chorded",
+    "workbench.iconTheme": "Monokai Pro Icons",
+    "workbench.colorTheme": "One Dark Pro",
+    "editor.cursorStyle": "block",
+    "gitlens.advanced.messages": {
+        "suppressCommitHasNoPreviousCommitWarning": false,
+        "suppressCommitNotFoundWarning": false,
+        "suppressFileNotUnderSourceControlWarning": false,
+        "suppressGitVersionWarning": false,
+        "suppressLineUncommittedWarning": false,
+        "suppressNoRepositoryWarning": false,
+        "suppressResultsExplorerNotice": false,
+        "suppressShowKeyBindingsNotice": true
+    }
+}
