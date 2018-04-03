@@ -30,6 +30,8 @@ brew 'packer'
 # Programming
 brew 'python'
 brew 'rbenv'
+brew 'ruby-build'
+brew 'rbenv-default-gems'
 
 # install neovim
 brew 'neovim', args: ['HEAD']
