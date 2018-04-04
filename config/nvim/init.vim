@@ -512,7 +512,12 @@ call plug#begin('~/.config/nvim/plugged')
 	" vim-gutentags {{{
 		Plug 'ludovicchabant/vim-gutentags' " extension to load tags for a project
 	" }}}
-
+	" Pretier {{{
+		Plug 'prettier/vim-prettier', {
+    		\ 'do': 'npm install',
+    		\ 'for': ['javascript', 'typescript', 'css', 'less', 'scss'] }
+	" }}}
+	
 
 	" ALE {{{
 		Plug 'w0rp/ale' " Asynchonous linting engine
