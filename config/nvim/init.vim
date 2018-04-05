@@ -573,6 +573,24 @@ call plug#begin('~/.config/nvim/plugged')
 		inoremap <expr><tab><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 	" }}}
 
+	" tern {{{
+		Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+		if exists('g:plugs["tern_for_vim"]')
+			let g:tern_show_argument_hints = 'on_hold'
+			let g:tern_show_signature_in_pum = 1
+			autocmd FileType javascript setlocal omnifunc=tern#Complete
+		endif
+		" tern
+		autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+	" }}}
+	
+	" tern for deoplete {{{
+		Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+		let g:tern#command = ["tern"]
+		let g:tern#arguments = ["--persistent"]
+	" }}}
+	
+
 	" UltiSnips {{{
 		Plug 'SirVer/ultisnips' " Snippets plugin
 		let g:UltiSnipsExpandTrigger="<tab>"
