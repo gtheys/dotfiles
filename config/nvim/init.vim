@@ -547,6 +547,32 @@ call plug#begin('~/.config/nvim/plugged')
 		
 	" }}}
 
+	" deoplete {{{
+		Plug 'Shougo/deoplete.nvim'
+		let g:deoplete#enable_at_startup = 1
+		if !exists('g:deoplete#omni#input_patterns')
+  			let g:deoplete#omni#input_patterns = {}
+		endif
+		" let g:deoplete#disable_auto_complete = 1
+		autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+		" Playing arounmd with this
+		" If I like it will move the the ftplugin dir
+		augroup omnifuncs
+  			autocmd!
+  			autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+ 			autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  			autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  			autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  			autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+		augroup end
+
+		" call deoplete#custom#set('ultisnips', 'matchers', ['matcher_fuzzy'])
+		
+		" deoplete tab-complete
+		inoremap <expr><tab><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+	" }}}
+
 	" UltiSnips {{{
 		Plug 'SirVer/ultisnips' " Snippets plugin
 		let g:UltiSnipsExpandTrigger="<tab>"
