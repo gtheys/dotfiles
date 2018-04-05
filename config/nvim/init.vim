@@ -393,6 +393,10 @@ call plug#begin('~/.config/nvim/plugged')
 	" Add wakatime
 	Plug 'wakatime/vim-wakatime'
 
+	" Macosx offline documentation browser
+	Plug 'rizzatti/dash.vim'
+	nmap <silent> <leader>d <Plug>DashSearch
+
 	" Close buffers but keep splits
 	Plug 'moll/vim-bbye'
 	nmap <leader>b :Bdelete<cr>
@@ -512,6 +516,7 @@ call plug#begin('~/.config/nvim/plugged')
 	" vim-gutentags {{{
 		Plug 'ludovicchabant/vim-gutentags' " extension to load tags for a project
 	" }}}
+
 	" Pretier {{{
 		Plug 'prettier/vim-prettier', {
     		\ 'do': 'npm install',
