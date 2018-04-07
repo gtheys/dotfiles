@@ -401,6 +401,9 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'moll/vim-bbye'
 	nmap <leader>b :Bdelete<cr>
 
+	" Keep vim sessions (works well with TMUX ressurect)
+	Plug 'tpope/vim-obsession'
+
 	" Writing in vim {{{{
 		Plug 'junegunn/limelight.vim'
 		Plug 'junegunn/goyo.vim'
