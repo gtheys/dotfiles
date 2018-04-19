@@ -132,4 +132,4 @@ set -g @plugin 'thewtex/tmux-mem-cpu-load'
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
 
-source ~/.dotfiles/tmux/theme.sh
+source ~/.dotfiles/tmux/base16.sh
