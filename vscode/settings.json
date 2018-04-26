@@ -20,5 +20,30 @@
         "suppressNoRepositoryWarning": false,
         "suppressResultsExplorerNotice": false,
         "suppressShowKeyBindingsNotice": true
-    }
+    },
+    "[markdown]": {
+        "editor.quickSuggestions": true,
+        // force centering in zen mode
+        "zenMode.centerLayout": true,
+        // use the beautiful duospace font when available
+        "editor.fontFamily": "iA Writer Duospace, monospace",
+        // enable word wrap, since horizontal scroll while writing isn't human
+        "editor.wordWrap": true,
+        // i don't need line numbers, i'm not coding
+        "editor.lineNumbers": "off",
+    \    // i don't need rules, i'm not coding
+        "editor.rulers": [],
+        // larger text, to improve focus on writing
+        "editor.fontSize": 18,
+        // more comfortable line height
+        "editor.lineHeight": 25,
+    },
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        {
+          "language": "vue",
+          "autoFix": true
+        },
+      ]
 }
