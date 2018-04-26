@@ -4,4 +4,4 @@
 #
 
 
-rsync -crz --delete /Users/gtheys/code/geerttheys.com/_site/ geert@kippeke:/home/geert/apps/geerttheys.com
+rsync -crz --delete ~/Code/Personal/geerttheys.com/_site/ geert@95.85.23.187:/home/geert/apps/geerttheys.com
