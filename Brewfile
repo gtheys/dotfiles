@@ -19,6 +19,8 @@ brew 'node'
 brew 'trash'
 brew 'fzf'
 
+brew 'universal-ctags/universal-ctags/universal-ctags', args ["--HEAD"] 
+
 # Devops
 #cask 'virtualbox'
 #cask 'virtualbox-extension-pack'
@@ -52,6 +54,7 @@ cask 'font-source-serif-pro'
 cask 'font-hack'
 
 # APPS
+cask 'ksdiff'
 cask '1password'
 cask 'dropbox'
 cask 'aerial'
