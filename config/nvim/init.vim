@@ -599,6 +599,9 @@ call plug#begin('~/.config/nvim/plugged')
 		\  },
 		\}
 
+		" vue support
+		Plug 'posva/vim-vue'
+
 		" match tags in html, similar to paren support
 		Plug 'gregsexton/MatchTag', { 'for': 'html' }
 
