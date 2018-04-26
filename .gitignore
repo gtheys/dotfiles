@@ -11,3 +11,5 @@ vim/vim.symlink/plugged/
 config/nvim/.netrwhist
 nvim/nvim.symlink/plugged
 
+tags
+
