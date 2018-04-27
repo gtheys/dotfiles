@@ -19,7 +19,8 @@ brew 'node'
 brew 'trash'
 brew 'fzf'
 
-brew 'universal-ctags/universal-ctags/universal-ctags', args ["--HEAD"] 
+tap 'universal-ctags/universal-ctags'
+brew 'universal-ctags', args: ['HEAD']
 
 # Devops
 #cask 'virtualbox'
