@@ -81,3 +81,7 @@ cask 'evernote'
 cask 'visual-studio-code'
 cask 'little-snitch'
 cask 'flux'
+
+# Gaming
+cask steam
+cask openttd
