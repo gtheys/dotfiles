@@ -11,6 +11,7 @@ brew 'grc'
 brew 'coreutils'
 
 # Install Binaries
+brew 'tmux'
 brew 'awscli'
 brew 'hub'
 brew 'tree'
