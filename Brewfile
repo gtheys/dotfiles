@@ -12,6 +12,7 @@ brew 'coreutils'
 
 # Install Binaries
 brew 'tmux'
+brew 'tmux-mem-cpu-load'
 brew 'awscli'
 brew 'hub'
 brew 'tree'
