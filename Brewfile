@@ -18,6 +18,7 @@ brew 'mas'
 brew 'node'
 brew 'trash'
 brew 'fzf'
+brew 'htop'
 
 brew 'universal-ctags/universal-ctags/universal-ctags', args ["--HEAD"] 
 
