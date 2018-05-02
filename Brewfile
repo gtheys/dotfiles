@@ -11,6 +11,8 @@ brew 'grc'
 brew 'coreutils'
 
 # Install Binaries
+brew 'tmux'
+brew 'tmux-mem-cpu-load'
 brew 'awscli'
 brew 'hub'
 brew 'tree'
@@ -20,7 +22,8 @@ brew 'trash'
 brew 'fzf'
 brew 'htop'
 
-brew 'universal-ctags/universal-ctags/universal-ctags', args ["--HEAD"] 
+tap 'universal-ctags/universal-ctags'
+brew 'universal-ctags', args: ['HEAD']
 
 # Devops
 #cask 'virtualbox'
@@ -53,6 +56,7 @@ cask 'font-source-code-pro'
 cask 'font-source-sans-pro'
 cask 'font-source-serif-pro'
 cask 'font-hack'
+cask 'font-dejavusansmono-nerd-font-mono'
 
 # APPS
 cask 'ksdiff'
@@ -79,3 +83,7 @@ cask 'evernote'
 cask 'visual-studio-code'
 cask 'little-snitch'
 cask 'flux'
+
+# Gaming
+cask steam
+cask openttd

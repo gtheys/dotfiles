@@ -28,7 +28,7 @@ else
   echo "Initialized base 16 colorscheme"
 fi
 
-source install/link.sh
+source script/link.sh
 
 # Before relying on Homebrew, check that packages can be compiled
 if ! type_exists 'gcc'; then
@@ -41,7 +41,7 @@ fi
 # Check for Homebrew
 if ! type_exists 'brew'; then
     echo "Installing Homebrew..."
-    ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
 # Check if git comes from Homebrew and install if needed
