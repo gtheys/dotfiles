@@ -21,6 +21,7 @@ brew 'node'
 brew 'trash'
 brew 'fzf'
 brew 'htop'
+brew 'the_silver_searcher'
 
 tap 'universal-ctags/universal-ctags'
 brew 'universal-ctags', args: ['HEAD']
