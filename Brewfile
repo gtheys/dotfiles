@@ -58,6 +58,7 @@ cask 'font-source-sans-pro'
 cask 'font-source-serif-pro'
 cask 'font-hack'
 cask 'font-dejavusansmono-nerd-font-mono'
+cask 'font-ia-writer-duospace'
 
 # APPS
 cask 'ksdiff'
