@@ -413,6 +413,17 @@ call plug#begin('~/.config/nvim/plugged')
 	" context-aware pasting
 	Plug 'sickill/vim-pasta'
 
+	" Vimwiki {{{
+	Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
+	set nocompatible
+	filetype plugin on
+	let g:vimwiki_autowriteall = 1
+	au BufNewFile,BufRead *.wiki set ft=markdown
+	autocmd BufNewFile,BufReadPost *.wiki set ft=markdown
+	let g:vimwiki_list = [{'path': '~/vimwiki/',
+                       \ 'syntax': 'markdown', 'ext': '.md'}]
+	"}}}
+
 	" NERDTree {{{
 		Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 		Plug 'Xuyuanp/nerdtree-git-plugin'
