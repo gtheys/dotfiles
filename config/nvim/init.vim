@@ -421,7 +421,7 @@ call plug#begin('~/.config/nvim/plugged')
 	let g:vimwiki_autowriteall = 1
 	au BufNewFile,BufRead *.wiki set ft=markdown
 	autocmd BufNewFile,BufReadPost *.wiki set ft=markdown
-	let g:vimwiki_list = [{'path': '~/vimwiki/',
+	let g:vimwiki_list = [{'path': '~/Google\ Drive/vimwiki/',
                        \ 'syntax': 'markdown', 'ext': '.md'}]
 	function! ToggleCalendar()
   		execute ":Calendar"
