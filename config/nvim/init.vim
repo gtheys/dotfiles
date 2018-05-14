@@ -415,6 +415,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 	" Vimwiki {{{
 	Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
+	Plug 'mattn/calendar-vim'
 	set nocompatible
 	filetype plugin on
 	let g:vimwiki_autowriteall = 1
@@ -422,6 +423,20 @@ call plug#begin('~/.config/nvim/plugged')
 	autocmd BufNewFile,BufReadPost *.wiki set ft=markdown
 	let g:vimwiki_list = [{'path': '~/vimwiki/',
                        \ 'syntax': 'markdown', 'ext': '.md'}]
+	function! ToggleCalendar()
+  		execute ":Calendar"
+  		if exists("g:calendar_open")
+    		if g:calendar_open == 1
+      			execute "q"
+      			unlet g:calendar_open
+    		else
+      			g:calendar_open = 1
+    		end
+  		else
+    		let g:calendar_open = 1
+  		end
+	endfunction
+	autocmd FileType markdown map c :call ToggleCalendar()
 	"}}}
 
 	" NERDTree {{{
