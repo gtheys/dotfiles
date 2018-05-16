@@ -617,6 +617,10 @@ call plug#begin('~/.config/nvim/plugged')
 		" deoplete tab-complete
 		inoremap <expr><tab>pumvisible() ? "\<c-n>" : "\<tab>"
 	" }}}
+	
+	" go for deoplete {{{
+	    Plug 'zchee/deoplete-go', { 'do': 'make'}
+	" }}}
 
 	" tern for deoplete {{{
 		Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
