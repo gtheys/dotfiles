@@ -436,7 +436,7 @@ call plug#begin('~/.config/nvim/plugged')
     		let g:calendar_open = 1
   		end
 	endfunction
-	autocmd FileType markdown map c :call ToggleCalendar()
+	autocmd FileType markdown map <Leader>c :call ToggleCalendar()
 	"}}}
 
 	" NERDTree {{{
