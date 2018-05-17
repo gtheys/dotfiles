@@ -591,6 +591,22 @@ call plug#begin('~/.config/nvim/plugged')
 		nmap <silent> <leader>af :ALEFix<cr>
 		
 	" }}}
+	
+	" tagbar {{{
+	" Try to see if this is useful 
+	    Plug 'majutsushi/tagbar'
+	" Goal with vimwiki is to replace taskpaper functionality
+	" this is not working yet
+	    let g:tagbar_type_vimwiki = {
+          \   'ctagstype':'vimwiki'
+          \ , 'kinds':['h:header']
+          \ , 'sro':'&&&'
+          \ , 'kind2scope':{'h':'header'}
+          \ , 'sort':0
+          \ , 'ctagsbin':'~/.dotfiles/bin/vwtags.py'
+          \ , 'ctagsargs': 'default'
+          \ }
+	" }}}
 
 	" deoplete {{{
 		Plug 'Shougo/deoplete.nvim'
