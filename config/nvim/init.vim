@@ -408,6 +408,40 @@ call plug#begin('~/.config/nvim/plugged')
 		Plug 'junegunn/limelight.vim'
 		Plug 'junegunn/goyo.vim'
 		let g:limelight_conceal_ctermfg = 240
+		Plug 'mbbill/undotree'
+		" === UndoTree
+		" using relative positioning instead
+		let g:undotree_CustomUndotreeCmd = 'vertical 32 new'
+		let g:undotree_CustomDiffpanelCmd= 'belowright 12 new'
+
+		" === Goyo
+		" changing from the default 80 to accomodate for UndoTree panel
+		let g:goyo_width = 104
+
+		" to automatically start UndoTree and Limelight when firing up Goyo
+		" (see more in Goyo project repo)
+		function! s:goyo_enter()
+		    Limelight
+		    let g:ale_enabled=0
+		    silent !tmux set status off
+		    silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+		    set noshowmode
+		    set noshowcmd
+		    set scrolloff=999
+		endfunction
+
+		function! s:goyo_leave()
+		    Limelight!
+		    let g:ale_enabled=1
+		    silent !tmux set status on
+		    silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+		    set showmode
+		    set showcmd
+		    set scrolloff=5
+		endfunction
+
+		autocmd! User GoyoEnter nested call <SID>goyo_enter()
+		autocmd! User GoyoLeave nested call <SID>goyo_leave()
 	" }}}
 
 	" context-aware pasting
