@@ -604,7 +604,7 @@ call plug#begin('~/.config/nvim/plugged')
 	
 
 	" ALE {{{
-		Plug 'w0rp/ale' " Asynchonous linting engine
+		Plug 'gtheys/ale' " Asynchonous linting engine
 		let g:ale_change_sign_column_color = 0
 		let g:ale_sign_column_always = 1
 		let g:ale_sign_error = '✖'
