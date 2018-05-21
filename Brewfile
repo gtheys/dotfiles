@@ -3,6 +3,7 @@ cask_args appdir: '/Applications'
 tap 'homebrew/bundle'
 tap 'caskroom/cask'
 tap 'caskroom/fonts'
+tap ValeLint/vale
 
 tap 'neovim/neovim'
 
@@ -43,6 +44,7 @@ brew 'rbenv-default-gems'
 
 # install neovim
 brew 'neovim', args: ['HEAD']
+brew vale
 
 # Quicklook
 cask 'qlcolorcode'
