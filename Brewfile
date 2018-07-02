@@ -23,6 +23,7 @@ brew 'trash'
 brew 'fzf'
 brew 'htop'
 brew 'the_silver_searcher'
+brew 'ranger'
 
 tap 'universal-ctags/universal-ctags'
 brew 'universal-ctags', args: ['HEAD']
