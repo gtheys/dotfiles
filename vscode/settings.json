@@ -30,7 +30,7 @@
         "editor.wordWrap": true,
         // i don't need line numbers, i'm not coding
         "editor.lineNumbers": "off",
-    \    // i don't need rules, i'm not coding
+        // i don't need rules, i'm not coding
         "editor.rulers": [],
         // larger text, to improve focus on writing
         "editor.fontSize": 18,
