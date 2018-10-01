@@ -44,5 +44,13 @@
           "language": "vue",
           "autoFix": true
         },
-      ]
+    ],
+    "gitProjectManager.baseProjectsFolders": [       
+        "/Users/gtheys/Code/AXA",
+        "/Users/gtheys/Code/Personal",
+        "/Users/gtheys/Code/go/src/github.com/gtheys"
+    ],
+    "gitProjectManager.displayProjectPath": true,
+    "gitProjectManager.openInNewWindow": true,
+    "gitProjectManager.storeRepositoriesBetweenSessions": true
 }
