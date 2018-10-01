@@ -6,7 +6,6 @@
     "editor.minimap.enabled": false,
     "vim.disableAnnoyingNeovimMessage": true,
     "workbench.sideBar.location": "right",
-    "[markdown]": {},
     "gitlens.keymap": "chorded",
     "workbench.iconTheme": "Monokai Pro Icons",
     "workbench.colorTheme": "One Dark Pro",
