@@ -759,7 +759,14 @@ call plug#begin('~/.config/nvim/plugged')
 		let g:vim_json_syntax_conceal = 0
 	" }}}
 
-	Plug 'fatih/vim-go', { 'for': 'go' }
+	" Golang {{{
+	    Plug 'fatih/vim-go', { 'for': 'go' }
+		let g:go_fmt_command = "goimports"
+		let g:go_fmt_options = {
+			\ 'gofmt': '-s',
+			\ }
+
+	" }}}
 	Plug 'timcharper/textile.vim', { 'for': 'textile' }
 	Plug 'lambdatoast/elm.vim', { 'for': 'elm' }
 	Plug 'tpope/vim-endwise', { 'for': [ 'ruby', 'bash', 'zsh', 'sh' ]}
