@@ -107,5 +107,4 @@ export NVM_DIR="$HOME/.nvm"
 # Quick add for pyenv
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
-pip install neovip install neovimm
 
