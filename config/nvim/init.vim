@@ -1,6 +1,9 @@
 " .vimrc / init.vim
 " The following vim/neovim configuration works for both Vim and NeoVim
 
+let g:python_host_prog = '/Users/gtheys/.pyenv/versions/neovim2/bin/python'
+let g:python3_host_prog = '/Users/gtheys/.pyenv/versions/neovim3/bin/python'
+
 " ensure vim-plug is installed and then load it
 call functions#PlugLoad()
 call plug#begin('~/.config/nvim/plugged')
@@ -767,6 +770,7 @@ call plug#begin('~/.config/nvim/plugged')
 			\ }
 
 	" }}}
+	Plug 'udalov/kotlin-vim'
 	Plug 'timcharper/textile.vim', { 'for': 'textile' }
 	Plug 'lambdatoast/elm.vim', { 'for': 'elm' }
 	Plug 'tpope/vim-endwise', { 'for': [ 'ruby', 'bash', 'zsh', 'sh' ]}
