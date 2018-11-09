@@ -717,11 +717,10 @@ call plug#begin('~/.config/nvim/plugged')
 		Plug 'tpope/vim-rails', { 'for': 'ruby' }
 	" }}}
 
-	" Ruby / Ruby on Rails
-	Plug 'tpope/vim-rails', { 'for': 'ruby' }
-
-	" JavaScript {{{
-		Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx', 'html'] }
+	" JavaScipt {{{
+		" Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx', 'html'] }
+		Plug 'othree/yajs.vim', { 'for': ['javascript', 'javascript.jsx', 'html'] }
+		Plug 'maxmellon/vim-jsx-pretty'
 		Plug 'moll/vim-node', { 'for': 'javascript' }
 		Plug 'mxw/vim-jsx', { 'for': ['javascript.jsx', 'javascript'] }
 		Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'], 'do': 'npm install' }
