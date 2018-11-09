@@ -94,7 +94,7 @@ call plug#begin('~/.config/nvim/plugged')
 	set foldlevel=1
 
 	" toggle invisible characters
-	set list
+	" set list
 	set listchars=tab:→\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
 	set showbreak=↪
 
@@ -110,8 +110,9 @@ call plug#begin('~/.config/nvim/plugged')
 	endif
 
 	" enable 24 bit color support if supported
-	if (has('mac') && empty($TMUX) && has("termguicolors"))
-		set termguicolors
+	    " enable 24 bit color support if supported
+	if (has("termguicolors"))
+	    set termguicolors
 	endif
 
 	" highlight conflicts
@@ -119,11 +120,14 @@ call plug#begin('~/.config/nvim/plugged')
 
 	" Load colorschemes
 	Plug 'chriskempson/base16-vim'
-	Plug 'joshdick/onedark.vim'
+	" Plug 'joshdick/onedark.vim'
+	" Plug 'morhetz/gruvbox'
+	" Fix weird FFF char thing
+	Plug 'gtheys/gruvbox'
 
 	" LightLine {{{
 		Plug 'itchyny/lightline.vim'
-		Plug 'nicknisi/vim-base16-lightline'
+Plug 'nicknisi/vim-base16-lightline'
 		" Plug 'felixjung/vim-base16-lightline'
 		let g:lightline = {
 		\	'colorscheme': 'base16',
@@ -512,6 +516,22 @@ call plug#begin('~/.config/nvim/plugged')
 	" }}}
 
 	" FZF {{{
+	"
+	let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
 		Plug '/usr/local/opt/fzf'
 		Plug 'junegunn/fzf.vim'
 		let g:fzf_layout = { 'down': '~25%' }
@@ -628,7 +648,7 @@ call plug#begin('~/.config/nvim/plugged')
 		nmap <silent> <leader>af :ALEFix<cr>
 		
 	" }}}
-	
+
 	" tagbar {{{
 	" Try to see if this is useful 
 	    Plug 'majutsushi/tagbar'
@@ -785,9 +805,13 @@ call plug#end()
 		let base16colorspace=256
 		source ~/.vimrc_background
 	else
-		let g:onedark_termcolors=16
-		let g:onedark_terminal_italics=1
-		colorscheme onedark
+		" let g:onedark_termcolors=16
+		" let g:onedark_terminal_italics=1
+		set background=dark
+		colorscheme gruvbox
+		let g:gruvbox_italic=1
+		let g:gruvbox_termcolors=16
+		let g:gruvbox_invert_indent_guides=1
 	endif
 	syntax on
 	filetype plugin indent on

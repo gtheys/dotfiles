@@ -1,6 +1,7 @@
 {
-    "editor.fontFamily": "Hack, Menlo, Monaco, 'Courier New', monospace",
-    "editor.fontSize": 16,
+    "editor.fontFamily": "Fira Code",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 17,
     "terminal.integrated.fontFamily": "Hack, Menlo, Monaco, 'Courier New', monospace",
     "terminal.integrated.fontSize":16,
     "editor.minimap.enabled": false,
@@ -8,7 +9,7 @@
     "workbench.sideBar.location": "right",
     "gitlens.keymap": "chorded",
     "workbench.iconTheme": "Monokai Pro Icons",
-    "workbench.colorTheme": "One Dark Pro",
+    "workbench.colorTheme": "Gruvbox Dark (Medium)",
     "editor.cursorStyle": "block",
     "gitlens.advanced.messages": {
         "suppressCommitHasNoPreviousCommitWarning": false,

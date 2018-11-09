@@ -24,7 +24,7 @@ export PROJECTS=~/Code
 export CLICOLOR=1
 
 # Set colors to match iTerm2 Terminal Colors
-export TERM=xterm-256color
+# export TERM=xterm-256color
 
 # Some Locales
 export LANG=en_US.UTF-8
@@ -76,7 +76,7 @@ fi
 
 # Base16 Shell
 if [ -z "$THEME" ]; then
-    export THEME="base16-onedark"
+    export THEME="base16-gruvbox-dark-medium"
 fi
 
 BASE16_SHELL="$CZSH/.config/base16-shell/scripts/$THEME.sh"
@@ -108,3 +108,10 @@ export NVM_DIR="$HOME/.nvm"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /Users/gtheys/.nvm/versions/node/v9.2.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/gtheys/.nvm/versions/node/v9.2.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /Users/gtheys/.nvm/versions/node/v9.2.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/gtheys/.nvm/versions/node/v9.2.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
