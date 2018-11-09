@@ -120,14 +120,14 @@ call plug#begin('~/.config/nvim/plugged')
 
 	" Load colorschemes
 	Plug 'chriskempson/base16-vim'
-	" Plug 'joshdick/onedark.vim'
+	Plug 'joshdick/onedark.vim'
 	" Plug 'morhetz/gruvbox'
 	" Fix weird FFF char thing
-	Plug 'gtheys/gruvbox'
+	" Plug 'gtheys/gruvbox'
 
 	" LightLine {{{
 		Plug 'itchyny/lightline.vim'
-Plug 'nicknisi/vim-base16-lightline'
+		  Plug 'nicknisi/vim-base16-lightline'
 		" Plug 'felixjung/vim-base16-lightline'
 		let g:lightline = {
 		\	'colorscheme': 'base16',
@@ -788,7 +788,7 @@ Plug 'nicknisi/vim-base16-lightline'
 			\ 'gofmt': '-s',
 			\ }
 	    let g:go_highlight_structs = 1 
-	    let g:go_highlight_methods = 1
+	    " let g:go_highlight_methods = 1
 	    let g:go_highlight_functions = 1
 	    let g:go_highlight_operators = 1
 	    let g:go_highlight_build_constraints = 1
@@ -810,13 +810,12 @@ call plug#end()
 		let base16colorspace=256
 		source ~/.vimrc_background
 	else
-		" let g:onedark_termcolors=16
-		" let g:onedark_terminal_italics=1
-		set background=dark
-		colorscheme gruvbox
-		let g:gruvbox_italic=1
-		let g:gruvbox_termcolors=16
-		let g:gruvbox_invert_indent_guides=1
+		let g:onedark_termcolors=16
+		let g:onedark_terminal_italics=1
+		" set background=dark
+		colorscheme onedark
+		" let g:gruvbox_italic=1
+		" let g:gruvbox_termcolors=16
 	endif
 	syntax on
 	filetype plugin indent on
