@@ -87,3 +87,5 @@
 	smudge = git-lfs smudge -- %f
 [include]
 	path = ~/.gitconfig.reflow
+[url "git@github.com:"]
+	insteadOf = https://github.com/
