@@ -45,7 +45,7 @@ brew 'rbenv-default-gems'
 
 # install neovim
 brew 'neovim', args: ['HEAD']
-brew vale
+brew 'vale'
 
 # Quicklook
 cask 'qlcolorcode'
@@ -90,5 +90,5 @@ cask 'little-snitch'
 cask 'flux'
 
 # Gaming
-cask steam
-cask openttd
+cask 'steam'
+cask 'openttd'
