@@ -109,6 +109,7 @@ export NVM_DIR="$HOME/.nvm"
 # Quick add for pyenv
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+export PYENV_ROOT="$HOME/.pyenv"
 
 
 # tabtab source for serverless package
