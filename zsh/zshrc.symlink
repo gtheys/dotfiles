@@ -5,6 +5,8 @@ _has() {
   return $( whence $1 >/dev/null )
 }
 
+[[ -e ~/.terminfo ]] && export TERMINFO_DIRS=~/.terminfo:/usr/share/terminfo
+
 # want my zsh plugins connected too
 # Changed ZSH to CZSH because it conflicts with oh-my-zsh
 # added ZSH for oh-my-zsh
