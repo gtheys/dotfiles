@@ -88,6 +88,16 @@ cask 'evernote'
 cask 'visual-studio-code'
 cask 'little-snitch'
 cask 'flux'
+cask 'the-unarchiver'
+
+# Work
+brew 'kubernetes-cli'
+brew 'helm'
+brew 'yarn'
+brew 'mkcert'
+brew 'gettext'
+brew 'git-buildnumber'
+brew 'minikube'
 
 # Gaming
 cask 'steam'
