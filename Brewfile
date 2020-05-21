@@ -3,7 +3,7 @@ cask_args appdir: '/Applications'
 tap 'homebrew/bundle'
 tap 'caskroom/cask'
 tap 'caskroom/fonts'
-tap ValeLint/vale
+tap 'ValeLint/vale'
 
 tap 'neovim/neovim'
 
