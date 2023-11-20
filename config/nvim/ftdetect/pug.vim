@@ -1,1 +1,0 @@
-au BufNewFile,BufRead *.pug set syntax=pug

@@ -1,7 +1,0 @@
-#!/bin/sh
-#
-# rsync my blog (I have ssh keys setup with my digitalocean setup)
-#
-
-
-rsync -crz --delete ~/Code/Personal/geerttheys.com/_site/ geert@95.85.23.187:/home/geert/apps/geerttheys.com

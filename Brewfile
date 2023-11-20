@@ -1,104 +1,65 @@
-cask_args appdir: '/Applications'
+# vim:ft=ruby
 
-tap 'homebrew/bundle'
-tap 'caskroom/cask'
-tap 'caskroom/fonts'
-tap 'ValeLint/vale'
+if OS.mac?
+    # taps
+    tap "homebrew/cask"
+    tap "homebrew/cask-fonts"
+    tap "koekeishiya/formulae"
 
-tap 'neovim/neovim'
+    brew "noti" # utility to display notifications from scripts
+    brew "trash" # rm, but put in the trash rather than completely delete
 
-# Install homebrew packages
-brew 'grc' 
-brew 'coreutils'
+    # Applications
+    cask "kitty" # a better terminal emulator
+    cask "imageoptim" # a tool to optimize images
+    cask "1password/tap/1password-cli"
+    cask "wezterm" # a better terminal emulator
 
-# Install Binaries
-brew 'tmux'
-brew 'tmux-mem-cpu-load'
-brew 'awscli'
-brew 'hub'
-brew 'tree'
-brew 'mas'
-brew 'node'
-brew 'trash'
-brew 'fzf'
-brew 'htop'
-brew 'the_silver_searcher'
-brew 'ranger'
+    # yabai
+    brew "yabai"
+    brew "skhd"
 
-tap 'universal-ctags/universal-ctags'
-brew 'universal-ctags', args: ['HEAD']
+    # Fonts
+    cask "font-fira-code"
+    cask "font-jetbrains-mono"
+    cask "font-cascadia-mono"
+    cask "font-symbols-only-nerd-font"
+    cask "font-recursive-code"
+elsif OS.linux?
+    brew "xclip" # access to clipboard (similar to pbcopy/pbpaste)
+end
 
-# Devops
-#cask 'virtualbox'
-#cask 'virtualbox-extension-pack'
-cask 'vagrant'
-brew 'ansible'
-brew 'terraform'
-brew 'packer'
+tap "homebrew/bundle"
+tap "homebrew/core"
 
-# Programming
-brew 'python'
-brew 'rbenv'
-brew 'go'
-brew 'ruby-build'
-brew 'rbenv-default-gems'
-
-# install neovim
-brew 'neovim', args: ['HEAD']
-brew 'vale'
-
-# Quicklook
-cask 'qlcolorcode'
-cask 'qlmarkdown'
-cask 'quicklook-json'
-cask 'quicklook-csv'
-cask 'qlstephen'
-
-# Fonts
-cask 'font-source-code-pro-for-powerline'
-cask 'font-source-code-pro'
-cask 'font-source-sans-pro'
-cask 'font-source-serif-pro'
-cask 'font-hack'
-cask 'font-dejavusansmono-nerd-font-mono'
-cask 'font-ia-writer-duospace'
-
-# APPS
-cask 'ksdiff'
-cask '1password'
-cask 'dropbox'
-cask 'aerial'
-cask 'alfred'
-cask 'caffeine'
-cask 'docker'
-cask 'google-backup-and-sync'
-cask 'google-chrome'
-cask 'authy'
-cask 'iterm2'
-cask 'java'
-cask 'now'
-cask 'sequel-pro'
-cask 'slack'
-cask 'torbrowser'
-cask 'tower'
-cask 'transmit'
-cask 'vlc'
-cask 'paw'  
-cask 'evernote'
-cask 'visual-studio-code'
-cask 'little-snitch'
-cask 'flux'
-cask 'the-unarchiver'
-
-# Work
-brew 'kubernetes-cli'
-brew 'helm'
-brew 'yarn'
-brew 'mkcert'
-brew 'gettext'
-brew 'git-buildnumber'
-brew 'minikube'
-
-# Gaming
-cask 'steam'
-cask 'openttd'
+# packages
+brew "bat" # better cat
+brew "cloc" # lines of code counter
+brew "entr" # file watcher / command runner
+brew "exa" # ls alternative
+brew "fd" # find alternative
+brew "fnm" # Fast Node version manager
+brew "fzf" # Fuzzy file searcher, used in scripts and in vim
+brew "gh" # GitHub CLI
+brew "git" # Git version control (latest version)
+brew "git-delta" # a better git diff
+brew "glow" # markdown viewer
+brew "gnupg" # GPG
+brew "grep" # grep (latest)
+brew "highlight" # code syntax highlighting
+brew "htop" # a top alternative
+brew "jq" # work with JSON files in shell scripts
+brew "lazygit" # a better git UI
+brew "neofetch" # pretty system info
+brew "neovim" # A better vim
+brew "python" # python (latst)
+brew "ripgrep" # very fast file searcher
+brew "shellcheck" # diagnostics for shell sripts
+brew "tmux" # terminal multiplexer
+brew "tree" # pretty-print directory contents
+brew "vim" # Vim (latest)
+brew "wdiff" # word differences in text files
+brew "wget" # internet file retriever
+brew "z" # switch between most used directories
+brew "zoxide" # switch between most used directories
+brew "zsh" # zsh (latest)
