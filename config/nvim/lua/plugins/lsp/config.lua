@@ -7,8 +7,15 @@ local border = theme.border
 local format_group = vim.api.nvim_create_augroup("LspFormatting", { clear = true })
 local null_ls = require("null-ls")
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
+local util = require("lspconfig/util")
 
 local M = {}
+
+local root_patterns = {
+  util.root_pattern("go.mod", ".git"),
+  util.root_pattern("package.json", ".git"),
+  util.root_pattern("pyproject.toml", ".git"),
+}
 
 local function format_async(err, _, result, _, bufnr)
   if err ~= nil or result == nil then
@@ -98,32 +105,34 @@ vim.api.nvim_create_autocmd("LspAttach", {
 function M.setup()
   mason.setup({ ui = { border = border } })
 
-  null_ls.setup({
-    border = border,
-    root_dir = require("lspconfig/util").root_pattern("package.json", ".git"),
-    on_attach = function(client, bufnr)
-      if client.supports_method("textDocument/formatting") then
-        vim.api.nvim_clear_autocmds({ group = format_group, buffer = bufnr })
-        vim.api.nvim_create_autocmd("BufWritePre", {
-          group = format_group,
-          buffer = bufnr,
-          callback = function()
-            vim.lsp.buf.format({
-              ---@diagnostic disable-next-line: redefined-local
-              filter = function(client)
-                return client.name == "null-ls"
-              end,
-              bufnr = bufnr,
-            })
-          end,
-        })
-      end
-    end,
-  })
+  for _, root_pattern in ipairs(root_patterns) do
+    null_ls.setup({
+      border = border,
+      root_dir = root_pattern,
+      on_attach = function(client, bufnr)
+        if client.supports_method("textDocument/formatting") then
+          vim.api.nvim_clear_autocmds({ group = format_group, buffer = bufnr })
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            group = format_group,
+            buffer = bufnr,
+            callback = function()
+              vim.lsp.buf.format({
+                ---@diagnostic disable-next-line: redefined-local
+                filter = function(client)
+                  return client.name == "null-ls"
+                end,
+                bufnr = bufnr,
+              })
+            end,
+          })
+        end
+      end,
+    })
+  end
 
   mason_null_ls.setup({
     automatic_installation = true,
-    ensure_installed = { "stylua", "prettier" },
+    ensure_installed = { "goimports", "stylua", "prettier" },
     handlers = {
       function(source_name, methods)
         require("mason-null-ls.automatic_setup")(source_name, methods)
@@ -240,6 +249,7 @@ function M.setup()
           end,
         },
         root_dir = require("lspconfig/util").root_pattern("go.mod"),
+        single_file = true,
       }))
     end,
 
