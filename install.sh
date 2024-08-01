@@ -162,7 +162,7 @@ setup_shell() {
     fi
 
     if [[ "$SHELL" != "$zsh_path" ]]; then
-        chsh -s "$zsh_path"
+        sudo chsh -s "$zsh_path"
         info "default shell changed to $zsh_path"
     fi
 }
@@ -207,7 +207,7 @@ case "$1" in
         setup_git
         ;;
     *)
-        echo -e $"\nUsage: $(basename "$0") {backup|link|git|homebrew|shell|terminfo|macos|all}\n"
+        echo -e $"\nUsage: $(basename "$0") {backup|link|git|homebrew|shell|terminfo|all}\n"
         exit 1
         ;;
 esac
