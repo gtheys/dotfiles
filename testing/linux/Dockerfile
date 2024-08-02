@@ -2,7 +2,7 @@ FROM ubuntu
 
 # Install dependencies
 RUN apt-get update
-RUN apt-get install -y build-essential file zsh git sudo ruby curl vim language-pack-en
+RUN apt-get install -y build-essential file zsh git sudo ruby curl vim neovim language-pack-en
 
 # take an SSH key as a build argument
 ARG PRIVATE_KEY
@@ -18,10 +18,10 @@ USER user:user
 WORKDIR /home/user
 RUN touch .bash_profile
 RUN mkdir -p .ssh
-RUN echo "$PRIVATE_KEY" > .ssh/id_rsa
-RUN echo "$PUBLIC_KEY" > .ssh/id_rsa.pub
-RUN chmod 600 .ssh/id_rsa
-RUN chmod 600 .ssh/id_rsa.pub
+RUN echo "$PRIVATE_KEY" > .ssh/id_ed25519
+RUN echo "$PUBLIC_KEY" > .ssh/id_ed25519.pub
+RUN chmod 600 .ssh/id_ed25519
+RUN chmod 600 .ssh/id_ed25519.pub
 RUN ssh-keyscan github.com >> .ssh/known_hosts
 
 RUN mkdir -p code
