@@ -35,7 +35,6 @@ setopt NO_HUP                    # don't kill background jobs when the shell exi
 setopt NO_LIST_BEEP
 setopt LOCAL_OPTIONS
 setopt LOCAL_TRAPS
-setopt PROMPT_SUBST
 
 # history
 HISTFILE=~/.zsh_history
@@ -160,5 +159,5 @@ done
 # If a ~/.localrc zshrc exists, source it
 [[ -a ~/.localrc ]] && source ~/.localrc
 
-# Created by `pipx` on 2023-10-23 09:19:33
 export PATH="$PATH:/home/geert/.local/bin"
+eval "$(starship init zsh)"
