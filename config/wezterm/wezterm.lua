@@ -1,7 +1,8 @@
-local wezterm = require("wezterm")
+local os                = require 'os'
+local wezterm           = require 'wezterm'
+local act               = wezterm.action
 
-
-local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider
+local SOLID_LEFT_ARROW  = wezterm.nerdfonts.pl_right_hard_divider
 local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
 
 function tab_title(tab_info)
@@ -71,12 +72,12 @@ local config = {
     {
       key = 'n',
       mods = 'LEADER',
-      action = wezterm.action.TogglePaneZoomState,
+      action = act.TogglePaneZoomState,
     },
     {
       key = ',',
       mods = 'LEADER',
-      action = wezterm.action.PromptInputLine {
+      action = act.PromptInputLine {
         description = 'Enter new name for tab',
         action = wezterm.action_callback(
           function(window, pane, line)
@@ -90,28 +91,65 @@ local config = {
     {
       key = 'c',
       mods = 'LEADER',
-      action = wezterm.action.SpawnTab 'CurrentPaneDomain',
+      action = act.SpawnTab 'CurrentPaneDomain',
     },
     {
       key = 'n',
       mods = 'LEADER',
-      action = wezterm.action.ActivateTabRelative(1),
+      action = act.ActivateTabRelative(1),
     },
     {
       key = 'p',
       mods = 'LEADER',
-      action = wezterm.action.ActivateTabRelative(-1),
+      action = act.ActivateTabRelative(-1),
     },
     {
       key = 'w',
       mods = 'LEADER',
-      action = wezterm.action.ShowTabNavigator,
+      action = act.ShowTabNavigator,
     },
     {
       key = '&',
       mods = 'LEADER',
-      action = wezterm.action.CloseCurrentTab { confirm = true },
+      action = act.CloseCurrentTab { confirm = true },
     },
+    -- Vertical split
+    {
+      -- |
+      key = '$',
+      mods = 'LEADER',
+      action = act.SplitPane {
+        direction = 'Right',
+        size = { Percent = 50 },
+      },
+    },
+    -- Horizontal split
+    {
+      -- -
+      key = '-',
+      mods = 'LEADER',
+      action = act.SplitPane {
+        direction = 'Down',
+        size = { Percent = 50 },
+      },
+    },
+    {
+      -- |
+      key = '¨',
+      mods = 'LEADER|SHIFT',
+      action = act.PaneSelect { mode = 'SwapWithActiveKeepFocus' }
+    },
+    {
+      key = ';',
+      mods = 'LEADER',
+      action = act.ActivatePaneDirection('Prev'),
+    },
+    {
+      key = 'o',
+      mods = 'LEADER',
+      action = act.ActivatePaneDirection('Next'),
+    },
+
   },
   -- font config
   font = wezterm.font("Monaspace Neon", { weight = "Regular" }),
@@ -126,6 +164,8 @@ local config = {
   line_height = 1.1,
   adjust_window_size_when_changing_font_size = false,
 
+  pane_focus_follows_mouse = true,
+  scrollback_lines = 5000,
   -- keys config
   send_composed_key_when_left_alt_is_pressed = true,
   send_composed_key_when_right_alt_is_pressed = false,
