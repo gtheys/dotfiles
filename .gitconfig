@@ -1,0 +1,18 @@
+[core]
+    editor = nvim
+	autocrlf = false
+[alias]
+    co = checkout
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    l = log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)%an%C(reset) - %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    # submodule shortcuts
+    si = submodule init
+    su = submodule update
+    sub = "!git submodule sync && git submodule update"
+[fetch]
+    prune = true
+[user]
+	email = geert.theys@gmail.com
+	name = Geert Theys
+[safe]
+	directory = C:/Users/geert/code/Windots

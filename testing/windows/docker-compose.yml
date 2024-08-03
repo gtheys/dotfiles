@@ -7,6 +7,7 @@ services:
       RAM_SIZE: "8G"
       CPU_CORES: "4"
       DISK_SIZE: "60G"
+      KEYBOARD: "fr-FR"
     devices:
       - /dev/kvm
     cap_add:
@@ -18,3 +19,4 @@ services:
     stop_grace_period: 2m
     volumes:
       - ./data/:/storage
+      - ../../.:/shared
