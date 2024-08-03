@@ -60,6 +60,59 @@ local config = {
     bottom = 2,
   },
 
+  -- key configuration
+  leader = {
+    key = 'a',
+    mods = 'CTRL',
+    timeout_milliseconds = 2000,
+  },
+  keys = {
+
+    {
+      key = 'n',
+      mods = 'LEADER',
+      action = wezterm.action.TogglePaneZoomState,
+    },
+    {
+      key = ',',
+      mods = 'LEADER',
+      action = wezterm.action.PromptInputLine {
+        description = 'Enter new name for tab',
+        action = wezterm.action_callback(
+          function(window, pane, line)
+            if line then
+              window:active_tab():set_title(line)
+            end
+          end
+        ),
+      },
+    },
+    {
+      key = 'c',
+      mods = 'LEADER',
+      action = wezterm.action.SpawnTab 'CurrentPaneDomain',
+    },
+    {
+      key = 'n',
+      mods = 'LEADER',
+      action = wezterm.action.ActivateTabRelative(1),
+    },
+    {
+      key = 'p',
+      mods = 'LEADER',
+      action = wezterm.action.ActivateTabRelative(-1),
+    },
+    {
+      key = 'w',
+      mods = 'LEADER',
+      action = wezterm.action.ShowTabNavigator,
+    },
+    {
+      key = '&',
+      mods = 'LEADER',
+      action = wezterm.action.CloseCurrentTab { confirm = true },
+    },
+  },
   -- font config
   font = wezterm.font("Monaspace Neon", { weight = "Regular" }),
   font_rules = {
