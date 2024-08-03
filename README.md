@@ -1,6 +1,6 @@
 # Dotfiles
 
-## Introduction
+## 🙋‍♂️Introduction
 
 My current workflow is Windows or Linux in dual boot setting. I used WSL2 before in windows but stopped doing that and work native using Powershell.
 
@@ -10,30 +10,28 @@ I am using this [Windots](https://github.com/scottmckendry/Windots) as base refe
 
 Goal is to go more and more in my own direction befitting my own workflows.
 
-``` [!note]
-This repo is a work in progress. It is full off ugly hacks and probably here and there hardcoded items like colorshemes and fonts. 
-```
+> [!note]
+> This repo is a work in progress. It is full off ugly hacks and probably here and there hardcoded items like colorshemes and fonts.
 
-## Installing
+## 🚀 Installing
 
 - Windows: ./Setup.ps1 all
 - Linux: ./install.sh all
 
-## Testing
+## 🕵🏻 Testing
 
 ### Windows
 
 I have a docker container using a windows sandbox. Check the `testing\windows` folder.
 
-``` [!warning]
-You can load the instance and the folder is in the \\host.lan\Data but I haven't been able to make winget work yet. This is a sandbox and need to figure out why it is not fetchen from the winget source. The rest of the Setup.ps1 can be tested.
-```
+> [!warning]
+> You can load the instance and the folder is in the \\host.lan\Data but I haven't been able to make winget work yet. This is a sandbox and need to figure out why it is not fetchen from the winget source. The rest of the Setup.ps1 can be tested.
 
 ### Linux
 
 There is also a docker container in `testing\linux`. For the moment you can just test the install script and the CLI. Not the gui aps like wezterm.
 
-## Applications
+## 📋Applications
 
 ### Shells
 
@@ -53,15 +51,14 @@ Why starship and not a ZSH implementation? Well it runs everyhere. Powershell, Z
 
 Yes love this terminal and same reason. It is portable between OS'es.
 
-```[!note]
-Am in the process removing TMUX from my workflow. This configuration will change a lot in the future. This way I can use panes in wezterm instead of TMUX. Again less configuration to maintain and lets face it using almost a decade now and it still sucks 😄
-```
+> [!note]
+> Am in the process removing TMUX from my workflow. This configuration will change a lot in the future. This way I can use panes in wezterm instead of TMUX. Again less configuration to maintain and lets face it using almost a decade now and it still sucks 😄
 
-## Future
+## 💡Future
 
-[ ] Want to add my windows configurations. I use tiling manager in windows and linux and want to sync their shortcuts.
-[ ] Add more specfic tweaks to the respective OS'es.
-[ ] There are loads of development environments I use and want them to de dployed automatically and on both OS'es.
-[ ] Cleanup and tidy up code - Ongoing
-[ ] Make the windows test environment work better
-[ ] Setup Gui test environment for linux to test my tiling manager configurations
+- [ ] Want to add my windows configurations. I use tiling manager in windows and linux and want to sync their shortcuts.
+- [ ] Add more specfic tweaks to the respective OS'es.
+- [ ] There are loads of development environments I use and want them to de dployed automatically and on both OS'es.
+- [ ] Cleanup and tidy up code - Ongoing
+- [ ] Make the windows test environment work better
+- [ ] Setup Gui test environment for linux to test my tiling manager configurations
