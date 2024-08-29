@@ -70,7 +70,7 @@ local config = {
   keys = {
 
     {
-      key = 'n',
+      key = 'z',
       mods = 'LEADER',
       action = act.TogglePaneZoomState,
     },
