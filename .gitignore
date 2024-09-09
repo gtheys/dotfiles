@@ -9,3 +9,5 @@ lazy-lock.json
 config/kitty/kitty-overrides.conf
 db.zo
 data*
+.aider*
+config/nushell/history.txt

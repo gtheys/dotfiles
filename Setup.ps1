@@ -25,6 +25,8 @@ $symlinks = @{
   "$HOME\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\config\windowsterminal\settings.json"
   "$HOME\.gitconfig"                                                                              = ".\.gitconfig"
   "$HOME\AppData\Roaming\lazygit"                                                                 = ".\config\lazygit"
+  "$HOME\AppData\Roaming\nushell"                                                                 = ".\config\nushell"
+  "$HOME\.glzr"                                                                                   = ".\config\glzr"
   "$ENV:PROGRAMFILES\WezTerm\wezterm_modules"                                                     = ".\config\wezterm\"
 }
 
@@ -50,6 +52,8 @@ $wingetDeps = @(
   "terraform" # Install for neovim LSP of my tofu files
   "miniconda"
   "starship.starship"
+  "glzr-io.glazewm"
+  "nushell"
 )
 
 $chocoDeps = @(
@@ -138,7 +142,8 @@ function Set-SymbolicLinks
 {
   # Create Symbolic Links
   Write-Host "Creating Symbolic Links..."
-  foreach ($symlink in $symlinks.GetEnumerator())
+  foreach($symlink in $symlinks.GetEnumerator())
+
   {
     Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
     New-Item -ItemType SymbolicLink -Path $symlink.Key -Target (Resolve-Path $symlink.Value) -Force | Out-Null
