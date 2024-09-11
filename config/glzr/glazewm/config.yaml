@@ -25,7 +25,7 @@ gaps:
 
   # Gap between windows and the screen edge.
   outer_gap:
-    top: "60px"
+    top: "100px"
     right: "20px"
     bottom: "20px"
     left: "20px"
@@ -71,10 +71,15 @@ window_behavior:
 
 workspaces:
   - name: "1"
+    display_name: "🏠 Home"
   - name: "2"
+    display_name: "🪟 Term"
   - name: "3"
+    display_name: "📝 Obsidian"
   - name: "4"
+    displayname: "Misc"
   - name: "5"
+    display_name: "⚒️  Work"
   - name: "6"
   - name: "7"
   - name: "8"
@@ -86,6 +91,11 @@ window_rules:
       # Ignores any Zebar windows.
       - window_process: { equals: "zebar" }
       - window_process: { equals: "Flow.Launcher" }
+      - window_process: { equals: "Messenger" }
+      - window_process: { equals: "Flow.Launcher" }
+
+      # WhatsApp
+      - window_class: { regex: "#32770" }
 
       # Ignores picture-in-picture windows for browsers.
       - window_title: { regex: "[Pp]icture.in.[Pp]icture" }
@@ -95,6 +105,24 @@ window_rules:
       - window_process: { equals: "PowerToys.PowerAccent" }
       - window_process: { equals: "Lively" }
         window_class: { regex: "HwndWrapper*" }
+
+  - commands: ["move --workspace 1", "focus --workspace 1"]
+    match:
+      - window_process: { equals: "firefox" }
+  - commands: ["move --workspace 2", "focus --workspace 2"]
+    match:
+      - window_process: { equals: "wezterm-gui" }
+  - commands: ["move --workspace 3", "focus --workspace 3"]
+    match:
+      - window_process: { equals: "Obsidian" }
+  - commands: ["move --workspace 4", "focus --workspace 4"]
+    match:
+      - window_process: { equals: "TIDAL" }
+      - window_process: { equals: "TIDALPlayer" }
+  - commands: ["move --workspace 5", "focus --workspace 5"]
+    match:
+      - window_process: { equals: "ms-teams" }
+      - window_process: { equals: "olk" }
 
 binding_modes:
   # When enabled, the focused window can be resized via arrow keys or HJKL.

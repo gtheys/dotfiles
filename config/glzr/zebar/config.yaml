@@ -6,18 +6,18 @@
 #
 # Docs regarding window: https://some-future-docs-link.com
 window/bar:
-  providers: ['self']
+  providers: ["self"]
   # Width of the window in physical pixels.
-  width: '{{ self.args.MONITOR_WIDTH }}'
+  width: "{{ self.args.MONITOR_WIDTH }}"
   # Height of the window in physical pixels.
-  height: '40'
+  height: "80"
   # X-position of the window in physical pixels.
-  position_x: '{{ self.args.MONITOR_X }}'
+  position_x: "{{ self.args.MONITOR_X }}"
   # Y-position of the window in physical pixels.
-  position_y: '{{ self.args.MONITOR_Y }}'
+  position_y: "{{ self.args.MONITOR_Y }}"
   # Whether to show the window above/below all others.
   # Allowed values: 'always_on_top', 'always_on_bottom', 'normal'.
-  z_order: 'normal'
+  z_order: "normal"
   # Whether the window should be shown in the taskbar.
   shown_in_taskbar: false
   # Whether the window should have resize handles.
@@ -37,7 +37,7 @@ window/bar:
     height: 100%;
     color: rgb(255 255 255 / 90%);
     font-family: ui-monospace, monospace;
-    font-size: 12px;
+    font-size: 16px;
     padding: 4px 24px;
     border-bottom: 1px solid rgb(255 255 255 / 5%);;
     background: linear-gradient(rgb(0 0 0 / 90%), rgb(5 2 20 / 85%));
@@ -81,11 +81,11 @@ window/bar:
             background: rgb(75 115 255 / 50%);
           }
         }
-      providers: ['glazewm']
+      providers: ["glazewm"]
       events:
-        - type: 'click'
-          fn_path: 'script.js#focusWorkspace'
-          selector: '.workspace'
+        - type: "click"
+          fn_path: "script.js#focusWorkspace"
+          selector: ".workspace"
       template: |
         @for (workspace of glazewm.currentWorkspaces) {
           <button
@@ -101,7 +101,7 @@ window/bar:
       justify-self: center;
 
     template/clock:
-      providers: ['date']
+      providers: ["date"]
       # Available date tokens: https://moment.github.io/luxon/#/formatting?id=table-of-tokens
       template: |
         {{ date.toFormat(date.now, 'EEE	d MMM t') }}
@@ -116,7 +116,7 @@ window/bar:
       }
 
     template/glazewm_other:
-      providers: ['glazewm']
+      providers: ["glazewm"]
       styles: |
         .binding-mode,
         .tiling-direction {
@@ -141,7 +141,7 @@ window/bar:
         }
 
     template/network:
-      providers: ['network']
+      providers: ["network"]
       template: |
         <!-- Show icon based on signal strength. -->
         @if (network.defaultInterface?.type === 'ethernet') {
@@ -158,13 +158,13 @@ window/bar:
         }
 
     template/memory:
-      providers: ['memory']
+      providers: ["memory"]
       template: |
         <i class="nf nf-fae-chip"></i>
         {{ Math.round(memory.usage) }}%
 
     template/cpu:
-      providers: ['cpu']
+      providers: ["cpu"]
       styles: |
         .high-usage {
           color: #900029;
@@ -180,7 +180,7 @@ window/bar:
         }
 
     template/battery:
-      providers: ['battery']
+      providers: ["battery"]
       styles: |
         position: relative;
 
@@ -204,7 +204,7 @@ window/bar:
         {{ Math.round(battery.chargePercent) }}%
 
     template/weather:
-      providers: ['weather']
+      providers: ["weather"]
       template: |
         @switch (weather.status) {
           @case ('clear_day') {<i class="nf nf-weather-day_sunny"></i>}
