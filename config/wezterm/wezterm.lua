@@ -14,15 +14,15 @@ function tab_title(tab_info)
 end
 
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-  local edge_background = '#1a1b26' -- Dark background
+  local edge_background = '#232634' -- Dark background
   local background = '#24283b'      -- Slightly lighter background for inactive tabs
   local foreground = '#c0caf5'      -- Light foreground for text
 
   if tab.is_active then
-    background = '#7aa2f7' -- Bright blue for active tab
-    foreground = '#1a1b26' -- Dark text for contrast on active tab
+    background = '#8caaee' -- Bright blue for active tab
+    foreground = '#232634' -- Dark text for contrast on active tab
   elseif hover then
-    background = '#3d59a1' -- Medium blue for hover state
+    background = '#99d1db' -- Medium blue for hover state
     foreground = '#c0caf5' -- Light text for hover state
   end
 
@@ -49,7 +49,7 @@ local config = {
   -- Probably can do this with launcher but need to figure it out
   default_prog = { 'pwsh.exe', '-NoLogo' },
 
-  color_scheme = "tokyonight_storm",
+  color_scheme = "Catppuccin Frappe",
   window_background_opacity = 0.85,
   enable_tab_bar = true, -- Enable the tab bar
   window_decorations = "RESIZE",
