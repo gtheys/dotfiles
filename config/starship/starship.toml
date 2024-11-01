@@ -16,6 +16,12 @@ format = "[$duration](bright-black)"
 [fill]
 symbol = ' '
 
+[python]
+format = "via [🐍 $version](bold green) "
+symbol = "🐍 "
+pyenv_version_name = true
+pyenv_prefix = "pyenv"
+
 [golang]
 symbol = " "
 
