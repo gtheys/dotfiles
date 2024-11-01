@@ -1,3 +1,31 @@
+# mocha.yaml
+rosewater: &rosewater "#f5e0dc"
+flamingo: &flamingo "#f2cdcd"
+pink: &pink "#f5c2e7"
+mauve: &mauve "#cba6f7"
+red: &red "#f38ba8"
+maroon: &maroon "#eba0ac"
+peach: &peach "#fab387"
+yellow: &yellow "#f9e2af"
+green: &green "#a6e3a1"
+teal: &teal "#94e2d5"
+sky: &sky "#89dceb"
+sapphire: &sapphire "#74c7ec"
+blue: &blue "#89b4fa"
+lavender: &lavender "#b4befe"
+text: &text "#cdd6f4"
+subtext1: &subtext1 "#bac2de"
+subtext0: &subtext0 "#a6adc8"
+overlay2: &overlay2 "#9399b2"
+overlay1: &overlay1 "#7f849c"
+overlay0: &overlay0 "#6c7086"
+surface2: &surface2 "#585b70"
+surface1: &surface1 "#45475a"
+surface0: &surface0 "#313244"
+base: &base "#1e1e2e"
+mantle: &mantle "#181825"
+crust: &crust "#11111b"
+
 general:
   # Commands to run when the WM has started (e.g. to run a script or launch
   # another application). Here we are running a batch script to start Zebar.
@@ -25,7 +53,7 @@ gaps:
 
   # Gap between windows and the screen edge.
   outer_gap:
-    top: "100px"
+    top: "90px"
     right: "20px"
     bottom: "20px"
     left: "20px"
@@ -37,13 +65,13 @@ window_effects:
     # ** Exclusive to Windows 11 due to API limitations.
     border:
       enabled: true
-      color: "#8dbcff"
+      color: *lavender
 
   # Visual effects to apply to non-focused windows.
   other_windows:
     border:
       enabled: true
-      color: "#a1a1a1"
+      color: *peach
 
 window_behavior:
   # New windows are created in this state whenever possible.
@@ -91,8 +119,7 @@ window_rules:
       # Ignores any Zebar windows.
       - window_process: { equals: "zebar" }
       - window_process: { equals: "Flow.Launcher" }
-      - window_process: { equals: "Messenger" }
-      - window_process: { equals: "Flow.Launcher" }
+      - window_process: { equals: "WhatsApp" }
 
       # WhatsApp
       - window_class: { regex: "#32770" }
@@ -123,6 +150,14 @@ window_rules:
     match:
       - window_process: { equals: "ms-teams" }
       - window_process: { equals: "olk" }
+  - commands: ["set-floating"]
+    match:
+      - window_process: { equals: "OneCommander" }
+      - window_process: { equals: "explorer" }
+      - window_process: { equals: "SnippingTool" }
+      - window_process: { equals: "WhatsApp" }
+      - window_process: { equals: "Taskmgr" }
+      - window_process: { equals: "Messenger" }
 
 binding_modes:
   # When enabled, the focused window can be resized via arrow keys or HJKL.
