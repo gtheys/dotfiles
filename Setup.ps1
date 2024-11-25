@@ -28,6 +28,8 @@ $symlinks = @{
   "$HOME\AppData\Roaming\nushell"                                                                 = ".\config\nushell"
   "$HOME\.glzr"                                                                                   = ".\config\glzr"
   "$ENV:PROGRAMFILES\WezTerm\wezterm_modules"                                                     = ".\config\wezterm\"
+  "$HOME\.config\starship.toml"                                                                   = ".\config\starship\starship.toml"
+  
 }
 
 # Winget & choco dependencies
