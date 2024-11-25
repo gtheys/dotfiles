@@ -67,14 +67,14 @@ gaps:
   scale_with_dpi: true
 
   # Gap between adjacent windows.
-  inner_gap: '20px'
+  inner_gap: '10px'
 
   # Gap between windows and the screen edge.
   outer_gap:
-    top: '60px'
-    right: '20px'
+    top: '55px'
+    right: '10px'
     bottom: '20px'
-    left: '20px'
+    left: '10px'
 
 window_effects:
   # Visual effects to apply to the focused window.
@@ -158,7 +158,7 @@ window_rules:
       - window_process: { equals: "foobar2000" }
 
       # WhatsApp
-      - window_class: { regex: "#32770" }
+      - window_class: { regex: "ApplicationFrameWindow" }
 
       # Ignores picture-in-picture windows for browsers.
       - window_title: { regex: "[Pp]icture.in.[Pp]icture" }
