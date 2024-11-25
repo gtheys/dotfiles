@@ -27,9 +27,17 @@ mantle: &mantle "#181825"
 crust: &crust "#11111b"
 
 general:
-  # Commands to run when the WM has started (e.g. to run a script or launch
-  # another application). Here we are running a batch script to start Zebar.
-  startup_commands: ["shell-exec %userprofile%/.glzr/zebar/start.bat"]
+ # Commands to run when the WM has started. This is useful for running a
+  # script or launching another application.
+  # Example: The below command launches Zebar.
+  startup_commands: ['shell-exec zebar']
+
+  # Commands to run just before the WM is shutdown.
+  # Example: The below command kills Zebar.
+  shutdown_commands: ['shell-exec taskkill /IM zebar.exe /F']
+
+  # Commands to run after the WM config is reloaded.
+  config_reload_commands: []
 
   # Whether to automatically focus windows underneath the cursor.
   focus_follows_cursor: false
@@ -45,18 +53,28 @@ general:
     # Trigger for cursor jump:
     # - 'monitor_focus': Jump when focus changes between monitors.
     # - 'window_focus': Jump when focus changes between windows.
-    trigger: "monitor_focus"
+    trigger: 'monitor_focus'
+
+  # How windows should be hidden when switching workspaces.
+  # - 'cloak': Recommended. Hides windows with no animation and keeps them
+  # visible in the taskbar.
+  # - 'hide': Legacy method (v3.5 and earlier) that has a brief animation,
+  # but has stability issues with some apps.
+  hide_method: 'cloak'
 
 gaps:
+  # Whether to scale the gaps with the DPI of the monitor.
+  scale_with_dpi: true
+
   # Gap between adjacent windows.
-  inner_gap: "20px"
+  inner_gap: '20px'
 
   # Gap between windows and the screen edge.
   outer_gap:
-    top: "90px"
-    right: "20px"
-    bottom: "20px"
-    left: "20px"
+    top: '60px'
+    right: '20px'
+    bottom: '20px'
+    left: '20px'
 
 window_effects:
   # Visual effects to apply to the focused window.
@@ -67,16 +85,33 @@ window_effects:
       enabled: true
       color: *lavender
 
+    # Remove the title bar from the window's frame. Note that this can
+    # cause rendering issues for some applications.
+    hide_title_bar:
+      enabled: false
+
+    # Change the corner style of the window's frame.
+    # ** Exclusive to Windows 11 due to API limitations.
+    corner_style:
+      enabled: true
+      # Allowed values: 'square', 'rounded', 'small_rounded'.
+      style: 'square'
+
   # Visual effects to apply to non-focused windows.
   other_windows:
     border:
       enabled: true
       color: *peach
+    hide_title_bar:
+      enabled: false
+    corner_style:
+      enabled: true
+      style: 'square'
 
 window_behavior:
   # New windows are created in this state whenever possible.
   # Allowed values: 'tiling', 'floating'.
-  initial_state: "tiling"
+  initial_state: 'tiling'
 
   # Sets the default options for when a new window is created. This also
   # changes the defaults for when the state change commands, like
@@ -120,6 +155,7 @@ window_rules:
       - window_process: { equals: "zebar" }
       - window_process: { equals: "Flow.Launcher" }
       - window_process: { equals: "WhatsApp" }
+      - window_process: { equals: "foobar2000" }
 
       # WhatsApp
       - window_class: { regex: "#32770" }
