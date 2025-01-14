@@ -50,17 +50,23 @@ Set-Alias -Name grep -Value Find-String
 Set-Alias -Name touch -Value New-File
 Set-Alias -Name df -Value Get-Volume
 Set-Alias -Name which -Value Show-Command
-Set-Alias -Name ls -Value Get-ChildItemPretty
+# Remove built-in aliases first
+Remove-Item -Path Alias:ls -Force -ErrorAction SilentlyContinue
+Remove-Item -Path Alias:cat -Force -ErrorAction SilentlyContinue
+Remove-Item -Path Alias:rm -Force -ErrorAction SilentlyContinue
+
+# Now set our custom aliases
+if (!(Test-Path Alias:ls)) { Set-Alias -Name ls -Value Get-ChildItemPretty }
 Set-Alias -Name ll -Value Get-ChildItemPretty
 Set-Alias -Name la -Value Get-ChildItemPretty
 Set-Alias -Name l -Value Get-ChildItemPretty
 Set-Alias -Name tif Show-ThisIsFine
 Set-Alias -Name vim -Value nvim
 Set-Alias -Name vi -Value nvim
-Set-Alias -Name cat -Value bat
+if (!(Test-Path Alias:cat)) { Set-Alias -Name cat -Value bat }
 Set-Alias -Name gs -Value Get-GitStatus
 Set-Alias -Name us -Value Update-Software
-Set-Alias -Name rm -Value Remove-ItemExtended
+if (!(Test-Path Alias:rm)) { Set-Alias -Name rm -Value Remove-ItemExtended }
 Set-Alias -Name dc -Value cd
 Set-Alias -Name tail -Value Get-Content-Tail
 
@@ -82,8 +88,7 @@ function Get-GitStatus
   git status
 }
 
-function Find-WindotsRepository
-{
+function Find-WindotsRepository {
   <#
     .SYNOPSIS
         Finds the local Windots repository.
@@ -94,15 +99,55 @@ function Find-WindotsRepository
     [string]$ProfilePath
   )
 
-  Write-Verbose "Resolving the profile path"
-  # First try to resolve as a symbolic link
-  $item = Get-Item $ProfilePath -ErrorAction SilentlyContinue
-  if ($item.LinkType -eq "SymbolicLink") {
-    return Split-Path $item.Target
+  try {
+    # First try the current directory
+    $repoPath = $PWD.Path
+    Write-Verbose "Checking current directory: $repoPath"
+
+    # Check if this is a git repository
+    $gitPath = Join-Path $repoPath ".git"
+    $isGitRepo = Test-Path $gitPath
+    Write-Verbose "Is git repository: $isGitRepo"
+
+    # Check for required files
+    $profilePath = Join-Path $repoPath "Profile.ps1"
+    $setupPath = Join-Path $repoPath "Setup.ps1"
+    $hasRequiredFiles = (Test-Path $profilePath) -and (Test-Path $setupPath)
+    Write-Verbose "Has required files: $hasRequiredFiles"
+
+    if ($isGitRepo -and $hasRequiredFiles) {
+      Write-Verbose "Found repository at current directory"
+      return $repoPath
+    }
+
+    # Try the parent directory of the profile
+    $parentPath = Split-Path $ProfilePath
+    Write-Verbose "Checking parent directory: $parentPath"
+
+    # Check if parent is a git repository
+    $parentGitPath = Join-Path $parentPath ".git"
+    $isParentGitRepo = Test-Path $parentGitPath
+    Write-Verbose "Parent is git repository: $isParentGitRepo"
+
+    # Check for required files in parent
+    $parentProfilePath = Join-Path $parentPath "Profile.ps1"
+    $parentSetupPath = Join-Path $parentPath "Setup.ps1"
+    $parentHasFiles = (Test-Path $parentProfilePath) -and (Test-Path $parentSetupPath)
+    Write-Verbose "Parent has required files: $parentHasFiles"
+
+    if ($isParentGitRepo -and $parentHasFiles) {
+      Write-Verbose "Found repository at parent directory"
+      return $parentPath
+    }
+
+    # If no repository found, return the current directory
+    Write-Verbose "No repository found, using current directory"
+    return $repoPath
   }
-  
-  # If not a symlink, return the parent directory of the profile
-  return Split-Path $ProfilePath
+  catch {
+    Write-Warning "Error finding repository: $($_.Exception.Message)"
+    return $PWD.Path
+  }
 }
 
 function Start-AdminSession
@@ -340,7 +385,8 @@ function Remove-ItemExtended
     [string]$Path
   )
 
-  Write-Verbose "Removing item '$Path' $($rf ? 'and all its children' : '')"
+  $message = if ($rf) { "and all its children" } else { "" }
+  Write-Verbose "Removing item '$Path' $message"
   Remove-Item $Path -Recurse:$rf -Force:$rf
 }
 
@@ -356,39 +402,90 @@ $ENV:FZF_DEFAULT_OPTS = '--color=fg:-1,fg+:#ffffff,bg:-1,bg+:#3c4048 --color=hl:
 $env:PYENV = "$HOME\.pyenv\pyenv-win"
 $ENV:Path+=";$PYENV/bin"
 $ENV:Path+=";$PYENV/shims"
-$ENV:Path+=";$PSScriptRoot/bin"
+$ENV:Path+=";$ENV:WindotsLocalRepo/bin"
 # Check for Windots and software updates while prompt is loading
-Start-ThreadJob -ScriptBlock {
-  Set-Location -Path $ENV:WindotsLocalRepo
-  $gitUpdates = git fetch && git status
-  if ($gitUpdates -match "behind")
-  {
-    $ENV:DOTFILES_UPDATE_AVAILABLE = "`u{db86}`u{dd1b} "
-  } else
-  {
-    $ENV:DOTFILES_UPDATE_AVAILABLE = ""
+# Check for updates in a background job if we're in a git repo
+$updateJob = Start-Job -ScriptBlock {
+  param($repoPath)
+  try {
+    if (-not $repoPath) {
+      Write-Warning "Repository path is null"
+      return ""
+    }
+    
+    $gitDir = Join-Path $repoPath ".git"
+    if (-not (Test-Path $gitDir)) {
+      Write-Warning "Not a git repository: $repoPath"
+      return ""
+    }
+    
+    Push-Location $repoPath
+    git fetch 2>&1 | Out-Null
+    $gitUpdates = git status 2>&1
+    Pop-Location
+    
+    if ($gitUpdates -match "behind") {
+      return "`u{db86}`u{dd1b} "
+    }
   }
-} | Out-Null
+  catch {
+    Write-Warning "Error checking git status: $($_.Exception.Message)"
+  }
+  return ""
+} -ArgumentList $ENV:WindotsLocalRepo
+
+$ENV:DOTFILES_UPDATE_AVAILABLE = $updateJob | Wait-Job | Receive-Job
+Remove-Job $updateJob -Force -ErrorAction SilentlyContinue
 
 Add-ProfileLogEntry -Message "Git fetch job started"
 
-Start-ThreadJob -ScriptBlock {
-  <#
-        This is gross, I know. But there's a noticible lag that manifests in powershell when running the winget and choco commands
-        within the main pwsh process. Running this whole block as an isolated job fails to set the environment variable correctly.
-        The compromise is to run the main logic of this block within a threadjob and get the output of the winget and choco commands
-        via two isolated jobs. This sets the environment variable correctly and doesn't cause any lag (that I've noticed yet).
-    #>
-  $wingetUpdatesString = Start-Job -ScriptBlock { winget list --upgrade-available | Out-String } | Wait-Job | Receive-Job
-  $chocoUpdatesString = Start-Job -ScriptBlock { choco upgrade all --noop | Out-String } | Wait-Job | Receive-Job
-  if ($wingetUpdatesString -match "upgrades available" -or $chocoUpdatesString -notmatch "can upgrade 0/")
-  {
-    $ENV:SOFTWARE_UPDATE_AVAILABLE = "`u{eb29} "
-  } else
-  {
-    $ENV:SOFTWARE_UPDATE_AVAILABLE = ""
+# Check for software updates in a background job
+$softwareJob = Start-Job -ScriptBlock {
+  try {
+    $updateAvailable = $false
+    
+    # Check winget updates
+    try {
+      $wingetJob = Start-Job -ScriptBlock { winget list --upgrade-available | Out-String }
+      $wingetUpdatesString = $wingetJob | Wait-Job | Receive-Job
+      if ($wingetUpdatesString -match "upgrades available") {
+        $updateAvailable = $true
+      }
+    }
+    catch {
+      Write-Warning "Error checking winget updates: $($_.Exception.Message)"
+    }
+    finally {
+      if ($wingetJob) { Remove-Job $wingetJob -Force -ErrorAction SilentlyContinue }
+    }
+    
+    # Check chocolatey updates
+    try {
+      $chocoJob = Start-Job -ScriptBlock { choco upgrade all --noop | Out-String }
+      $chocoUpdatesString = $chocoJob | Wait-Job | Receive-Job
+      if ($chocoUpdatesString -notmatch "can upgrade 0/") {
+        $updateAvailable = $true
+      }
+    }
+    catch {
+      Write-Warning "Error checking chocolatey updates: $($_.Exception.Message)"
+    }
+    finally {
+      if ($chocoJob) { Remove-Job $chocoJob -Force -ErrorAction SilentlyContinue }
+    }
+    
+    if ($updateAvailable) {
+      return "`u{eb29} "
+    }
   }
-} | Out-Null
+  catch {
+    Write-Warning "Error checking software updates: $($_.Exception.Message)"
+  }
+  return ""
+}
+
+$ENV:SOFTWARE_UPDATE_AVAILABLE = $softwareJob | Wait-Job | Receive-Job
+Remove-Job $softwareJob -Force -ErrorAction SilentlyContinue
 
 function Invoke-Starship-TransientFunction
 {
@@ -403,41 +500,37 @@ Invoke-Expression (&starship init powershell)
 Enable-TransientPrompt
 Invoke-Expression (& { ( zoxide init powershell --cmd cd | Out-String ) })
 
-$colors = @{
-  "Operator"         = "`e[35m" # Purple
-  "Parameter"        = "`e[36m" # Cyan
-  "String"           = "`e[32m" # Green
-  "Command"          = "`e[34m" # Blue
-  "Variable"         = "`e[37m" # White
-  "Comment"          = "`e[38;5;244m" # Gray
-  "InlinePrediction" = "`e[38;5;244m" # Gray
-}
+# Configure PSReadLine based on PowerShell version
+Import-Module PSReadLine
 
-Set-PSReadLineOption -Colors $colors
-Set-PSReadLineOption -PredictionSource HistoryAndPlugin
-Set-PSReadLineOption -PredictionViewStyle InlineView
-Set-PSReadLineKeyHandler -Function AcceptSuggestion -Key Alt+l
-Import-Module -Name CompletionPredictor
+if ($PSVersionTable.PSVersion.Major -ge 7) {
+  # PowerShell 7+ specific settings
+  $colors = @{
+    "Operator"         = "Magenta" # Purple
+    "Parameter"        = "Cyan"    # Cyan
+    "String"           = "Green"   # Green
+    "Command"          = "Blue"    # Blue
+    "Variable"         = "White"   # White
+    "Comment"          = "DarkGray" # Gray
+  }
+  Set-PSReadLineOption -Colors $colors
+  Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+  Set-PSReadLineOption -PredictionViewStyle InlineView
+  Set-PSReadLineKeyHandler -Function AcceptSuggestion -Key Alt+l
+  Import-Module -Name CompletionPredictor -ErrorAction SilentlyContinue
+} else {
+  # PowerShell 5.1 settings
+  Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+  Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+  Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+  Set-PSReadLineKeyHandler -Chord "Ctrl+RightArrow" -Function ForwardWord
+}
 
 Add-ProfileLogEntry -Message "Prompt setup complete"
 
-$enableLog ? $stopwatch.Stop() : $null
+if ($enableLog) { $stopwatch.Stop() }
 
 Add-ProfileLogEntry -Message "Profile load complete"
-
-
-Import-Module PSReadLine
-
-Set-PSReadLineOption -PredictionSource History
-
-Set-PSReadLineOption -HistorySearchCursorMovesToEnd
-Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
-Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
-
-Set-PSReadLineOption -Colors @{ InlinePrediction = '#875f5f'}
-
-
-Set-PSReadLineKeyHandler -Chord "Ctrl+RightArrow" -Function ForwardWord
 
 
 # Adding this to make refreshenv work
