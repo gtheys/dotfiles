@@ -94,9 +94,15 @@ function Find-WindotsRepository
     [string]$ProfilePath
   )
 
-  Write-Verbose "Resolving the symbolic link for the profile"
-  $profileSymbolicLink = Get-ChildItem $ProfilePath | Where-Object FullName -EQ $PROFILE.CurrentUserAllHosts
-  return Split-Path $profileSymbolicLink.Target
+  Write-Verbose "Resolving the profile path"
+  # First try to resolve as a symbolic link
+  $item = Get-Item $ProfilePath -ErrorAction SilentlyContinue
+  if ($item.LinkType -eq "SymbolicLink") {
+    return Split-Path $item.Target
+  }
+  
+  # If not a symlink, return the parent directory of the profile
+  return Split-Path $ProfilePath
 }
 
 function Start-AdminSession
@@ -350,8 +356,7 @@ $ENV:FZF_DEFAULT_OPTS = '--color=fg:-1,fg+:#ffffff,bg:-1,bg+:#3c4048 --color=hl:
 $env:PYENV = "$HOME\.pyenv\pyenv-win"
 $ENV:Path+=";$PYENV/bin"
 $ENV:Path+=";$PYENV/shims"
-$ENV:Path+=";$WindotsLocalRepo\bin"
-
+$ENV:Path+=";$PSScriptRoot/bin"
 # Check for Windots and software updates while prompt is loading
 Start-ThreadJob -ScriptBlock {
   Set-Location -Path $ENV:WindotsLocalRepo
