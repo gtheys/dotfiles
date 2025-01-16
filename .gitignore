@@ -12,3 +12,6 @@ data*
 .aider*
 config/nushell/history.txt
 config/glzr/glazewm/errors.log
+node_modules/
+package-lock.json
+package.json
