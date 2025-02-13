@@ -169,10 +169,10 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
+        # Pressing left will shrink the window's width.
+        # Pressing right will grow the window's width.
+        # Pressing up will shrink the window's height.
+        # Pressing down will grow the window's height.
         bindsym j resize shrink width 10 px or 10 ppt
         bindsym k resize grow height 10 px or 10 ppt
         bindsym l resize shrink height 10 px or 10 ppt
@@ -191,6 +191,36 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
+
+# for hiding the cursor after x amount of inactive seconds here, x = 2
+exec --no-startup-id unclutter --timeout 2
+
+# gaps between windows ************************************************
+gaps inner 7
+
+# removing the titlebar from every window *****************************
+default_border pixel 1
+default_floating_border pixel 1
+for_window [class="^.*"] border pixel 1
+
+#enable autotiling *****************************************************
+exec_always  --no-startup-id autotiling
+
+# setting catppuccin colors ********************************************
+# target                 title     bg          text      indicator  border
+client.focused           #b4befe   #1e1e2e    #cdd6f4   #f6e0dc    #74c7ec
+client.focused_inactive  #6c7086   #1e1e2e    #cdd6f4   #f6e0dc    #cba6f7
+client.unfocused         #6c7086   #1e1e2e    #cdd6f4   #f6e0dc    #cba6f7
+client.urgent            #fab387   #1e1e2e    #fab387   #6c7086    #f38ba8
+client.placeholder       #6c7086   #1e1e2e    #cdd6f4   #6c7086    #cba6f7
+client.background        #1e1e2e
+
+for_window [class=".*"] border pixel 1
+
+# Screenshot ***********************************************************
+bindsym Print exec --no-startup-id /usr/bin/maim "/home/geert/Pictures/Screenshot/$(date +'%Y-%m-%d_%H-%M-%S').png"
+bindsym $mod+Print exec --no-startup-id /usr/bin/maim -i $(xdotool getactivewindow) "/home/geert/Pictures/Screenshot/$(date +'%Y-%m-%d_%H-%M-%S').png"
+bindsym Shift+Print exec --no-startup-id /home/geert/bin/flameshot_toggle.sh
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
