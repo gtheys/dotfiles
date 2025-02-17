@@ -1,191 +1,83 @@
-local os                = require 'os'
-local wezterm           = require 'wezterm'
-local act               = wezterm.action
+local wezterm = require("wezterm") --[[@as Wezterm]]
+local config = wezterm.config_builder()
+wezterm.log_info("reloading")
 
-local SOLID_LEFT_ARROW  = wezterm.nerdfonts.pl_right_hard_divider
-local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
+require("tabs").setup(config)
+require("mouse").setup(config)
+require("links").setup(config)
+require("keys").setup(config)
 
-function tab_title(tab_info)
-  local title = tab_info.tab_title
-  if title and #title > 0 then
-    return title
-  end
-  return tab_info.active_pane.title
+-- config.front_end = "WebGpu"
+-- config.front_end = "OpenGL" -- current work-around for https://github.com/wez/wezterm/issues/4825
+-- config.enable_wayland = true
+-- config.webgpu_power_preference = "HighPerformance"
+-- config.animation_fps = 1
+config.cursor_blink_ease_in = "Constant"
+config.cursor_blink_ease_out = "Constant"
+
+-- Colorscheme
+config.color_scheme_dirs = { wezterm.home_dir .. "~/Code/tokyonight.nvim/extras/wezterm" }
+config.color_scheme = "tokyonight_night"
+wezterm.add_to_config_reload_watch_list(config.color_scheme_dirs[1] .. config.color_scheme .. ".toml")
+
+config.colors = {
+  indexed = { [241] = "#65bcff" },
+}
+
+config.underline_thickness = 3
+config.cursor_thickness = 4
+config.underline_position = -6
+
+if wezterm.target_triple:find("windows") then
+  config.default_prog = { "pwsh" }
+  config.window_decorations = "RESIZE|TITLE"
+  wezterm.on("gui-startup", function(cmd)
+    local screen = wezterm.gui.screens().active
+    local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
+    local gui = window:gui_window()
+    local width = 0.7 * screen.width
+    local height = 0.7 * screen.height
+    gui:set_inner_size(width, height)
+    gui:set_position((screen.width - width) / 2, (screen.height - height) / 2)
+  end)
+else
+  config.term = "wezterm"
+  config.window_decorations = "NONE"
 end
 
-wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-  local edge_background = '#232634' -- Dark background
-  local background = '#24283b'      -- Slightly lighter background for inactive tabs
-  local foreground = '#c0caf5'      -- Light foreground for text
-
-  if tab.is_active then
-    background = '#8caaee' -- Bright blue for active tab
-    foreground = '#232634' -- Dark text for contrast on active tab
-  elseif hover then
-    background = '#99d1db' -- Medium blue for hover state
-    foreground = '#c0caf5' -- Light text for hover state
-  end
-
-  local edge_foreground = background
-  local title = tab_title(tab)
-  title = wezterm.truncate_right(title, max_width - 2)
-
-  return {
-    { Background = { Color = edge_background } },
-    { Foreground = { Color = edge_foreground } },
-    { Text = SOLID_LEFT_ARROW },
-    { Background = { Color = background } },
-    { Foreground = { Color = foreground } },
-    { Text = ' ' .. title .. ' ' },
-    { Background = { Color = edge_background } },
-    { Foreground = { Color = edge_foreground } },
-    { Text = SOLID_RIGHT_ARROW },
-  }
-end)
-
-local config = {
-
-  -- Comment this out on linux
-  -- Probably can do this with launcher but need to figure it out
-  default_prog = { 'pwsh.exe', '-NoLogo' },
-
-  color_scheme = "Catppuccin Frappe",
-  window_background_opacity = 0.85,
-  enable_tab_bar = true, -- Enable the tab bar
-  window_decorations = "RESIZE",
-  window_close_confirmation = "NeverPrompt",
-  window_padding = {
-    left = 2,
-    right = 2,
-    top = 2,
-    bottom = 2,
+-- Fonts
+config.font_size = 10
+config.font = wezterm.font({ family = "Firacode Nerd Font" })
+config.bold_brightens_ansi_colors = true
+config.font_rules = {
+  {
+    intensity = "Bold",
+    italic = true,
+    font = wezterm.font({ family = "Maple Mono", weight = "Bold", style = "Italic" }),
   },
-
-  -- key configuration
-  leader = {
-    key = 'a',
-    mods = 'CTRL',
-    timeout_milliseconds = 2000,
+  {
+    italic = true,
+    intensity = "Half",
+    font = wezterm.font({ family = "Maple Mono", weight = "DemiBold", style = "Italic" }),
   },
-  keys = {
-
-    {
-      key = 'z',
-      mods = 'LEADER',
-      action = act.TogglePaneZoomState,
-    },
-    {
-      key = ',',
-      mods = 'LEADER',
-      action = act.PromptInputLine {
-        description = 'Enter new name for tab',
-        action = wezterm.action_callback(
-          function(window, pane, line)
-            if line then
-              window:active_tab():set_title(line)
-            end
-          end
-        ),
-      },
-    },
-    {
-      key = 'c',
-      mods = 'LEADER',
-      action = act.SpawnTab 'CurrentPaneDomain',
-    },
-    {
-      key = 'n',
-      mods = 'LEADER',
-      action = act.ActivateTabRelative(1),
-    },
-    {
-      key = 'p',
-      mods = 'LEADER',
-      action = act.ActivateTabRelative(-1),
-    },
-    {
-      key = 'w',
-      mods = 'LEADER',
-      action = act.ShowTabNavigator,
-    },
-    {
-      key = '&',
-      mods = 'LEADER',
-      action = act.CloseCurrentTab { confirm = true },
-    },
-    -- Vertical split
-    {
-      -- |
-      key = '$',
-      mods = 'LEADER',
-      action = act.SplitPane {
-        direction = 'Right',
-        size = { Percent = 50 },
-      },
-    },
-    -- Horizontal split
-    {
-      -- -
-      key = '-',
-      mods = 'LEADER',
-      action = act.SplitPane {
-        direction = 'Down',
-        size = { Percent = 50 },
-      },
-    },
-    {
-      -- |
-      key = '¨',
-      mods = 'LEADER|SHIFT',
-      action = act.PaneSelect { mode = 'SwapWithActiveKeepFocus' }
-    },
-    {
-      key = ';',
-      mods = 'LEADER',
-      action = act.ActivatePaneDirection('Prev'),
-    },
-    {
-      key = 'o',
-      mods = 'LEADER',
-      action = act.ActivatePaneDirection('Next'),
-    },
-
+  {
+    italic = true,
+    intensity = "Normal",
+    font = wezterm.font({ family = "Maple Mono", style = "Italic" }),
   },
-  -- font config
-  font = wezterm.font("Monaspace Neon", { weight = "Regular" }),
-  font_rules = {
-    {
-      italic = true,
-      font = wezterm.font("Monaspace Radon", { weight = "Medium" }),
-    },
-  },
-  harfbuzz_features = { "calt", "dlig", "clig=1", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08" },
-  font_size = 16,
-  line_height = 1.1,
-  adjust_window_size_when_changing_font_size = false,
-
-  pane_focus_follows_mouse = true,
-  scrollback_lines = 5000,
-  -- keys config
-  send_composed_key_when_left_alt_is_pressed = true,
-  send_composed_key_when_right_alt_is_pressed = false,
-
-  window_background_gradient = {
-    orientation = "Horizontal",
-    colors = {
-      "#00000C",
-      "#000026",
-      "#00000C",
-    },
-    interpolation = "CatmullRom",
-    blend = "Rgb",
-    noise = 0,
-  },
-  -- Add this new section for the window frame
-  window_frame = {
-    active_titlebar_bg = "#00000C",
-    inactive_titlebar_bg = "#00000C",
-  }
 }
+
+-- Cursor
+config.default_cursor_style = "BlinkingBar"
+config.force_reverse_video_cursor = true
+config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
+-- window_background_opacity = 0.9,
+-- cell_width = 0.9,
+config.scrollback_lines = 10000
+
+-- Command Palette
+config.command_palette_font_size = 13
+config.command_palette_bg_color = "#394b70"
+config.command_palette_fg_color = "#828bb8"
 
 return config
