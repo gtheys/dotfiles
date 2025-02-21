@@ -15,3 +15,5 @@ config/glzr/glazewm/errors.log
 node_modules/
 package-lock.json
 package.json
+config/lazygit/state.yml
+config/nvim/lazyvim.json
