@@ -17,13 +17,14 @@ mute)
   ;;
 esac
 
-VOLUME=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | tr -dc '0-9' | sed 's/^0\{1,2\}//')
+# Extract volume as a decimal (e.g., 0.49) and convert to percentage
+VOLUME=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | sed 's/Volume: //' | awk '{printf "%.0f", $1 * 100}')
 
 send_notification() {
-  if [ "$1" = "mute" ]; then ICON="mute"; elif [ "$VOLUME" -lt 33 ]; then ICON="low"; elif [ "$VOLUME" -lt 66 ]; then ICON="medium"; else ICON="high"; fi
+  if [ "$1" = "mute" ]; then ICON="audio-volume-muted"; elif [ "$VOLUME" -lt 33 ]; then ICON="audio-volume-low"; elif [ "$VOLUME" -lt 66 ]; then ICON="audio-volume-medium"; else ICON="audio-volume-high"; fi
   if [ "$1" = "mute" ]; then TEXT="Currently muted"; else TEXT="Currently at ${VOLUME}%"; fi
 
-  dunstify -a "Volume" -r 9993 -h int:value:"$VOLUME" -i "volume-$ICON" "Volume" "$TEXT" -t 2000
+  dunstify -a "Volume" -i "$ICON" "Volume" "$TEXT" -t 2000
 }
 
 case $1 in
