@@ -2,21 +2,77 @@
 
 # Use brightnessctl to naturally adjust laptop screen brightness and send a notification
 
-currentbrightness=$(brightnessctl -e4 -m | awk -F, '{print substr($4, 0, length($4)-1)}')
-if [ "$currentbrightness" -lt 30 ] && [ "$1" = "down" ]; then exit 1; fi
+# Determine which device to use
+select_device() {
+    # Count the number of devices
+    device_count=$(brightnessctl -l | grep -c "Device")
+    
+    # If there's only one device, use the default (no device specified)
+    if [ "$device_count" -eq 1 ]; then
+        echo ""
+        return
+    fi
+    
+    # If there are multiple devices, check if intel_backlight is available
+    if brightnessctl -l | grep -q "intel_backlight"; then
+        echo "-d intel_backlight"
+        return
+    fi
+    
+    # Default to no specific device
+    echo ""
+}
+
+# Store the device parameter
+DEVICE_PARAM=$(select_device)
+
+# Get current brightness percentage
+get_brightness() {
+    brightnessctl $DEVICE_PARAM -e4 -m | awk -F, '{print substr($4, 0, length($4)-1)}'
+}
 
 send_notification() {
-	brightness=$(brightnessctl -e4 -m | awk -F, '{print substr($4, 0, length($4)-1)}')
-	dunstify -a "Backlight" -u low -r 9994 -h int:value:"$brightness" -i "brightness" "Brightness" "Currently at $brightness%" -t 1000
+	brightness=$(brightnessctl $DEVICE_PARAM -e4 -m | awk -F, '{print substr($4, 0, length($4)-1)}')
+	
+	# Always echo the brightness for reliability
+	echo "Brightness: $brightness%"
+	
+	# Try to use notify-send if available
+	if command -v notify-send >/dev/null 2>&1; then
+		notify-send -u low "Brightness" "Currently at $brightness%" -t 1000 2>/dev/null || true
+	fi
+	
+	# Removed dunstify as it was causing segmentation faults
 }
 
 case $1 in
 	up)
-		brightnessctl -e4 set 5%+
+		brightnessctl $DEVICE_PARAM -e4 set 5%+
 		send_notification "$1"
 		;;
 	down)
-		brightnessctl -e4 set 5%-
+		# Check if brightness is already at or below 30%
+		current=$(get_brightness)
+		if [ "$current" -le 30 ]; then
+			echo "Brightness already at minimum allowed level (30%)"
+			exit 0
+		fi
+		
+		# Proceed with normal 5% decrease
+		brightnessctl $DEVICE_PARAM -e4 set 5%-
+		
+		# Check if we went below 30% after decrease
+		new=$(get_brightness)
+		if [ "$new" -lt 30 ]; then
+			# Set to exactly 30%
+			brightnessctl $DEVICE_PARAM -e4 set 30%
+			echo "Brightness set to minimum allowed level (30%)"
+		fi
+		
 		send_notification "$1"
+		;;
+	*)
+		echo "Usage: $(basename $0) [up|down]"
+		exit 1
 		;;
 esac
