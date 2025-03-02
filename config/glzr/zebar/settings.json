@@ -1,9 +1,0 @@
-{
-  "$schema": "https://github.com/glzr-io/zebar/raw/v2.4.0/resources/settings-schema.json",
-  "startupConfigs": [
-    {
-      "path": "neobrutal-zebar\\bar.zebar.json",
-      "preset": "default"
-    }
-  ]
-}
