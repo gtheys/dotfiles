@@ -1,8 +1,0 @@
-# .zprofile is sourced on login shells and before .zshrc. As a general rule, it should not change the
-# shell environment at all.
-
-test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-# Created by `pipx` on 2023-10-23 09:19:33
-export PATH="$PATH:/home/geert/.local/bin"

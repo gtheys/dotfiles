@@ -1,7 +1,15 @@
-export ZSH=$DOTFILES/zsh
+export ZSH=$ZDOTDIR
 
-if [[ -d $DOTFILES/zsh/functions ]]; then
-    for func in $DOTFILES/zsh/functions/*(:t); autoload -U $func
+# Ensure functions directory is in fpath
+if [[ -d $ZDOTDIR/functions ]]; then
+    if [[ $fpath[(i)$ZDOTDIR/functions] -gt $#fpath ]]; then
+        fpath=($ZDOTDIR/functions $fpath)
+    fi
+    
+    # Autoload all functions
+    for func in $ZDOTDIR/functions/*(:t); do
+        autoload -U $func
+    done
 fi
 
 ########################################################
@@ -12,6 +20,10 @@ fi
 autoload -U compinit add-zsh-hook
 compinit
 
+# source alias file if it exists
+[ -f "$ZDOTDIR/alias" ] && source "$ZDOTDIR/alias"
+
+# Use prepend_path
 prepend_path /usr/local/opt/grep/libexec/gnubin
 prepend_path /usr/local/sbin
 prepend_path $DOTFILES/bin
@@ -135,12 +147,6 @@ export LESS_TERMCAP_mh=$(tput dim)
 # prefer zoxide over z.sh
 if [[ -x "$(command -v zoxide)" ]]; then
     eval "$(zoxide init zsh --hook pwd)"
-else
-  # source z.sh if it exists
-  zpath="$(brew --prefix)/etc/profile.d/z.sh"
-  if [ -f "$zpath" ]; then
-      source "$zpath"
-  fi
 fi
 
 # Detect which `ls` flavor is in use
@@ -149,12 +155,6 @@ if ls --color > /dev/null 2>&1; then # GNU `ls`
 else # macOS `ls`
     colorflag="-G"
 fi
-
-# look for all .zsh files and source them
-config_files=($DOTFILES/**/*.zsh)
-for file in $config_files[@]; do
-  source "$file"
-done
 
 # If a ~/.zshrc.local exists, source it
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
