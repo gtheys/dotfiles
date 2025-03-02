@@ -35,37 +35,11 @@ get_linkables() {
     find -H "$DOTFILES" -maxdepth 3 -name '*.symlink'
 }
 
-backup() {
-    BACKUP_DIR=$HOME/dotfiles-backup
-
-    echo "Creating backup directory at $BACKUP_DIR"
-    mkdir -p "$BACKUP_DIR"
-
-    for file in $(get_linkables); do
-        filename=".$(basename "$file" '.symlink')"
-        target="$HOME/$filename"
-        if [ -f "$target" ]; then
-            echo "backing up $filename"
-            cp "$target" "$BACKUP_DIR"
-        else
-            warning "$filename does not exist at this location or is a symlink"
-        fi
-    done
-
-    for filename in "$HOME/.config/nvim" "$HOME/.vim" "$HOME/.vimrc"; do
-        if [ ! -L "$filename" ]; then
-            echo "backing up $filename"
-            cp -rf "$filename" "$BACKUP_DIR"
-        else
-            warning "$filename does not exist at this location or is a symlink"
-        fi
-    done
-}
-
-
 setup_symlinks() {
     title "Creating symlinks"
+    BACKUP_DIR=$HOME/dotfiles-backup
 
+    # Create symlinks for *.symlink files
     for file in $(get_linkables) ; do
         target="$HOME/.$(basename "$file" '.symlink')"
         if [ -e "$target" ]; then
@@ -76,6 +50,14 @@ setup_symlinks() {
         fi
     done
 
+    # Explicitly ensure zshenv.symlink is linked
+    if [ -e "$HOME/.zshenv" ]; then
+        info "~/.zshenv already exists... Skipping."
+    else
+        info "Creating symlink for $DOTFILES/zshenv.symlink"
+        ln -s "$DOTFILES/zshenv.symlink" "$HOME/.zshenv"
+    fi
+
     echo -e
     info "installing to ~/.config"
     if [ ! -d "$HOME/.config" ]; then
@@ -83,15 +65,55 @@ setup_symlinks() {
         mkdir -p "$HOME/.config"
     fi
 
-    config_files=$(find "$DOTFILES/config" -maxdepth 1 2>/dev/null)
+    # Create symlinks for config folders
+    config_files=$(find "$DOTFILES/config" -maxdepth 1 -type d 2>/dev/null)
+    for config in $config_files; do
+        # Skip the config directory itself
+        if [ "$config" = "$DOTFILES/config" ]; then
+            continue
+        fi
+        
+        target="$HOME/.config/$(basename "$config")"
+        if [ -e "$target" ]; then
+            info "~${target#$HOME} already exists."
+            read -rp "Do you want to backup? [y/N] " backup
+            if [[ $backup =~ ^([Yy])$ ]]; then
+                # Backup to BACKUP_DIR
+                info "Backing up to $BACKUP_DIR/$(basename "$target")"
+                mkdir -p "$BACKUP_DIR"
+                cp -r "$target" "$BACKUP_DIR"
+                success "Backup created at $BACKUP_DIR/$(basename "$target")"
+            fi
+            # Remove existing folder
+            info "Removing existing folder at $target"
+            rm -rf "$target"
+        fi
+        # Create symlink
+        info "Creating symlink for $config"
+        ln -s "$config" "$target"
+    done
+    
+    # Handle individual files in config directory
+    config_files=$(find "$DOTFILES/config" -maxdepth 1 -type f 2>/dev/null)
     for config in $config_files; do
         target="$HOME/.config/$(basename "$config")"
         if [ -e "$target" ]; then
-            info "~${target#$HOME} already exists... Skipping."
-        else
-            info "Creating symlink for $config"
-            ln -s "$config" "$target"
+            info "~${target#$HOME} already exists."
+            read -rp "Do you want to backup? [y/N] " backup
+            if [[ $backup =~ ^([Yy])$ ]]; then
+                # Backup to BACKUP_DIR
+                info "Backing up to $BACKUP_DIR/$(basename "$target")"
+                mkdir -p "$BACKUP_DIR"
+                cp "$target" "$BACKUP_DIR"
+                success "Backup created at $BACKUP_DIR/$(basename "$target")"
+            fi
+            # Remove existing file
+            info "Removing existing file at $target"
+            rm -f "$target"
         fi
+        # Create symlink
+        info "Creating symlink for $config"
+        ln -s "$config" "$target"
     done
 }
 
@@ -122,51 +144,6 @@ setup_git() {
     fi
 }
 
-setup_homebrew() {
-    title "Setting up Homebrew"
-
-    if test ! "$(command -v brew)"; then
-        info "Homebrew not installed. Installing."
-        # Run as a login shell (non-interactive) so that the script doesn't pause for user input
-        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash --login
-    fi
-
-    if [ "$(uname)" == "Linux" ]; then
-        test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-        test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
-    fi
-
-    # install brew dependencies from Brewfile
-    brew bundle
-
-    # install fzf
-    echo -e
-    info "Installing fzf"
-    "$(brew --prefix)"/opt/fzf/install --key-bindings --completion --no-update-rc --no-bash --no-fish
-}
-
-fetch_catppuccin_theme() {
-    for palette in frappe latte macchiato mocha; do
-        curl -o "$DOTFILES/config/kitty/themes/catppuccin-$palette.conf" "https://raw.githubusercontent.com/catppuccin/kitty/main/$palette.conf"
-    done
-}
-
-setup_shell() {
-    title "Configuring shell"
-
-    [[ -n "$(command -v brew)" ]] && zsh_path="$(brew --prefix)/bin/zsh" || zsh_path="$(which zsh)"
-    if ! grep "$zsh_path" /etc/shells; then
-        info "adding $zsh_path to /etc/shells"
-        echo "$zsh_path" | sudo tee -a /etc/shells
-    fi
-
-    if [[ "$SHELL" != "$zsh_path" ]]; then
-        sudo chsh -s "$zsh_path"
-        info "default shell changed to $zsh_path"
-    fi
-}
-
 function setup_terminfo() {
     title "Configuring terminfo"
 
@@ -177,37 +154,75 @@ function setup_terminfo() {
     tic -x "$DOTFILES/resources/xterm-256color-italic.terminfo"
 }
 
+function sync_dotfiles() {
+    title "Syncing dotfiles"
+    
+    if [ ! -d "$HOME/.config" ]; then
+        info "Creating ~/.config"
+        mkdir -p "$HOME/.config"
+    fi
+    
+    # Find all directories in ~/.dotfiles
+    dotfiles_dirs=$(find "$HOME/.dotfiles" -type d -not -path "*/\.*" -not -path "$HOME/.dotfiles" 2>/dev/null)
+    
+    for dir in $dotfiles_dirs; do
+        # Get the relative path from ~/.dotfiles
+        rel_path=${dir#"$HOME/.dotfiles/"}
+        
+        # Skip the config directory as it's handled by setup_symlinks
+        if [[ "$rel_path" == "config" ]]; then
+            continue
+        fi
+        
+        # Check if this is a subdirectory of config
+        if [[ "$rel_path" == config/* ]]; then
+            # For config subdirectories, we want to link them to ~/.config
+            config_subdir=${rel_path#"config/"}
+            target="$HOME/.config/$config_subdir"
+            
+            if [ -e "$target" ] && [ ! -L "$target" ]; then
+                info "~${target#$HOME} already exists... Skipping."
+            elif [ -L "$target" ]; then
+                info "~${target#$HOME} is already a symlink... Skipping."
+            else
+                info "Creating symlink for $dir to $target"
+                mkdir -p "$(dirname "$target")"
+                ln -s "$dir" "$target"
+                success "Created symlink for $dir"
+            fi
+        # Handle other directories that should be linked to ~/.config
+        elif [ -d "$dir" ] && [[ "$rel_path" != "resources" ]] && [[ "$rel_path" != "bin" ]]; then
+            # For other directories, check if they should be linked to ~/.config
+            target="$HOME/.config/$(basename "$dir")"
+            
+            if [ -e "$target" ] && [ ! -L "$target" ]; then
+                info "~${target#$HOME} already exists... Skipping."
+            elif [ -L "$target" ]; then
+                info "~${target#$HOME} is already a symlink... Skipping."
+            else
+                info "Creating symlink for $dir to $target"
+                ln -s "$dir" "$target"
+                success "Created symlink for $dir"
+            fi
+        fi
+    done
+}
+
 case "$1" in
-    backup)
-        backup
-        ;;
     link)
         setup_symlinks
         ;;
     git)
         setup_git
         ;;
-    homebrew)
-        setup_homebrew
-        ;;
-    shell)
-        setup_shell
-        ;;
     terminfo)
         setup_terminfo
         ;;
-    catppuccin)
-        fetch_catppuccin_theme
-        ;;
-    all)
-        setup_symlinks
-        setup_terminfo
-        setup_homebrew
-        setup_shell
-        setup_git
+    sync)
+        sync_dotfiles
         ;;
     *)
-        echo -e $"\nUsage: $(basename "$0") {backup|link|git|homebrew|shell|terminfo|all}\n"
+        echo -e $"\nUsage: $(basename "$0") {link|git|terminfo|sync}\n"
         exit 1
         ;;
 esac
