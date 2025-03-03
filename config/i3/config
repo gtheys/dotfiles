@@ -16,6 +16,12 @@ exec --no-startup-id ~/set_once.sh
 # Please see http://i3wm.org/docs/userguide.html for the official i3 reference!
 
 #######################
+# host includes       #
+#######################
+
+include ~/.config/i3/`hostname`.conf
+
+#######################
 # config starts here: #
 #######################
 
@@ -572,7 +578,7 @@ strip_workspace_numbers yes
 
 ## rofi bindings fancy application menu ($mod+d /F9 optional disabled)
 
-bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun \
+bindsym $mod+d exec --no-startup-id rofi -dpi 1 -modi drun -show drun \
 		-config ~/.config/rofi/rofidmenu.rasi
 
 #bindsym F9 exec --no-startup-id rofi -modi drun -show drun \
