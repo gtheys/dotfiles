@@ -1,0 +1,17 @@
+https://substack.jurgenappelo.com/feed "AI"
+https://archlinux.org/feeds/news/ "linux"
+https://lwn.net/headlines/newrss "linux"
+https://www.reddit.com/r/neovim/.rss "linux"
+
+#"query:Youtube:tags # \"yt\""
+
+# rss 									     # tags		# creator
+https://www.youtube.com/feeds/videos.xml?channel_id=UCSDN0H_NAr7ssiaT3Pbjv3Q "mma"
+https://www.youtube.com/feeds/videos.xml?channel_id=UC3XTzVzaHQEd30rQbuvCtTQ "news"
+https://www.youtube.com/feeds/videos.xml?channel_id=UCSJPFQdZwrOutnmSFYtbstA "movies"
+https://www.youtube.com/feeds/videos.xml?channel_id=UCvlj0IzjSnNoduQF0l3VGng "news"
+https://www.youtube.com/feeds/videos.xml?channel_id=UC_gSotrFVZ_PiAxo3fTQVuQ "sport"
+https://www.youtube.com/feeds/videos.xml?channel_id=UCNSMdQtn1SuFzCZjfK2C7dQ "motorcycle"
+https://www.youtube.com/feeds/videos.xml?channel_id=UC0mJA1lqKjB4Qaaa2PNf0zg "motorcycle"
+https://www.youtube.com/feeds/videos.xml?channel_id=UC32340UayBiHETGy7z1iFHg "mma"
+https://www.youtube.com/feeds/videos.xml?channel_id=UCGk3BLFNe8cCmE9dkutQBfg "mma"

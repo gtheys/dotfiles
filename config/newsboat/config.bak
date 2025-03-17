@@ -1,0 +1,74 @@
+# base configs
+max-items 50
+prepopulate-query-feeds yes
+auto-reload yes
+reload-threads 100
+feed-sort-order title
+confirm-exit yes
+
+# macros
+macro SPACE set browser "mpv %u --fs video" ; open-in-browser ; set browser "elinks %u"
+
+browser "firefox --new-window %u"
+
+# Video macro that resets to system browser
+# macro SPACE set browser "mpv --fs %u"; open-in-browser; set browser "firefox --new-window %u"
+# macro v set browser "mpv --fs %u"; open-in-browser; set browser "firefox --new-window %u"
+
+# bookmarkeng
+bookmark-cmd "echo >> \"$HOME\"/notes/bookmarks/youtube"
+bookmark-autopilot yes
+
+# col # item		# fg   	# bg	# format
+color background	default	default
+color listnormal 	white	default
+color listnormal_unread red  	default 
+color listfocus 	black	white	bold standout
+color listfocus_unread 	black	red     bold standout
+color info		default	default
+color article		default	default
+
+# highlights		      	# fg	# bg	# format
+highlight article "^(Feed):*"	black 	default
+highlight article "^Title:*"	white	default	bold
+highlight article "^Author:*"	white	default
+highlight article "^Date:*"	white	default 
+highlight article "^Link:*"	red     default
+highlight article "^Flags:*" 	white   default	bold
+
+# keybinds
+unbind-key -a
+
+# right hand
+bind-key h quit
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key H prev-unread-feed
+bind-key J next-unread
+bind-key K prev-unread
+bind-key L next-unread-feed
+bind-key g home
+bind-key G end
+
+# left hand
+bind-key f toggle-show-read-feeds
+bind-key F set-filter
+bind-key d toggle-article-read
+bind-key D mark-all-feeds-read
+bind-key a reload-all
+bind-key A reload
+bind-key s set-tag
+bind-key S clear-tag
+
+# other
+bind-key b bookmark
+bind-key v edit-flags
+bind-key q hard-quit
+
+# utils
+bind-key SPACE macro-prefix
+bind-key ? help
+bind-key / open-search
+bind-key : cmdline
+bind-key ; sort
