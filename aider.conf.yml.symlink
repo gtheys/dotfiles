@@ -1,9 +1,7 @@
 dark-mode: true
-sonnet: true
 model: openrouter/anthropic/claude-3.5-sonnet
-#################
-# Output settings:
 
+# Output settings:
 ## Set the color for user input (default: #00cc00)
 user-input-color: #a6e3a1
 
@@ -13,12 +11,11 @@ user-input-color: #a6e3a1
 ## Set the color for tool error messages (default: #FF2222)
 tool-error-color: #f38ba8
 
-
 ## Set the color for tool warning messages (default: #FFA500)
 tool-warning-color: #fab387 
 
 ## Set the color for assistant output (default: #0088ff)
 assistant-output-color: #89b4fa
 
-## Set the markdown code theme (default: default, other options include monokai, solarized-dark, solarized-light, or a Pygments builtin style, see https://pygments.org/styles for available themes)
+## Set the markdown code theme
 code-theme: one-dark
