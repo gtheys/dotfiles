@@ -19,3 +19,5 @@ assistant-output-color: #89b4fa
 
 ## Set the markdown code theme
 code-theme: one-dark
+
+read: [CONVENTIONS.md, solution-design.txt, tasks.txt]
