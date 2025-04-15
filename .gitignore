@@ -18,3 +18,4 @@ package.json
 config/lazygit/state.yml
 config/nvim/lazyvim.json
 config/zsh/.zcompdump
+config/btop/btop.log
