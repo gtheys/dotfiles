@@ -30,6 +30,7 @@ prepend_path $DOTFILES/bin
 prepend_path $HOME/bin
 prepend_path $HOME/.local/bin
 prepend_path $HOME/.config/scripts
+prepend_path ${ASDF_DATA_DIR:-$HOME/.asdf}/shims
 
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
