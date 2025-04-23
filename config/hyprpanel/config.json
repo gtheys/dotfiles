@@ -395,7 +395,7 @@
   "theme.bar.buttons.modules.microphone.text": "#c3e88d",
   "theme.bar.buttons.modules.microphone.icon": "#272a3d",
   "theme.bar.buttons.modules.microphone.icon_background": "#c3e88d",
-  "theme.bar.location": "bottom",
+  "theme.bar.location": "top",
   "theme.bar.floating": false,
   "theme.bar.buttons.enableBorders": true,
   "theme.bar.scaling": 85,
