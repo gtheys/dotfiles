@@ -1,6 +1,6 @@
 [core]
     editor = nvim
-	autocrlf = false
+	  autocrlf = false
 [alias]
     co = checkout
     hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
@@ -11,9 +11,8 @@
     sub = "!git submodule sync && git submodule update"
 [fetch]
     prune = true
-[user]
-	email = geert.theys@gmail.com
-	name = Geert Theys
-[safe]
-	directory = C:/Users/geert/code/Windots
-	directory = C:/Users/geert/AppData/Local/nvim-data/lazy/
+[includeIf "gitdir:~/Code/salaryhero/"]
+    path = ~/.gitconfig-work
+
+[includeIf "gitdir:~/Code/personal/"]
+    path = ~/.gitconfig-local
