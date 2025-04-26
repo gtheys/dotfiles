@@ -123,6 +123,16 @@ fi
 [[ -e ~/.terminfo ]] && export TERMINFO_DIRS=~/.terminfo:/usr/share/terminfo
 
 ########################################################
+# Various Configuration
+########################################################
+
+# Podman configuration settings
+
+export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
+export UID=$(id -u)
+export GID=$(id -g)
+
+########################################################
 # Setup
 ########################################################
 
