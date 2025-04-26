@@ -46,7 +46,7 @@ else
 end
 
 -- Fonts
-config.font_size = 10
+config.font_size = 12
 config.font = wezterm.font({ family = "Firacode Nerd Font" })
 config.bold_brightens_ansi_colors = true
 config.font_rules = {
