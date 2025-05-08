@@ -77,10 +77,19 @@ return {
         inline = {
           adapter = "openrouter", -- Use OpenRouter for inline actions
         },
-        -- Explicitly define other common strategies to use OpenRouter
-        agent = {
-          adapter = "openrouter",
-        },
+        -- -- Explicitly define other common strategies to use OpenRouter
+        -- agent = {
+        --   adapter = "openrouter",
+        --   tools = {
+        --     ["mcp"] = {
+        --       callback = require("mcphub.extensions.codecompanion"),
+        --       description = "Call tools and resources from the MCP Servers",
+        --       opts = {
+        --         user_approval = true,
+        --       },
+        --     },
+        --   },
+        -- },
         edit = {
           adapter = "openrouter",
         },
