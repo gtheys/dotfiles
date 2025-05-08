@@ -9,11 +9,9 @@ local opt = vim.opt
 if vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1 then
   opt.shell = "pwsh -NoLogo -CustomPipeName vim"
   opt.shellcmdflag =
-  "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
+    "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
   opt.shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait"
   opt.shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
   opt.shellquote = ""
   opt.shellxquote = ""
 end
--- Set the Python 3 host program
-vim.g.python3_host_prog = 'C:\\Users\\geert\\.pyenv\\pyenv-win\\versions\\3.12.0\\python.exe'
