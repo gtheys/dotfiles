@@ -1,23 +1,27 @@
 dark-mode: true
+
 model: openrouter/anthropic/claude-3.5-sonnet
 
-# Output settings:
-## Set the color for user input (default: #00cc00)
 user-input-color: #a6e3a1
-
-## Set the color for tool output (default: None)
-#tool-output-color: xxx
-
-## Set the color for tool error messages (default: #FF2222)
+tool-output-color: #f5c2e7      # Added for better tool output visibility
 tool-error-color: #f38ba8
-
-## Set the color for tool warning messages (default: #FFA500)
-tool-warning-color: #fab387 
-
-## Set the color for assistant output (default: #0088ff)
+tool-warning-color: #fab387
 assistant-output-color: #89b4fa
 
-## Set the markdown code theme
 code-theme: one-dark
 
-read: [CONVENTIONS.md, solution-design.txt, tasks.txt]
+read: 
+  - CONVENTIONS.md
+  - solution-design.txt
+  - tasks.txt
+  - README.md                  # added more context for Aider
+  - docs/
+  - .env.example
+
+attribute-author: false
+attribute-committer: false
+attribute-co-authored-by: false
+
+# logging-level: info            # Optional: enable if supported
+auto-commits: false              # Optional: if Aider supports autosave or auto-commit
+
