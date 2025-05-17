@@ -38,7 +38,13 @@ else
 fi
 
 # Apply the new monitor configuration
-hyprctl keyword monitor "$MONITOR,$RESOLUTION@$NEW_RATE,auto,$SCALING"
+if (($(echo "$NEW_RATE == $RATE1" | bc -l))); then
+  # Use preferred for performance mode
+  hyprctl keyword monitor "$MONITOR,preferred,auto,$SCALING"
+else
+  # Use explicit resolution and refresh rate for power saving mode
+  hyprctl keyword monitor "$MONITOR,$RESOLUTION@$NEW_RATE,auto,$SCALING"
+fi
 
 # Apply the new power profile
 if command -v powerprofilesctl >/dev/null 2>&1; then

@@ -44,3 +44,8 @@ fi
 alias la="ls -AF ${colorflag}"
 alias lld="ls -l | grep ^d"
 alias rmf="rm -rf"
+
+# Screen fps
+
+alias lhz="hyprctl dispatch setoutputmode eDP-2 3840x2400@60"
+alias hhz="hyprctl dispatch setoutputmode eDP-2 3840x2400@120"

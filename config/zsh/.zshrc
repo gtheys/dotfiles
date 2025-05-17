@@ -174,6 +174,10 @@ else # macOS `ls`
     colorflag="-G"
 fi
 
+# if uwsm check may-start && uwsm select; then
+# 	exec uwsm start default
+# fi
+#
 # If a ~/.zshrc.local exists, source it
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 # If a ~/.localrc zshrc exists, source it
@@ -181,3 +185,7 @@ fi
 
 export PATH="$PATH:/home/geert/.local/bin"
 eval "$(starship init zsh)"
+
+
+# LESS_TERMCAP_mh
+alias hp="__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia Hyprland"

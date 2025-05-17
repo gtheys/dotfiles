@@ -398,7 +398,7 @@
   "theme.bar.location": "top",
   "theme.bar.floating": false,
   "theme.bar.buttons.enableBorders": true,
-  "theme.bar.scaling": 85,
+  "theme.bar.scaling": 100,
   "scalingPriority": "hyprland",
   "menus.clock.weather.location": "Bangkok",
   "menus.clock.weather.unit": "metric",
@@ -457,8 +457,9 @@
       ]
     }
   },
-  "bar.customModules.cpuTemp.sensor": "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon4/temp1_input",
+  "bar.customModules.cpuTemp.sensor": "/sys/class/thermal/thermal_zone10/temp",
   "bar.customModules.netstat.labelType": "full",
   "bar.customModules.netstat.round": true,
-  "bar.customModules.netstat.rateUnit": "auto"
+  "bar.customModules.netstat.rateUnit": "auto",
+  "bar.network.showWifiInfo": true
 }
