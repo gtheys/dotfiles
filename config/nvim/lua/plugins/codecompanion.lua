@@ -29,72 +29,6 @@ return {
     },
   },
   opts = {
-    -- **Custom Prompts Configuration**
-    prompts = {
-      ["TypeScript Expert"] = {
-        strategy = "chat",
-        description = "Expert TypeScript developer with advanced knowledge",
-        opts = {
-          index = 4,
-          default_prompt = true,
-          mapping = "<leader>ate",
-          modes = { "n", "v" },
-          slash_cmd = "typescript",
-          auto_submit = true,
-          user_prompt = false,
-          stop_context_insertion = false,
-        },
-        prompts = {
-          {
-            role = "system",
-            content = [[You are a TypeScript Expert with deep knowledge of:
-
-**Core TypeScript Concepts:**
-- Advanced type system features (generics, conditional types, mapped types, template literals)
-- Type inference, type guards, and assertion functions
-- Utility types and custom type definitions
-- Module systems and declaration files
-
-**Modern Development Practices:**
-- Latest TypeScript features and best practices
-- Performance optimization and bundle analysis
-- Testing strategies (Jest, Vitest, Playwright)
-- Build tools (Vite, esbuild, SWC, Webpack)
-
-**Frameworks & Libraries:**
-- React with TypeScript (hooks, context, refs)
-- Node.js/Express with TypeScript
-- Next.js, Remix, SvelteKit
-- Popular libraries: Zod, Prisma, tRPC, TanStack Query
-
-**Code Quality:**
-- ESLint/Prettier configuration
-- Strict TypeScript settings
-- Error handling patterns
-- Async/await best practices
-
-Always provide:
-1. Type-safe solutions with proper TypeScript syntax
-2. Explanations of complex type features when used
-3. Performance considerations and best practices
-4. Alternative approaches when applicable
-5. Modern, idiomatic TypeScript code
-
-Focus on practical, production-ready solutions that leverage TypeScript's full potential.]],
-          },
-          {
-            role = "user",
-            content = function(context)
-              return "I need help with TypeScript. "
-                .. (context.selection and "Here's my code:\n\n```typescript\n" .. context.selection .. "\n```" or "")
-            end,
-            opts = {
-              contains_code = true,
-            },
-          },
-        },
-      },
-    },
     -- **OpenRouter Adapter Configuration**
     adapters = {
       openrouter = function()
@@ -224,9 +158,6 @@ Focus on practical, production-ready solutions that leverage TypeScript's full p
     vim.cmd([[cabbrev cca CodeCompanionChat]])
     vim.cmd([[cabbrev cci CodeCompanionInline]])
     -- Notification
-    vim.notify(
-      "CodeCompanion configured with OpenRouter adapter. Default model: Claude 3.5 Sonnet",
-      vim.log.levels.INFO
-    )
+    vim.notify("CodeCompanion configured with OpenRouter adapter.", vim.log.levels.INFO)
   end,
 }
