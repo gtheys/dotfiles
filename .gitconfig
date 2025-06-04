@@ -1,3 +1,6 @@
+[user]
+    name = Geert Theys
+    email = me@geerttheys.com
 [core]
     editor = nvim
 	  autocrlf = false
@@ -5,14 +8,17 @@
     co = checkout
     hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
     l = log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)%an%C(reset) - %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    # show commits by a specific author
+    whoami = "!f() { git log --author=\"$1\" --pretty=format:'%Cred%h%Creset %Cgreen(%cr)%Creset - %s %C(yellow)%d%Creset' --abbrev-commit; }; f"
     # submodule shortcuts
     si = submodule init
     su = submodule update
     sub = "!git submodule sync && git submodule update"
 [fetch]
     prune = true
-[includeIf "gitdir:~/Code/salaryhero/"]
-    path = ~/.gitconfig-work
-
-[includeIf "gitdir:~/Code/personal/"]
-    path = ~/.gitconfig-local
+[includeIf "gitdir:/home/geert/Code/salaryhero/"]
+    path = /home/geert/.gitconfig-work
+[includeIf "gitdir:/home/geert/Code/personal/"]
+    path = /home/geert/.gitconfig-local
+[includeIf "gitdir:/home/geert/Code/sprinkel/"]
+    path = /home/geert/.gitconfig-sprinkel
