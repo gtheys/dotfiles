@@ -8,8 +8,8 @@
 MONITOR="eDP-2"             # Your monitor identifier
 RESOLUTION="3840x2400"      # Your monitor resolution
 SCALING="1.5"               # Your scaling factor
-RATE1="120.00000"           # First refresh rate (high performance)
-RATE2="60.00000"            # Second refresh rate (power saving)
+RATE1="120.00"              # First refresh rate (high performance)
+RATE2="60.00"               # Second refresh rate (power saving)
 PROFILE1="balanced"         # Power profile for high refresh rate
 PROFILE2="power-saver"      # Power profile for low refresh rate
 BRIGHTNESS1="80%"           # Brightness for high refresh rate
