@@ -1,0 +1,356 @@
+#!/bin/bash
+
+# Container Engine Switcher Functions for Arch Linux
+# Source this file to add container switching functions to your shell
+#
+# Usage:
+#   source ~/.config/scripts/container-switch.sh
+#   container-switch docker
+#   container-switch podman
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Print colored output
+_cs_print_status() {
+  echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+_cs_print_success() {
+  echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+_cs_print_warning() {
+  echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+_cs_print_error() {
+  echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Check if packages are installed
+_cs_check_packages() {
+  local missing=()
+
+  if ! pacman -Qs docker >/dev/null 2>&1; then
+    missing+=("docker")
+  fi
+
+  if ! pacman -Qs podman >/dev/null 2>&1; then
+    missing+=("podman")
+  fi
+
+  if [[ ${#missing[@]} -gt 0 ]]; then
+    _cs_print_error "Missing packages: ${missing[*]}"
+    _cs_print_status "Install with: sudo pacman -S ${missing[*]}"
+    return 1
+  fi
+}
+
+# Stop all container-related services
+_cs_stop_all_services() {
+  _cs_print_status "Stopping all container services..."
+
+  # Stop Docker services
+  sudo systemctl stop docker.service docker.socket 2>/dev/null || true
+
+  # Stop Podman services (user and system)
+  systemctl --user stop podman.service podman.socket 2>/dev/null || true
+  sudo systemctl stop podman.service podman.socket 2>/dev/null || true
+
+  # Kill any remaining processes
+  sudo pkill -f dockerd 2>/dev/null || true
+  sudo pkill -f podman 2>/dev/null || true
+
+  sleep 2
+}
+
+# Switch to Docker
+_cs_switch_to_docker() {
+  _cs_print_status "Switching to Docker..."
+
+  _cs_stop_all_services
+
+  # Unset DOCKER_HOST from systemd user environment
+  systemctl --user unset-environment DOCKER_HOST 2>/dev/null || true
+
+  # Unset DOCKER_HOST in current session (this actually works now!)
+  unset DOCKER_HOST
+
+  # Handle package conflicts: remove podman-docker, install docker
+  if pacman -Qs podman-docker >/dev/null 2>&1; then
+    _cs_print_status "Removing podman-docker aliases..."
+    sudo pacman -R podman-docker --noconfirm
+  fi
+
+  if ! pacman -Qs docker >/dev/null 2>&1; then
+    _cs_print_status "Installing Docker..."
+    sudo pacman -S docker --noconfirm
+  fi
+
+  # Start Docker services
+  _cs_print_status "Starting Docker services..."
+  sudo systemctl start docker.service docker.socket
+  sudo systemctl enable docker.service docker.socket
+
+  # Ensure user is in docker group
+  if ! groups | grep -q docker; then
+    _cs_print_warning "Adding user to docker group..."
+    sudo usermod -aG docker $USER
+    _cs_print_warning "You'll need to log out and back in for group changes to take effect"
+  fi
+
+  _cs_print_success "Switched to Docker!"
+  _cs_print_status "Docker daemon is now active"
+}
+
+# Setup rootless podman (fix newuidmap issues)
+_cs_setup_podman_rootless() {
+  local uid=$(id -u)
+  local user=$(whoami)
+
+  _cs_print_status "Setting up rootless podman for user: $user"
+
+  # Check if subuid/subgid entries exist and add if missing
+  if ! grep -q "^${user}:" /etc/subuid 2>/dev/null; then
+    _cs_print_status "Adding subuid entry: ${user}:100000:65536"
+    echo "${user}:100000:65536" | sudo tee -a /etc/subuid >/dev/null
+  else
+    _cs_print_status "subuid entry already exists for $user"
+  fi
+
+  if ! grep -q "^${user}:" /etc/subgid 2>/dev/null; then
+    _cs_print_status "Adding subgid entry: ${user}:100000:65536"
+    echo "${user}:100000:65536" | sudo tee -a /etc/subgid >/dev/null
+  else
+    _cs_print_status "subgid entry already exists for $user"
+  fi
+
+  # Ensure newuidmap and newgidmap have setuid bit
+  _cs_print_status "Setting setuid permissions on newuidmap/newgidmap..."
+  sudo chmod u+s /usr/bin/newuidmap /usr/bin/newgidmap
+
+  # Verify permissions
+  if [[ ! -u /usr/bin/newuidmap ]] || [[ ! -u /usr/bin/newgidmap ]]; then
+    _cs_print_warning "Failed to set setuid permissions on newuidmap/newgidmap"
+  fi
+
+  # Stop any existing podman processes
+  systemctl --user stop podman.service podman.socket 2>/dev/null || true
+
+  # Reset podman completely to clear any previous state
+  _cs_print_status "Resetting podman system to clear previous state..."
+  podman system reset --force 2>/dev/null || true
+
+  # Remove any stale socket files
+  rm -f /run/user/${uid}/podman/podman.sock 2>/dev/null || true
+
+  # Create podman user directories if they don't exist
+  mkdir -p ~/.local/share/containers
+  mkdir -p ~/.config/containers
+
+  _cs_print_status "Rootless podman setup complete"
+}
+# Switch to Podman
+_cs_switch_to_podman() {
+  _cs_print_status "Switching to Podman..."
+
+  _cs_stop_all_services
+
+  # Handle package conflicts FIRST: remove docker, install podman-docker
+  if pacman -Qs "^docker$" >/dev/null 2>&1; then
+    _cs_print_status "Removing Docker package to avoid conflicts..."
+    sudo pacman -R docker --noconfirm
+  fi
+
+  if ! pacman -Qs podman-docker >/dev/null 2>&1; then
+    _cs_print_status "Installing podman-docker for docker command aliases..."
+    sudo pacman -S podman-docker --noconfirm
+  fi
+
+  # Setup rootless podman BEFORE starting services
+  _cs_setup_podman_rootless
+
+  # Set DOCKER_HOST to podman socket in systemd user environment
+  systemctl --user set-environment DOCKER_HOST=unix:///run/user/$(id -u)/podman/podman.sock
+
+  # Set DOCKER_HOST in current session
+  export DOCKER_HOST=unix:///run/user/$(id -u)/podman/podman.sock
+
+  # Start Podman socket first (more reliable than service)
+  _cs_print_status "Starting Podman socket..."
+  systemctl --user start podman.socket
+  systemctl --user enable podman.socket
+
+  # Wait for socket to be ready
+  sleep 3
+
+  # Test if podman is working
+  _cs_print_status "Testing podman setup..."
+  if ! timeout 10 podman version >/dev/null 2>&1; then
+    _cs_print_warning "Podman test failed, trying to fix..."
+
+    # Force restart the socket
+    systemctl --user stop podman.socket
+    sleep 2
+    systemctl --user start podman.socket
+    sleep 3
+
+    # If still failing, show diagnostic info
+    if ! timeout 10 podman version >/dev/null 2>&1; then
+      _cs_print_error "Podman setup failed. Diagnostic info:"
+      echo "subuid entries:"
+      grep "$(whoami)" /etc/subuid || echo "No subuid entry found"
+      echo "subgid entries:"
+      grep "$(whoami)" /etc/subgid || echo "No subgid entry found"
+      echo "newuidmap permissions:"
+      ls -la /usr/bin/newuidmap
+      return 1
+    fi
+  fi
+
+  _cs_print_success "Switched to Podman!"
+  _cs_print_status "Podman is now active with docker command aliases"
+}
+
+# Show current status
+_cs_show_status() {
+  echo
+  _cs_print_status "Container Engine Status:"
+  echo "========================="
+
+  # Check Docker
+  if systemctl is-active --quiet docker.service; then
+    echo -e "Docker:  ${GREEN}ACTIVE${NC}"
+  else
+    echo -e "Docker:  ${RED}INACTIVE${NC}"
+  fi
+
+  # Check Podman
+  if systemctl --user is-active --quiet podman.service; then
+    echo -e "Podman:  ${GREEN}ACTIVE${NC}"
+  else
+    echo -e "Podman:  ${RED}INACTIVE${NC}"
+  fi
+
+  # Check DOCKER_HOST
+  local systemd_docker_host=$(systemctl --user show-environment | grep DOCKER_HOST= 2>/dev/null | cut -d= -f2 || echo "not set")
+  local session_docker_host=${DOCKER_HOST:-"not set"}
+  echo "DOCKER_HOST (systemd): $systemd_docker_host"
+  echo "DOCKER_HOST (session): $session_docker_host"
+
+  # Check podman-docker package
+  if pacman -Qs podman-docker >/dev/null 2>&1; then
+    echo -e "Podman-Docker aliases: ${GREEN}INSTALLED${NC}"
+  else
+    echo -e "Podman-Docker aliases: ${RED}NOT INSTALLED${NC}"
+  fi
+
+  # Test which engine responds
+  echo
+  _cs_print_status "Testing docker command..."
+  if timeout 5 docker version >/dev/null 2>&1; then
+    local engine=$(docker version --format '{{.Server.Platform.Name}}' 2>/dev/null || echo "unknown")
+    echo -e "Docker command works: ${GREEN}YES${NC} (using: $engine)"
+  else
+    echo -e "Docker command works: ${RED}NO${NC}"
+  fi
+  echo
+}
+
+# Clean up and reset everything
+_cs_reset_all() {
+  _cs_print_status "Resetting all container configurations..."
+
+  _cs_stop_all_services
+
+  # Remove environment variables
+  systemctl --user unset-environment DOCKER_HOST 2>/dev/null || true
+  unset DOCKER_HOST
+
+  # Disable all services
+  sudo systemctl disable docker.service docker.socket 2>/dev/null || true
+  systemctl --user disable podman.service podman.socket 2>/dev/null || true
+
+  # Remove podman-docker and install regular docker
+  if pacman -Qs podman-docker >/dev/null 2>&1; then
+    _cs_print_status "Removing podman-docker and restoring Docker..."
+    sudo pacman -R podman-docker --noconfirm
+    sudo pacman -S docker --noconfirm
+  fi
+
+  _cs_print_success "Reset complete. Docker package restored, no container engine is active."
+}
+
+# Usage information
+_cs_usage() {
+  echo "Container Engine Switcher Functions for Arch Linux"
+  echo "Usage: container-switch [docker|podman|status|reset]"
+  echo
+  echo "Commands:"
+  echo "  docker  - Switch to Docker"
+  echo "  podman  - Switch to Podman (rootless mode)"
+  echo "  status  - Show current status"
+  echo "  reset   - Stop and disable all container engines"
+  echo
+  echo "Examples:"
+  echo "  container-switch docker   # Switch to Docker"
+  echo "  container-switch podman   # Switch to Podman"
+  echo "  container-switch status   # Check current state"
+  echo
+  echo "Setup:"
+  echo "  Add to your ~/.bashrc or ~/.zshrc:"
+  echo "  source ~/.config/scripts/container-switch.sh"
+}
+
+# Main function that gets called
+container-switch() {
+  if ! _cs_check_packages; then
+    return 1
+  fi
+
+  case "${1:-}" in
+  "docker")
+    _cs_switch_to_docker
+    _cs_show_status
+    ;;
+  "podman")
+    _cs_switch_to_podman
+    _cs_show_status
+    ;;
+  "status")
+    _cs_show_status
+    ;;
+  "reset")
+    _cs_reset_all
+    _cs_show_status
+    ;;
+  "help" | "-h" | "--help")
+    _cs_usage
+    ;;
+  "")
+    _cs_print_error "No command specified"
+    _cs_usage
+    return 1
+    ;;
+  *)
+    _cs_print_error "Unknown command: $1"
+    _cs_usage
+    return 1
+    ;;
+  esac
+}
+
+# If script is being sourced, just define the functions
+# If script is being executed directly, show usage
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  echo "This script should be sourced, not executed directly."
+  echo "Add this to your ~/.bashrc or ~/.zshrc:"
+  echo "source ${BASH_SOURCE[0]}"
+  echo ""
+  _cs_usage
+fi
