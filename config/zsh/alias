@@ -49,3 +49,17 @@ alias rmf="rm -rf"
 
 alias lhz="hyprctl dispatch setoutputmode eDP-2 3840x2400@60"
 alias hhz="hyprctl dispatch setoutputmode eDP-2 3840x2400@120"
+
+# Show latest Arch Linux news before upgrading
+arch_news_check() {
+    echo "🔔 Latest Arch Linux news:"
+    curl -s https://archlinux.org/news/ \
+      | grep -Eo 'href="/news/[^"]+"' \
+      | cut -d'"' -f2 \
+      | head -n 5 \
+      | sed 's|^|https://archlinux.org|'
+
+    echo
+}
+
+alias pacnews="arch_news_check"

@@ -128,10 +128,10 @@ fi
 
 # Podman configuration settings
 
-export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
-export UID=$(id -u)
-export GID=$(id -g)
-
+# export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
+# export UID=$(id -u)
+# export GID=$(id -g)
+#
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
 export LS_COLORS=$(vivid generate catppuccin-mocha)
@@ -140,12 +140,14 @@ export LS_COLORS=$(vivid generate catppuccin-mocha)
 # Setup
 ########################################################
 
-if [ -f $HOME/.fzf.zsh ]; then
-  source $HOME/.fzf.zsh
+#if [ -f $HOME/.fzf.zsh ]; then
+  source /usr/share/fzf/key-bindings.zsh
+  source /usr/share/fzf/completion.zsh
+  #source $HOME/.fzf.zsh
   export FZF_DEFAULT_COMMAND='fd --type f'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   export FZF_DEFAULT_OPTS="--color bg:-1,bg+:-1,fg:-1,fg+:#feffff,hl:#993f84,hl+:#d256b5,info:#676767,prompt:#676767,pointer:#676767"
-fi
+#fi
 
 # add color to man pages
 export MANROFFOPT='-c'
@@ -182,7 +184,9 @@ fi
 
 export PATH="$PATH:/home/geert/.local/bin"
 eval "$(starship init zsh)"
+eval $(minikube -p minikube docker-env) 
 
 
-# LESS_TERMCAP_mh
-alias hp="__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia Hyprland"
+# FZF with Git right in the shell by Junegunn : check out his github below
+# Keymaps for this is available at https://github.com/junegunn/fzf-git.sh
+source ~/.config/scripts/fzf-git.sh
