@@ -31,6 +31,7 @@ prepend_path $HOME/bin
 prepend_path $HOME/.local/bin
 prepend_path $HOME/.config/scripts
 prepend_path ${ASDF_DATA_DIR:-$HOME/.asdf}/shims
+prepend_path $HOME/.local/share/npm/bin
 
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
@@ -186,6 +187,8 @@ export PATH="$PATH:/home/geert/.local/bin"
 eval "$(starship init zsh)"
 eval $(minikube -p minikube docker-env) 
 
+eval "$(/usr/bin/mise activate zsh)"
+eval "$(mise activate zsh --shims)"
 
 # FZF with Git right in the shell by Junegunn : check out his github below
 # Keymaps for this is available at https://github.com/junegunn/fzf-git.sh
