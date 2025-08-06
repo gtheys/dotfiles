@@ -1,6 +1,6 @@
 ---
 description: "Read-only PR reviewer that inspects the diff and produces actionable comments."
-model: openrouter/google/gemini-2.5-pro-preview-06-05
+model: openrouter/anthropic/claude-4-sonnet-20250522
 temperature: 0.1
 tools:
   # read-only analysis; no edits/patches

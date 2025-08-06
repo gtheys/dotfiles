@@ -1,4 +1,17 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "autoupdate": true
+  "mcp": {
+    "postgres": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@henkey/postgres-mcp-server"
+      ],
+      "enabled": true,
+      "environment": {
+        "DATABASE_URL": "postgres://postgres:localpassword@localhost:5432/salaryhero?sslmode=disable"
+      }
+    }
+  }
 }
