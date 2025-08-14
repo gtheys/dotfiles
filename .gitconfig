@@ -22,3 +22,5 @@
     path = /home/geert/.gitconfig-local
 [includeIf "gitdir:/home/geert/Code/sprinkel/"]
     path = /home/geert/.gitconfig-sprinkel
+[init]
+	defaultBranch = main
