@@ -48,7 +48,7 @@ BASE="${BASE:-$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | 
   git diff --unified=0 "origin/$BASE...HEAD"
   ```
 
-* Keep only source files `*.js, *.jsx, *.ts, *.tsx`, excluding test patterns: `*.test.*`, `*.spec.*`, `__tests__/`
+* Keep only source files `*.js, *.jsx, *.ts, *.tsx`, excluding test patterns: `*.test.*`, `*.spec.*`, `tests/`
 * For each file, identify changed symbols (exported functions/classes/components/routes) via grep/AST hints.
 
 ## 2) Detect Jest/TypeScript setup
@@ -82,7 +82,7 @@ BASE="${BASE:-$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | 
 
   * This agent assumes **Jest**; if Vitest is detected, **stop** with a clear note
 * Use `ts-jest` or `babel-jest` if configured; **do not** alter config
-* Add minimal fixtures under `__tests__/__fixtures__` when needed
+* Add minimal fixtures under `test/__fixtures__` when needed
 
 ## 6) Run tests with coverage (Cobertura + LCOV for changed-lines analysis)
 
@@ -129,7 +129,7 @@ Expected outputs:
 * Stage only tests/fixtures:
 
   ```bash
-  git add **/__tests__/** **/*.test.* **/__mocks__/** **/testdata/**
+  git add **/test/** **/*.test.* **/mock/** **/testdata/**
   ```
 
 * Do **not** commit; provide a suggested commit message
