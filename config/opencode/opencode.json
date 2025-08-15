@@ -10,7 +10,7 @@
       ],
       "enabled": true,
       "environment": {
-        "DATABASE_URL": "postgres://postgres:localpassword@localhost:5432/salaryhero?sslmode=disable"
+        "POSTGRES_CONNECTION_STRING": "postgres://postgres:localpassword@localhost:5432/salaryhero?sslmode=disable"
       }
     }
   }
