@@ -1,3 +1,21 @@
+---
+mode: primary
+description: "Used to analyze the codebase and write down in /notest/architecture/"
+model: openrouter/anthropic/claude-4-sonnet-20250522
+temperature: 0.1
+tools:
+  # read-only analysis; no edits/patches
+  write: false
+  edit: false
+  patch: false
+  # enable reading + shell so it can run git and inspect files
+  read: true
+  grep: true
+  glob: true
+  bash: true
+---
+
+
 # Codebase analysis guidelines
 
 This repository contains codebase analysis documents in `notes/architecture/`.
