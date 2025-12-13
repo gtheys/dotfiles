@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# AIDEV-NOTE: Script to open spec files from Jira ID via Taskwarrior
+# Supports fzf for interactive selection with fallback to bash select
+# Usage: open-spec <JIRA-ID>
+
+JIRA_ID="${1:-}"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+if [[ -z "$JIRA_ID" ]]; then
+    echo -e "${RED}Usage:${NC} open-spec <JIRA-ID>"
+    echo -e "${BLUE}Example:${NC} open-spec IN-1373"
+    exit 1
+fi
+
+# AIDEV-NOTE: Query for spec tasks by searching description for Jira ID
+# The spec task description format is: "SPEC: <JIRA-ID> <summary> spec_state:<state>"
+echo -e "${BLUE}🔍 Searching for spec tasks matching: $JIRA_ID${NC}"
+SPEC_TASKS=$(task +spec export 2>/dev/null | jq --arg jid "$JIRA_ID" '[.[] | select(.description | contains($jid))]')
+
+if [[ "$SPEC_TASKS" == "[]" ]]; then
+    echo -e "${RED}❌ No spec task found for Jira ID: $JIRA_ID${NC}"
+    echo ""
+    echo -e "${BLUE}📋 All existing spec tasks:${NC}"
+    task +spec
+    echo ""
+    echo -e "${YELLOW}💡 To create a spec for this Jira issue, check if the Jira task exists first:${NC}"
+    echo -e "   task jiraid:$JIRA_ID"
+    exit 1
+fi
+
+# Count specs
+SPEC_COUNT=$(echo "$SPEC_TASKS" | jq 'length')
+
+if [[ "$SPEC_COUNT" -eq 1 ]]; then
+    # Single spec - select automatically
+    SELECTED_SPEC=$(echo "$SPEC_TASKS" | jq '.[0]')
+    SELECTED_INDEX=0
+else
+    # Multiple specs - let user choose
+    echo -e "${GREEN}Found $SPEC_COUNT spec tasks for $JIRA_ID${NC}"
+    echo ""
+    
+    # Check if fzf is available
+    if command -v fzf &>/dev/null; then
+        # Use fzf for selection
+        # AIDEV-NOTE: Extract spec_state from description (format: "... spec_state:draft")
+        # Build formatted list with index, state, and description
+        FORMATTED_LIST=$(echo "$SPEC_TASKS" | jq -r 'to_entries[] | 
+            .key as $idx |
+            .value.description as $desc |
+            ($desc | capture("spec_state:(?<state>[^ ]+)").state // "unknown") as $state |
+            "\($idx):::\($state):::\($desc)"')
+        
+        # Present to fzf with formatted display
+        SELECTED_LINE=$(echo "$FORMATTED_LIST" | 
+            awk -F':::' '{printf "[%-10s] %s\n", $2, $3}' | 
+            fzf --height=40% \
+                --border \
+                --prompt="Select spec to open > " \
+                --preview="echo {} | sed 's/\[//;s/\]//' | awk '{print \"State: \" \$1}'" \
+                --preview-window=up:3:wrap)
+        
+        if [[ -z "$SELECTED_LINE" ]]; then
+            echo -e "${YELLOW}Selection cancelled${NC}"
+            exit 0
+        fi
+        
+        # Extract index from selection
+        SELECTED_INDEX=$(echo "$FORMATTED_LIST" | 
+            awk -F':::' '{printf "[%-10s] %s\n", $2, $3}' | 
+            grep -Fn "$SELECTED_LINE" | 
+            cut -d: -f1)
+        SELECTED_INDEX=$((SELECTED_INDEX - 1))
+    else
+        # Fallback to bash select
+        # AIDEV-NOTE: Extract spec_state from description for bash select menu
+        mapfile -t MENU_ITEMS < <(echo "$SPEC_TASKS" | jq -r '.[] | 
+            .description as $desc |
+            ($desc | capture("spec_state:(?<state>[^ ]+)").state // "unknown") as $state |
+            "[" + $state + "] " + $desc')
+        
+        PS3="Select spec to open (1-$SPEC_COUNT): "
+        select item in "${MENU_ITEMS[@]}"; do
+            if [[ -n "$item" ]]; then
+                SELECTED_INDEX=$((REPLY - 1))
+                break
+            fi
+        done
+    fi
+    
+    SELECTED_SPEC=$(echo "$SPEC_TASKS" | jq ".[$SELECTED_INDEX]")
+fi
+
+# Extract file path from annotation
+SPEC_PATH=$(echo "$SELECTED_SPEC" | jq -r '.annotations[]? | 
+    select(.description | contains("Spec(repo=")) | 
+    .description | 
+    sub("Spec\\(repo=[^)]+\\): "; "")')
+
+if [[ -z "$SPEC_PATH" ]]; then
+    echo -e "${RED}❌ No spec file path found in task annotations${NC}"
+    exit 1
+fi
+
+# Construct full path
+if [[ -n "${LLM_NOTES_ROOT:-}" ]]; then
+    FULL_PATH="$LLM_NOTES_ROOT/$SPEC_PATH"
+else
+    echo -e "${YELLOW}⚠️  \$LLM_NOTES_ROOT not set, using relative path${NC}"
+    FULL_PATH="$SPEC_PATH"
+fi
+
+# Determine editor
+EDITOR="${EDITOR:-vim}"
+if ! command -v "$EDITOR" &>/dev/null; then
+    EDITOR="nano"
+fi
+if ! command -v "$EDITOR" &>/dev/null; then
+    EDITOR="vi"
+fi
+
+# Show what we're opening
+SPEC_DESC=$(echo "$SELECTED_SPEC" | jq -r '.description')
+# AIDEV-NOTE: Extract spec_state from description since it's not a separate UDA
+SPEC_STATE=$(echo "$SELECTED_SPEC" | jq -r '.description | capture("spec_state:(?<state>[^ ]+)").state // "unknown"')
+echo ""
+echo -e "${GREEN}📝 Opening spec:${NC}"
+echo -e "  ${BLUE}Description:${NC} $SPEC_DESC"
+echo -e "  ${BLUE}State:${NC} $SPEC_STATE"
+echo -e "  ${BLUE}Path:${NC} $FULL_PATH"
+echo ""
+
+# Open file
+exec "$EDITOR" "$FULL_PATH"
