@@ -14,6 +14,7 @@
     si = submodule init
     su = submodule update
     sub = "!git submodule sync && git submodule update"
+	dt = difftool -d
 [fetch]
     prune = true
 [includeIf "gitdir:/home/geert/Code/salaryhero/"]
@@ -24,3 +25,5 @@
     path = /home/geert/.gitconfig-sprinkel
 [init]
 	defaultBranch = main
+[diff]
+	tool = meld
