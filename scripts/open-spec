@@ -4,6 +4,7 @@ set -euo pipefail
 # AIDEV-NOTE: Script to open spec files from Jira ID via Taskwarrior
 # Supports fzf for interactive selection with fallback to bash select
 # Usage: open-spec <JIRA-ID>
+# Note: spec_state is now a UDA (User Defined Attribute) in Taskwarrior
 
 JIRA_ID="${1:-}"
 
@@ -21,9 +22,11 @@ if [[ -z "$JIRA_ID" ]]; then
 fi
 
 # AIDEV-NOTE: Query for spec tasks by searching description for Jira ID
-# The spec task description format is: "SPEC: <JIRA-ID> <summary> spec_state:<state>"
+# The spec task description format is: "SPEC: <JIRA-ID> <summary>"
+# spec_state is stored as a UDA, not in the description
+# Filter out deleted tasks (status != "deleted")
 echo -e "${BLUE}🔍 Searching for spec tasks matching: $JIRA_ID${NC}"
-SPEC_TASKS=$(task +spec export 2>/dev/null | jq --arg jid "$JIRA_ID" '[.[] | select(.description | contains($jid))]')
+SPEC_TASKS=$(task +spec export 2>/dev/null | jq --arg jid "$JIRA_ID" '[.[] | select(.description | contains($jid)) | select(.status != "deleted")]')
 
 if [[ "$SPEC_TASKS" == "[]" ]]; then
     echo -e "${RED}❌ No spec task found for Jira ID: $JIRA_ID${NC}"
@@ -48,15 +51,20 @@ else
     echo -e "${GREEN}Found $SPEC_COUNT spec tasks for $JIRA_ID${NC}"
     echo ""
     
+    # AIDEV-NOTE: Check if we have an interactive terminal for fzf/select
+    # If not interactive, default to first spec
+    if [[ ! -t 0 ]] && [[ ! -t 2 ]]; then
+        echo -e "${YELLOW}⚠️  Non-interactive terminal detected, selecting first spec${NC}"
+        SELECTED_INDEX=0
     # Check if fzf is available
-    if command -v fzf &>/dev/null; then
+    elif command -v fzf &>/dev/null; then
         # Use fzf for selection
-        # AIDEV-NOTE: Extract spec_state from description (format: "... spec_state:draft")
+        # AIDEV-NOTE: spec_state is now a UDA field, accessed directly from the task object
         # Build formatted list with index, state, and description
         FORMATTED_LIST=$(echo "$SPEC_TASKS" | jq -r 'to_entries[] | 
             .key as $idx |
             .value.description as $desc |
-            ($desc | capture("spec_state:(?<state>[^ ]+)").state // "unknown") as $state |
+            (.value.spec_state // "unknown") as $state |
             "\($idx):::\($state):::\($desc)"')
         
         # Present to fzf with formatted display
@@ -77,14 +85,15 @@ else
         SELECTED_INDEX=$(echo "$FORMATTED_LIST" | 
             awk -F':::' '{printf "[%-10s] %s\n", $2, $3}' | 
             grep -Fn "$SELECTED_LINE" | 
+            head -1 |
             cut -d: -f1)
         SELECTED_INDEX=$((SELECTED_INDEX - 1))
     else
         # Fallback to bash select
-        # AIDEV-NOTE: Extract spec_state from description for bash select menu
+        # AIDEV-NOTE: spec_state is now a UDA field, accessed directly from the task object
         mapfile -t MENU_ITEMS < <(echo "$SPEC_TASKS" | jq -r '.[] | 
             .description as $desc |
-            ($desc | capture("spec_state:(?<state>[^ ]+)").state // "unknown") as $state |
+            (.spec_state // "unknown") as $state |
             "[" + $state + "] " + $desc')
         
         PS3="Select spec to open (1-$SPEC_COUNT): "
@@ -129,8 +138,8 @@ fi
 
 # Show what we're opening
 SPEC_DESC=$(echo "$SELECTED_SPEC" | jq -r '.description')
-# AIDEV-NOTE: Extract spec_state from description since it's not a separate UDA
-SPEC_STATE=$(echo "$SELECTED_SPEC" | jq -r '.description | capture("spec_state:(?<state>[^ ]+)").state // "unknown"')
+# AIDEV-NOTE: spec_state is now a UDA field, accessed directly from the task object
+SPEC_STATE=$(echo "$SELECTED_SPEC" | jq -r '.spec_state // "unknown"')
 echo ""
 echo -e "${GREEN}📝 Opening spec:${NC}"
 echo -e "  ${BLUE}Description:${NC} $SPEC_DESC"
