@@ -1,0 +1,54 @@
+# [Created by task 3.4.2 11/10/2025 11:52:01]
+data.location=/home/geert/.task
+news.version=3.4.2
+
+# To use the default location of the XDG directories,
+# move this configuration file from ~/.taskrc to ~/.config/task/taskrc and update location config as follows:
+
+#data.location=~/.local/share/task
+#hooks.location=~/.config/task/hooks
+
+# Color theme (uncomment one to use)
+#include light-16.theme
+#include light-256.theme
+#include bubblegum-256.theme
+#include dark-16.theme
+#include dark-256.theme
+#include dark-red-256.theme
+#include dark-green-256.theme
+#include dark-blue-256.theme
+#include dark-violets-256.theme
+#include dark-yellow-green.theme
+#include dark-gray-256.theme
+#include dark-gray-blue-256.theme
+#include solarized-dark-256.theme
+#include solarized-light-256.theme
+#include no-color.theme
+
+# AIDEV-NOTE: Jira ID UDA for tracking Jira ticket references
+uda.jiraid.type=string
+uda.jiraid.label=JiraID
+
+# AIDEV-NOTE: Spec State UDA for tracking specification workflow states
+uda.spec_state.type=string
+uda.spec_state.label=SpecState
+uda.spec_state.values=approved,review,draft,stale,
+uda.spec_state.default=draft
+
+# AIDEV-NOTE: Color coding for spec states
+color.uda.spec_state.approved=green
+color.uda.spec_state.review=yellow
+color.uda.spec_state.draft=blue
+color.uda.spec_state.stale=red
+
+# AIDEV-NOTE: Custom report for specification tasks
+report.specs.description=Specification tasks with state
+report.specs.columns=id,spec_state,priority,project,tags,due,description
+report.specs.filter=status:pending +spec
+report.specs.labels=ID,State,Pri,Project,Tags,Due,Description
+report.specs.sort=spec_state-,priority+,due+
+
+# AIDEV-NOTE: Modified list report to include Jira ID
+report.list.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,jiraid,description,urgency
+report.list.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Jira,Description,Urg
+
