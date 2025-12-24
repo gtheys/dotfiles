@@ -1,0 +1,18 @@
+[general]
+targets = ["jira"]
+
+[jira]
+service = "jira"
+base_uri = "https://salaryhero.atlassian.net"
+username = "geert@salary-hero.com"
+password = "@oracle:eval:echo $JIRA_API_TOKEN"
+
+# only mine + only open
+query = "assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC"
+
+description_template = "{{jiraid}} {{jirasummary}}"
+project_template = "{{project.key | lower}}"
+priority_template = "{{priority.name | lower}}"
+
+import_labels_as_tags = true
+add_tags = ["jira"]
