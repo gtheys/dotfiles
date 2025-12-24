@@ -11,7 +11,7 @@ password = "@oracle:eval:echo $JIRA_API_TOKEN"
 query = "assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC"
 
 description_template = "{{jiraid}} {{jirasummary}}"
-project_template = "{{project.key | lower}}"
+project_template = "salaryhero.jira.{{project.key | lower}}"
 priority_template = "{{priority.name | lower}}"
 
 import_labels_as_tags = true

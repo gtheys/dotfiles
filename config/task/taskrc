@@ -29,6 +29,10 @@ news.version=3.4.2
 uda.jiraid.type=string
 uda.jiraid.label=JiraID
 
+# AIDEV-NOTE: Repository UDA for tracking which repository a task belongs to
+uda.repository.type=string
+uda.repository.label=Repo
+
 # AIDEV-NOTE: Spec State UDA for tracking specification workflow states
 uda.spec_state.type=string
 uda.spec_state.label=SpecState
@@ -48,7 +52,16 @@ report.specs.filter=status:pending +spec
 report.specs.labels=ID,State,Pri,Project,Tags,Due,Description
 report.specs.sort=spec_state-,priority+,due+
 
-# AIDEV-NOTE: Modified list report to include Jira ID
-report.list.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,jiraid,description,urgency
-report.list.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Jira,Description,Urg
+# AIDEV-NOTE: Modified list report to include Jira ID and Repository
+report.list.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,jiraid,repository,description,urgency
+report.list.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Jira,Repo,Description,Urg
+
+# AIDEV-NOTE: Custom report for dependency hierarchy view
+# Use `task tree` to see tasks grouped by dependency chains
+# Sorts by description to leverage numbering scheme (1., 1.1., 2., 2.1., etc.)
+report.tree.description=Tasks grouped by dependency chains
+report.tree.columns=id,depends.count,project,jiraid,description.count,urgency
+report.tree.labels=ID,Deps,Project,Jira,Description,Urg
+report.tree.filter=status:pending
+report.tree.sort=description+
 
