@@ -16,3 +16,6 @@ priority_template = "{{priority.name | lower}}"
 
 import_labels_as_tags = true
 add_tags = ["jira"]
+
+# Set work_state to "new" for all imported tickets
+static_fields = ["work_state:new"]

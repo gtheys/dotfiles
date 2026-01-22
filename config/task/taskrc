@@ -21,9 +21,14 @@ news.version=3.4.2
 #include dark-yellow-green.theme
 #include dark-gray-256.theme
 #include dark-gray-blue-256.theme
-#include solarized-dark-256.theme
+#nclude solarized-dark-256.theme
 #include solarized-light-256.theme
 #include no-color.theme
+#
+include ~/.dotfiles/config/task/nord.theme 
+
+# AIDEV-NOTE: Color precedence - UDA colors (work_state) take priority over most other rules
+rule.precedence.color=deleted,completed,active,uda.,keyword.,tag.,project.,overdue,scheduled,due.today,due,blocked,blocking,recurring,tagged
 
 # AIDEV-NOTE: Jira ID UDA for tracking Jira ticket references
 uda.jiraid.type=string
@@ -33,35 +38,34 @@ uda.jiraid.label=JiraID
 uda.repository.type=string
 uda.repository.label=Repo
 
-# AIDEV-NOTE: Spec State UDA for tracking specification workflow states
-uda.spec_state.type=string
-uda.spec_state.label=SpecState
-uda.spec_state.values=approved,review,draft,stale,
-uda.spec_state.default=draft
+# AIDEV-NOTE: Work State UDA for tracking workflow states
+uda.work_state.type=string
+uda.work_state.label=WorkState
+uda.work_state.values=approved,review,draft,rejected,todo,inprogress,done,new
+uda.work_state.default=new
 
-# AIDEV-NOTE: Color coding for spec states
-color.uda.spec_state.approved=green
-color.uda.spec_state.review=yellow
-color.uda.spec_state.draft=blue
-color.uda.spec_state.stale=red
+# AIDEV-NOTE: Color coding for work states is defined in nord.theme
 
-# AIDEV-NOTE: Custom report for specification tasks
-report.specs.description=Specification tasks with state
-report.specs.columns=id,spec_state,priority,project,tags,due,description
-report.specs.filter=status:pending +spec
-report.specs.labels=ID,State,Pri,Project,Tags,Due,Description
-report.specs.sort=spec_state-,priority+,due+
+# AIDEV-NOTE: Custom report for work tasks with state
+report.specs.columns=id,status.short,work_state,project,tags,due,description
+report.specs.filter=status:completed or status:pending +spec
+report.specs.labels=ID,St,State,Project,Tags,Due,Description
+report.specs.sort=work_state-,due+
 
-# AIDEV-NOTE: Modified list report to include Jira ID and Repository
-report.list.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,jiraid,repository,description,urgency
-report.list.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Jira,Repo,Description,Urg
+# AIDEV-NOTE: Modified list report to include Jira ID, Repository, and Work State
+report.list.columns=id,status.short,work_state,start.age,entry.age,depends,project,tags,recur,scheduled.countdown,due.relative,until.remaining,jiraid,repository,description
+report.list.labels=ID,St,WS,Active,Age,Deps,Project,Tag,Recur,S,Due,Until,Jira,Repo,Description
 
 # AIDEV-NOTE: Custom report for dependency hierarchy view
 # Use `task tree` to see tasks grouped by dependency chains
 # Sorts by description to leverage numbering scheme (1., 1.1., 2., 2.1., etc.)
-report.tree.description=Tasks grouped by dependency chains
-report.tree.columns=id,depends.count,project,jiraid,description.count,urgency
-report.tree.labels=ID,Deps,Project,Jira,Description,Urg
-report.tree.filter=status:pending
-report.tree.sort=description+
 
+context.work.read=project:salaryhero
+context.work.write=project:salaryhero
+report.next.columns=id,status.short,work_state,start.age,entry.age,depends,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description
+report.next.labels=ID,St,WS,Active,Age,Deps,Project,Tag,Recur,S,Due,Until,Description
+report.byproject.description=Tasks grouped by project
+report.byproject.columns=id,status.short,work_state,project,tags,due.relative,jiraid,repository,description
+report.byproject.labels=ID,St,WS,Project,Tags,Due,Jira,Repo,Description
+report.byproject.filter=status:pending
+report.byproject.sort=project+,due+
