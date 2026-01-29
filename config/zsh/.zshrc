@@ -32,6 +32,7 @@ prepend_path $HOME/.local/bin
 prepend_path $HOME/.config/scripts
 prepend_path ${ASDF_DATA_DIR:-$HOME/.asdf}/shims
 prepend_path $HOME/.local/share/npm/bin
+prepend_path $HOME/.bun/bin:$PATH
 
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
@@ -135,7 +136,10 @@ fi
 #
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
-export LS_COLORS=$(vivid generate catppuccin-mocha)
+export LS_COLORS=$(vivid generate tokyonight-storm)
+
+export PLAYWRIGHT_MCP_BROWSER=firefox
+
 
 ########################################################
 # Setup
