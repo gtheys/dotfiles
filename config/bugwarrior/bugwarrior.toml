@@ -7,7 +7,7 @@ base_uri = "https://salaryhero.atlassian.net"
 username = "geert@salary-hero.com"
 password = "@oracle:eval:echo $JIRA_API_TOKEN"
 
-query = "issuetype IN (Story, Task, Bug) AND assignee = currentUser() AND statusCategory != Done AND project IN (\"IMP\", \"DP\",\"IN\") ORDER BY updated DESC"
+query = "issuetype IN (Story, Task, \"Sub-task\", Bug) AND assignee = currentUser() AND statusCategory != Done AND project IN (\"IMP\", \"DP\",\"IN\") ORDER BY updated DESC"
 # only mine + only open
 #query = "assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC"
 description_template = "{{jiraid}} {{jirasummary}}"
