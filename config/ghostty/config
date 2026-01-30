@@ -1,0 +1,84 @@
+# Fonts
+font-family = "FiraCode Nerd Font Mono"
+font-family-bold = auto
+font-family-italic = "Maple Mono"
+font-style-italic = "Italic"
+font-family-bold-italic = "Maple Mono"
+font-style-bold-italic = "Bold Italic"
+font-size = 12
+adjust-underline-position = 4
+
+# Symbol mapping for Nerd Font icons
+# AIDEV-NOTE: Maps Unicode ranges for Nerd Font symbols to Symbols Nerd Font
+font-codepoint-map = U+23FB-U+23FE="Symbols Nerd Font"
+font-codepoint-map = U+2665="Symbols Nerd Font"
+font-codepoint-map = U+26A1="Symbols Nerd Font"
+font-codepoint-map = U+2B58="Symbols Nerd Font"
+font-codepoint-map = U+E000-U+E00A="Symbols Nerd Font"
+font-codepoint-map = U+E0A0-U+E0A3="Symbols Nerd Font"
+font-codepoint-map = U+E0B0-U+E0C8="Symbols Nerd Font"
+font-codepoint-map = U+E0CA="Symbols Nerd Font"
+font-codepoint-map = U+E0CC-U+E0D2="Symbols Nerd Font"
+font-codepoint-map = U+E0D4="Symbols Nerd Font"
+font-codepoint-map = U+E200-U+E2A9="Symbols Nerd Font"
+font-codepoint-map = U+E300-U+E3E3="Symbols Nerd Font"
+font-codepoint-map = U+E5FA-U+E634="Symbols Nerd Font"
+font-codepoint-map = U+E700-U+E7C5="Symbols Nerd Font"
+font-codepoint-map = U+EA60-U+EBEB="Symbols Nerd Font"
+font-codepoint-map = U+F000-U+F2E0="Symbols Nerd Font"
+font-codepoint-map = U+F300-U+F32F="Symbols Nerd Font"
+font-codepoint-map = U+F400-U+F4A9="Symbols Nerd Font"
+font-codepoint-map = U+F500-U+F8FF="Symbols Nerd Font"
+
+# Disable ligatures at cursor position
+font-feature = -calt
+
+# Mouse
+mouse-hide-while-typing = true
+# mouse-scroll-multiplier = 1
+
+# Theme
+theme = /home/geert/Code/personal/tokyonight.nvim/extras/ghostty/tokyonight_storm
+# theme = Flexoki Dark
+cursor-invert-fg-bg = true
+background-opacity = 0.9
+window-theme = ghostty
+
+# keybindings
+keybind = clear
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+j=goto_split:bottom
+keybind = ctrl+shift+k=goto_split:top
+keybind = ctrl+shift+l=goto_split:right
+keybind = super+shift+t=new_tab
+keybind = super+shift+h=previous_tab
+keybind = super+shift+l=next_tab
+keybind = super+shift+comma=move_tab:-1
+keybind = super+shift+period=move_tab:1
+keybind = super+shift+c=copy_to_clipboard
+keybind = super+shift+v=paste_from_clipboard
+keybind = super+shift+enter=new_split:auto
+keybind = super+shift+i=inspector:toggle
+keybind = super+shift+m=toggle_split_zoom
+keybind = super+shift+r=reload_config
+keybind = super+shift+s=write_screen_file:open
+keybind = super+shift+w=close_surface
+
+keybind = ctrl+equal=increase_font_size:1
+keybind = ctrl+plus=increase_font_size:1
+keybind = ctrl+minus=decrease_font_size:1
+
+# Window
+gtk-single-instance = true
+gtk-tabs-location = bottom
+gtk-wide-tabs = false
+gtk-toolbar-style = flat
+window-padding-y = 2,0
+window-padding-balance = true
+window-decoration = false
+
+# Other
+copy-on-select = clipboard
+shell-integration-features = cursor,sudo,no-title,ssh-env,ssh-terminfo
+app-notifications = no-clipboard-copy
+#config-file = ./config-dankcolors
