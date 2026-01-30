@@ -1,5 +1,7 @@
 local M = {}
 
+-- Colorize terminal output in scrollback
+-- This function handles ANSI escape codes properly
 function M.colorize()
   vim.wo.number = false
   vim.wo.relativenumber = false
@@ -26,3 +28,5 @@ function M.colorize()
     vim.b[buf].minianimate_disable = false
   end, 2000)
 end
+
+return M
