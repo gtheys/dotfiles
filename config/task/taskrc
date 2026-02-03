@@ -69,3 +69,12 @@ report.byproject.columns=id,status.short,work_state,project,tags,due.relative,ji
 report.byproject.labels=ID,St,WS,Project,Tags,Due,Jira,Repo,Description
 report.byproject.filter=status:pending
 report.byproject.sort=project+,due+
+
+# AIDEV-NOTE: Custom tree report for viewing task dependency hierarchy by project
+# Shows tasks in tree format with work state, dependencies, and project context
+# Usage: task project:DP-29 ptree  OR  ttree DP-29 (using scripts/ttree)
+report.ptree.description=Project tree view with dependencies
+report.ptree.columns=id,work_state,depends,project,tags,due.relative,description
+report.ptree.labels=ID,WS,Deps,Project,Tags,Due,Description
+report.ptree.sort=depends+,id+
+report.ptree.filter=status:pending

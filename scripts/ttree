@@ -1,0 +1,45 @@
+#!/usr/bin/env zsh
+# ttree - Taskwarrior Project Tree Viewer
+# 
+# AIDEV-NOTE: Standalone script for viewing taskwarrior projects in tree format
+# Uses the custom 'ptree' report defined in ~/.dotfiles/config/task/taskrc
+# 
+# Usage:
+#   ttree <project-name>     - Show tree for specific project
+#   ttree -h|--help          - Show help message
+#
+# Examples:
+#   ttree DP-29              - Show tree for project DP-29
+#   ttree salaryhero         - Show tree for salaryhero project
+#
+# Installation:
+#   Make executable: chmod +x /home/geert/.dotfiles/scripts/ttree
+#   Add to PATH or create alias: alias ttree='/home/geert/.dotfiles/scripts/ttree'
+
+# Show help if requested or no arguments provided
+if [[ "$1" == "-h" || "$1" == "--help" || -z "$1" ]]; then
+    cat <<EOF
+Usage: ttree <project-name>
+
+Show taskwarrior tasks in a tree format for a specific project.
+
+The tree view displays tasks hierarchically based on their dependencies,
+showing:
+  - Task ID and work state
+  - Dependencies (hierarchical structure)
+  - Project, tags, and due dates
+  - Task descriptions
+
+Examples:
+  ttree DP-29         - Show tree view for project DP-29
+  ttree salaryhero    - Show tree view for salaryhero project
+
+Alternative usage (native taskwarrior):
+  task project:DP-29 ptree
+EOF
+    exit 0
+fi
+
+# Run the tree report for the specified project
+# Uses the custom 'ptree' report defined in taskrc
+task project:"$1" ptree
