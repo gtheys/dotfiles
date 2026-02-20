@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Get all open PRs where you're requested as reviewer
+# and remove yourself from each one
+
+gh search prs --review-requested=@me --state=open --json repository,number --limit 100 | \
+  jq -r '.[] | "\(.repository.nameWithOwner) \(.number)"' | \
+  while read repo pr_number; do
+    echo "Removing review request from $repo #$pr_number"
+    gh pr edit "$pr_number" --repo "$repo" --remove-reviewer @me
+  done

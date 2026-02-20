@@ -194,6 +194,8 @@ eval $(minikube -p minikube docker-env)
 eval "$(/usr/bin/mise activate zsh)"
 eval "$(mise activate zsh --shims)"
 
+ eval $(op signin)
+
 # FZF with Git right in the shell by Junegunn : check out his github below
 # Keymaps for this is available at https://github.com/junegunn/fzf-git.sh
 source ~/.config/scripts/fzf-git.sh
