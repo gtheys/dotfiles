@@ -78,3 +78,5 @@ report.ptree.columns=id,work_state,depends,project,tags,due.relative,description
 report.ptree.labels=ID,WS,Deps,Project,Tags,Due,Description
 report.ptree.sort=depends+,id+
 report.ptree.filter=status:pending
+
+include ~/.config/task/secrets.taskrc
