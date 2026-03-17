@@ -30,9 +30,31 @@ include ~/.dotfiles/config/task/nord.theme
 # AIDEV-NOTE: Color precedence - UDA colors (work_state) take priority over most other rules
 rule.precedence.color=deleted,completed,active,uda.,keyword.,tag.,project.,overdue,scheduled,due.today,due,blocked,blocking,recurring,tagged
 
-# AIDEV-NOTE: Jira ID UDA for tracking Jira ticket references
+# AIDEV-NOTE: Jira UDAs - required for bugwarrior to match/update existing tasks
+# jiraurl is the UNIQUE_KEY bugwarrior uses to find existing tasks; without it,
+# every pull throws NotFound and tasks get incorrectly closed.
 uda.jiraid.type=string
 uda.jiraid.label=JiraID
+uda.jiraurl.type=string
+uda.jiraurl.label=Jira URL
+uda.jirasummary.type=string
+uda.jirasummary.label=Jira Summary
+uda.jiradescription.type=string
+uda.jiradescription.label=Jira Description
+uda.jiraissuetype.type=string
+uda.jiraissuetype.label=Issue Type
+uda.jiraestimate.type=numeric
+uda.jiraestimate.label=Estimate
+uda.jirafixversion.type=string
+uda.jirafixversion.label=Fix Version
+uda.jiracreatedts.type=date
+uda.jiracreatedts.label=Created At
+uda.jirastatus.type=string
+uda.jirastatus.label=Jira Status
+uda.jirasubtasks.type=string
+uda.jirasubtasks.label=Jira Subtasks
+uda.jiraparent.type=string
+uda.jiraparent.label=Jira Parent
 
 # AIDEV-NOTE: Repository UDA for tracking which repository a task belongs to
 uda.repository.type=string
@@ -79,4 +101,4 @@ report.ptree.labels=ID,WS,Deps,Project,Tags,Due,Description
 report.ptree.sort=depends+,id+
 report.ptree.filter=status:pending
 
-include ~/.config/task/secrets.taskrc
+include ~/.config/task/secret.taskrc
