@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+#
+# firebase_token.sh — Fetch a Firebase bearer token, all credentials from 1Password.
+#
+# Usage:
+#   ./firebase_token.sh
+#   ./firebase_token.sh --raw          # print only the token (no formatting)
+#
+# 1Password item setup:
+#   Item name: "Firebase" (or change OP_ITEM below)
+#   Fields:
+#     username  — Firebase email
+#     password  — Firebase password
+#     api_key   — Firebase Web API key
+
+set -euo pipefail
+
+# ── Configuration ────────────────────────────────────────────────────
+OP_ITEM="${OP_ITEM:-[SH] Firebase}"
+
+# ── Check dependencies ───────────────────────────────────────────────
+for cmd in curl jq op; do
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "Error: '$cmd' is required but not installed." >&2
+    exit 1
+  fi
+done
+
+# ── Parse flags ──────────────────────────────────────────────────────
+RAW=false
+[[ "${1:-}" == "--raw" ]] && RAW=true
+
+# ── Fetch everything from 1Password ─────────────────────────────────
+$RAW || echo "Fetching credentials from 1Password (item: ${OP_ITEM})..." >&2
+
+FIREBASE_API_KEY=$(op item get "$OP_ITEM" --fields api_key --reveal 2>/dev/null) || {
+  echo "Error: could not read 'api_key' from 1Password item '${OP_ITEM}'." >&2
+  exit 1
+}
+
+FIREBASE_EMAIL=$(op item get "$OP_ITEM" --fields username --reveal 2>/dev/null) || {
+  echo "Error: could not read 'username' from 1Password item '${OP_ITEM}'." >&2
+  exit 1
+}
+
+FIREBASE_PASSWORD=$(op item get "$OP_ITEM" --fields password --reveal 2>/dev/null) || {
+  echo "Error: could not read 'password' from 1Password item '${OP_ITEM}'." >&2
+  exit 1
+}
+
+# ── Build JSON payload safely with jq ────────────────────────────────
+PAYLOAD=$(jq -n \
+  --arg email "$FIREBASE_EMAIL" \
+  --arg password "$FIREBASE_PASSWORD" \
+  '{email: $email, password: $password, returnSecureToken: true}')
+
+# ── Request token ────────────────────────────────────────────────────
+ENDPOINT="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_API_KEY}"
+
+RESPONSE=$(curl -s -X POST "$ENDPOINT" \
+  -H "Content-Type: application/json" \
+  -d "$PAYLOAD")
+
+# ── Parse response ───────────────────────────────────────────────────
+ID_TOKEN=$(echo "$RESPONSE" | jq -r '.idToken // empty')
+
+if [[ -z "$ID_TOKEN" ]]; then
+  ERROR_MSG=$(echo "$RESPONSE" | jq -r '.error.message // "Unknown error"')
+  echo "Authentication failed: $ERROR_MSG" >&2
+  exit 1
+fi
+
+# ── Output ───────────────────────────────────────────────────────────
+if $RAW; then
+  echo "$ID_TOKEN"
+else
+  EXPIRES_IN=$(echo "$RESPONSE" | jq -r '.expiresIn // "3600"')
+  echo "✓ Token fetched successfully (expires in ${EXPIRES_IN}s)"
+  echo ""
+  echo "Bearer token:"
+  echo "$ID_TOKEN"
+  echo ""
+  echo "Example usage:"
+  echo "  curl -H \"Authorization: Bearer $ID_TOKEN\" https://your-api.example.com/endpoint"
+fi
