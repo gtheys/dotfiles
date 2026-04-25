@@ -32,7 +32,11 @@ prepend_path $HOME/.local/bin
 prepend_path $HOME/.config/scripts
 prepend_path ${ASDF_DATA_DIR:-$HOME/.asdf}/shims
 prepend_path $HOME/.local/share/npm/bin
-prepend_path $HOME/.bun/bin:$PATH
+prepend_path $HOME/.bun/bin
+prepend_path /opt/cuda/bin
+prepend_path $HOME/.cargo/bin
+
+export LD_LIBRARY_PATH=/opt/cuda/lib64:$LD_LIBRARY_PATH
 
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
@@ -187,15 +191,29 @@ fi
 # If a ~/.localrc zshrc exists, source it
 [[ -a ~/.localrc ]] && source ~/.localrc
 
-export PATH="$PATH:/home/geert/.local/bin"
 eval "$(starship init zsh)"
-eval $(minikube -p minikube docker-env) 
+eval "$(direnv hook zsh)"
+
+# Only run if docker is running
+if docker info &>/dev/null 2>&1; then
+    eval $(minikube -p minikube docker-env 2>/dev/null)
+fi
+
+# Only run if op is installed
+if command -v op &>/dev/null; then
+    eval $(op signin)
+fi
 
 eval "$(/usr/bin/mise activate zsh)"
 eval "$(mise activate zsh --shims)"
 
- eval $(op signin)
-
 # FZF with Git right in the shell by Junegunn : check out his github below
 # Keymaps for this is available at https://github.com/junegunn/fzf-git.sh
 source ~/.config/scripts/fzf-git.sh
+
+
+## Export my API keys with 1 password
+export ANTHROPIC_API_KEY=$(op read "op://Personal/llm-keys/anthropic_key")
+export OPENAI_API_KEY=$(op read "op://Personal/llm-keys/openai_key")
+export OPENCODE_API_KEY=$(op read "op://Personal/llm-keys/opencode_key")
+export GEMINI_API_KEY=$(op read "op://Personal/llm-keys/gemini_key")
