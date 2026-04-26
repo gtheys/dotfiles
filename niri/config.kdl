@@ -225,7 +225,7 @@ binds {
     Print            { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot rc"; }
     Mod+Print        { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot rf"; }
     Ctrl+Print       { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot ri"; }
-    Mod+Z            { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot ri"; }
+    Mod+S            { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot ri"; }
     Shift+Print      { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot sc"; }
     Mod+Shift+Print  { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot sf"; }
     Ctrl+Shift+Print { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot si"; }
