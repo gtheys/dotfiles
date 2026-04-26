@@ -199,10 +199,8 @@ if docker info &>/dev/null 2>&1; then
     eval $(minikube -p minikube docker-env 2>/dev/null)
 fi
 
-# Only run if op is installed
-if command -v op &>/dev/null; then
-    eval $(op signin)
-fi
+# AIDEV-NOTE: Removed `op signin` as it blocks shell startup. Modern 1Password CLI
+# prompts for biometric auth lazily when needed. Add back only if specific tools break.
 
 eval "$(/usr/bin/mise activate zsh)"
 eval "$(mise activate zsh --shims)"
@@ -213,7 +211,26 @@ source ~/.config/scripts/fzf-git.sh
 
 
 ## Export my API keys with 1 password
-export ANTHROPIC_API_KEY=$(op read "op://Personal/llm-keys/anthropic_key")
-export OPENAI_API_KEY=$(op read "op://Personal/llm-keys/openai_key")
-export OPENCODE_API_KEY=$(op read "op://Personal/llm-keys/opencode_key")
-export GEMINI_API_KEY=$(op read "op://Personal/llm-keys/gemini_key")
+# AIDEV-NOTE: Cache LLM keys locally to avoid blocking shell startup with `op read`.
+# Keys are refreshed from 1Password only when the cache is older than 24 hours.
+__llm_keys_cache="$HOME/.cache/llm-keys.env"
+
+_load_llm_keys() {
+    if [[ -f "$__llm_keys_cache" ]] && [[ -z "$(find "$__llm_keys_cache" -mtime +0 2>/dev/null)" ]]; then
+        source "$__llm_keys_cache"
+    elif command -v op &>/dev/null; then
+        mkdir -p "$(dirname "$__llm_keys_cache")"
+        {
+            echo "export ANTHROPIC_API_KEY='$(op read "op://Personal/llm-keys/anthropic_key" 2>/dev/null)'"
+            echo "export OPENAI_API_KEY='$(op read "op://Personal/llm-keys/openai_key" 2>/dev/null)'"
+            echo "export OPENCODE_API_KEY='$(op read "op://Personal/llm-keys/opencode_key" 2>/dev/null)'"
+            echo "export GEMINI_API_KEY='$(op read "op://Personal/llm-keys/gemini_key" 2>/dev/null)'"
+        } > "$__llm_keys_cache"
+        chmod 600 "$__llm_keys_cache"
+        source "$__llm_keys_cache"
+    fi
+}
+
+_load_llm_keys
+unfunction _load_llm_keys
+unset __llm_keys_cache
