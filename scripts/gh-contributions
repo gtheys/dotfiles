@@ -1,0 +1,223 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# AIDEV-NOTE: Fetches GitHub contribution stats (commits, lines added/deleted)
+# for a given author across all salary-hero org repos using the GraphQL API.
+# Uses one GraphQL call per repo (instead of N REST calls per commit), making
+# it practical even for active contributors. Defaults to last 30 days.
+
+ORG="salary-hero"
+DAYS=30
+AUTHOR=""
+
+usage() {
+  local exit_code="${1:-0}"
+  cat <<EOF
+Usage: $(basename "$0") <github-username> [--days N]
+
+Fetch contribution stats for a GitHub user across all $ORG repos.
+
+Options:
+  --days N    Number of days to look back (default: $DAYS)
+  -h, --help  Show this help message
+
+Example:
+  $(basename "$0") salaryhero-liam
+  $(basename "$0") salaryhero-liam --days 90
+EOF
+  exit "$exit_code"
+}
+
+# --- Parse args ---
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help) usage 0 ;;
+    --days)
+      DAYS="${2:?--days requires a value}"
+      if ! [[ "$DAYS" =~ ^[1-9][0-9]*$ ]]; then
+        echo "Error: --days must be a positive integer, got '$DAYS'" >&2
+        exit 1
+      fi
+      shift 2
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      usage 1
+      ;;
+    *)
+      if [[ -z "$AUTHOR" ]]; then
+        AUTHOR="$1"
+      else
+        echo "Unexpected argument: $1" >&2
+        usage 1
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$AUTHOR" ]]; then
+  echo "Error: GitHub username is required." >&2
+  usage 1
+fi
+
+SINCE=$(date -u -d "$DAYS days ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
+     || date -u -v-"${DAYS}d" +%Y-%m-%dT%H:%M:%SZ) # macOS fallback
+
+# --- Check rate limit before we start ---
+remaining=$(gh api rate_limit --jq '.resources.graphql.remaining' 2>/dev/null || echo "unknown")
+if [[ "$remaining" != "unknown" && "$remaining" -lt 50 ]]; then
+  echo "Warning: Only $remaining GraphQL API calls remaining. Results may be incomplete." >&2
+fi
+
+echo "Fetching contributions for '$AUTHOR' in org '$ORG' (last $DAYS days)..."
+echo ""
+
+# --- Collect repos (portable, no mapfile) ---
+REPOS=()
+while IFS= read -r line; do
+  REPOS+=("$line")
+done < <(gh repo list "$ORG" --limit 500 --json nameWithOwner -q '.[].nameWithOwner')
+
+if [[ ${#REPOS[@]} -eq 0 ]]; then
+  echo "No repos found for org '$ORG'." >&2
+  exit 1
+fi
+
+# --- Header ---
+printf "%-45s %8s %12s %12s %12s\n" "REPOSITORY" "COMMITS" "ADDED" "DELETED" "NET"
+printf "%-45s %8s %12s %12s %12s\n" "----------" "-------" "-----" "-------" "---"
+
+TOTAL_COMMITS=0
+TOTAL_ADDED=0
+TOTAL_DELETED=0
+
+repo_count=${#REPOS[@]}
+repo_idx=0
+
+# AIDEV-NOTE: GraphQL query fetches commit history with additions/deletions in a
+# single call per repo. Paginates via cursor if >100 commits. The author ID is
+# resolved once upfront, then used in the history filter.
+
+# --- Resolve GitHub user ID for GraphQL author filter ---
+# AIDEV-NOTE: GraphQL CommitAuthor filter doesn't support login directly for
+# the history(author:) field in all cases, but using the user's node ID works.
+# However, the simplest approach is to filter by commit author email/name after
+# fetching. Instead, we use the REST-fetched commits approach but via GraphQL
+# history which does support author:{id} with the user's node ID.
+USER_ID=$(gh api graphql -f query='
+  query($login: String!) {
+    user(login: $login) {
+      id
+    }
+  }
+' -f login="$AUTHOR" --jq '.data.user.id' 2>/dev/null || true)
+
+if [[ -z "$USER_ID" ]]; then
+  echo "Error: Could not resolve GitHub user '$AUTHOR'. Check the username." >&2
+  exit 1
+fi
+
+for repo in "${REPOS[@]}"; do
+  short="${repo#*/}"
+  owner="${repo%%/*}"
+  repo_idx=$((repo_idx + 1))
+  printf "\r[%d/%d] Scanning %-40s" "$repo_idx" "$repo_count" "$short..." >&2
+
+  # AIDEV-NOTE: Fetch commit history via GraphQL. The author filter uses the
+  # resolved user node ID. We paginate if there are more than 100 commits.
+  added=0
+  deleted=0
+  commits=0
+  has_next="true"
+  cursor=""
+
+  while [[ "$has_next" == "true" ]]; do
+    # AIDEV-NOTE: gh api graphql -F sends raw JSON values, -f sends strings.
+    # For the first page we omit $after entirely so it defaults to null in GraphQL.
+    # On subsequent pages we pass the cursor string.
+    cursor_args=()
+    if [[ -n "$cursor" ]]; then
+      cursor_args=(-f after="$cursor")
+    fi
+
+    result=$(gh api graphql -f query='
+      query($owner: String!, $name: String!, $since: GitTimestamp!, $authorId: ID!, $after: String) {
+        repository(owner: $owner, name: $name) {
+          defaultBranchRef {
+            target {
+              ... on Commit {
+                history(since: $since, author: {id: $authorId}, first: 100, after: $after) {
+                  totalCount
+                  pageInfo {
+                    hasNextPage
+                    endCursor
+                  }
+                  nodes {
+                    additions
+                    deletions
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ' -f owner="$owner" -f name="$short" -f since="$SINCE" -f authorId="$USER_ID" \
+      "${cursor_args[@]+"${cursor_args[@]}"}" 2>/dev/null || true)
+
+    if [[ -z "$result" ]]; then
+      break
+    fi
+
+    # Extract data — total count comes from the first page
+    history=$(echo "$result" | jq -r '.data.repository.defaultBranchRef.target.history // empty' 2>/dev/null || true)
+
+    if [[ -z "$history" ]]; then
+      break
+    fi
+
+    if [[ "$commits" -eq 0 ]]; then
+      commits=$(echo "$history" | jq -r '.totalCount // 0')
+    fi
+
+    # Sum additions/deletions from this page
+    page_added=$(echo "$history" | jq -r '[.nodes[].additions] | add // 0' 2>/dev/null || true)
+    page_deleted=$(echo "$history" | jq -r '[.nodes[].deletions] | add // 0' 2>/dev/null || true)
+
+    added=$((added + ${page_added:-0}))
+    deleted=$((deleted + ${page_deleted:-0}))
+
+    has_next=$(echo "$history" | jq -r '.pageInfo.hasNextPage' 2>/dev/null || echo "false")
+    cursor=$(echo "$history" | jq -r '.pageInfo.endCursor // empty' 2>/dev/null || true)
+
+    if [[ -z "$cursor" ]]; then
+      break
+    fi
+  done
+
+  commits="${commits:-0}"
+  if [[ "$commits" -eq 0 ]]; then
+    continue
+  fi
+
+  net=$((added - deleted))
+  # Clear progress line before printing result
+  printf "\r%-80s\r" "" >&2
+  printf "%-45s %8d %12s %12s %12d\n" "$short" "$commits" "+${added}" "-${deleted}" "$net"
+
+  TOTAL_COMMITS=$((TOTAL_COMMITS + commits))
+  TOTAL_ADDED=$((TOTAL_ADDED + added))
+  TOTAL_DELETED=$((TOTAL_DELETED + deleted))
+done
+
+# Clear any remaining progress line
+printf "\r%-80s\r" "" >&2
+
+# --- Totals ---
+TOTAL_NET=$((TOTAL_ADDED - TOTAL_DELETED))
+echo ""
+printf "%-45s %8s %12s %12s %12s\n" "----------" "-------" "-----" "-------" "---"
+printf "%-45s %8d %12s %12s %12d\n" "TOTAL" "$TOTAL_COMMITS" "+${TOTAL_ADDED}" "-${TOTAL_DELETED}" "$TOTAL_NET"
+echo ""
+echo "Period: $(date -u -d "$DAYS days ago" +%Y-%m-%d 2>/dev/null || date -u -v-"${DAYS}d" +%Y-%m-%d) -> $(date -u +%Y-%m-%d)"
