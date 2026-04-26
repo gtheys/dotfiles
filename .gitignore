@@ -22,3 +22,5 @@ config/btop/btop.log
 config/pgcli/history
 config/pgcli/log
 config/task/secret.taskrc
+config/tmux/plugins/
+config/tmux/.tmux/plugins/
