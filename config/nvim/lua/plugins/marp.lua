@@ -1,0 +1,3 @@
+return {
+  "nwiizo/marp.nvim",
+}
