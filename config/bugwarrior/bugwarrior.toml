@@ -7,10 +7,13 @@ base_uri = "https://salaryhero.atlassian.net"
 username = "geert@salary-hero.com"
 password = "@oracle:eval:echo $JIRA_API_TOKEN"
 
-query = "issuetype IN (Story, Task, \"Sub-task\", Bug) AND assignee = currentUser() AND statusCategory != Done AND project IN (\"IMP\", \"DP\", \"IN\") AND updated >= -30d ORDER BY created DESC"
+# AIDEV-NOTE: Restored proper query - removed time filter to prevent auto-closing old tickets
+query = "issuetype IN (Story, Task, \"Sub-task\", Bug) AND assignee = currentUser() AND statusCategory != Done AND project IN (\"IMP\", \"DP\", \"IN\") ORDER BY created DESC"
+#query = "issuetype IN (Story, Task, \"Sub-task\", Bug) AND assignee = currentUser() AND statusCategory != Done AND project IN (\"IMP\", \"DP\", \"IN\") AND updated >= -30d ORDER BY created DESC"
 #query = "issuetype IN (Story, Task, \"Sub-task\", Bug) AND assignee = currentUser() AND statusCategory != Done AND project IN (\"IMP\", \"DP\",\"IN\") ORDER BY updated DESC"
 # only mine + only open
 #query = "assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC"
+
 description_template = "{{jiraid}} {{jirasummary}}"
 project_template = "salaryhero.jira.{{project.key | lower}}"
 priority_template = "{{priority.name | lower}}"
@@ -18,5 +21,5 @@ priority_template = "{{priority.name | lower}}"
 import_labels_as_tags = true
 add_tags = ["jira"]
 
-# Set work_state to "new" for all imported tickets
+# Set work_state to "new" for all imported tickets  
 static_fields = ["work_state:new"]
