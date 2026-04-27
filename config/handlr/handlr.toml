@@ -1,0 +1,12 @@
+[[handlers]]
+exec = "chromium %u"
+regexes = [
+  '(https?://)?(.*\.)?github\.com.*',
+  '(https?://)?(.*\.)?atlassian\.(com|net).*',
+  '(https?://)?(.*\.)?bitbucket\.org.*',
+  '(https?://)?(.*\.)?jira\.com.*',
+]
+
+[[handlers]]
+exec = "firefox %u"
+regexes = ['.*']

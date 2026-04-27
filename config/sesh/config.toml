@@ -1,0 +1,25 @@
+# ~/.config/sesh/config.toml
+
+[default]
+# Optional fuzzy finder (fzf, skim, etc.)
+finder = "fzf"
+walker = "fd"
+
+# List all your project directories
+[[session]]
+name = "personal"
+path = "~/Code/personal/"
+
+[[session]]
+name = "SH"
+path = "~/Code/salaryhero/"
+
+[[session]]
+name = "dotfiles"
+path = "~/.dotfiles"
+command = "nvim"
+
+[[session]]
+name = "notes"
+path = "~/Code/notes"
+command = "nvim"

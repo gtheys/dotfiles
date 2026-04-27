@@ -24,17 +24,17 @@ compinit
 [ -f "$ZDOTDIR/alias" ] && source "$ZDOTDIR/alias"
 
 # Use prepend_path
+prepend_path $HOME/.config/scripts
 prepend_path /usr/local/opt/grep/libexec/gnubin
 prepend_path /usr/local/sbin
 prepend_path $DOTFILES/bin
 prepend_path $HOME/bin
 prepend_path $HOME/.local/bin
-prepend_path $HOME/.config/scripts
+prepend_path $HOME/.cargo/bin
 prepend_path ${ASDF_DATA_DIR:-$HOME/.asdf}/shims
 prepend_path $HOME/.local/share/npm/bin
 prepend_path $HOME/.bun/bin
 prepend_path /opt/cuda/bin
-prepend_path $HOME/.cargo/bin
 
 export LD_LIBRARY_PATH=/opt/cuda/lib64:$LD_LIBRARY_PATH
 
@@ -121,6 +121,7 @@ zfetch zsh-users/zsh-syntax-highlighting
 zfetch zsh-users/zsh-autosuggestions
 zfetch grigorii-zander/zsh-npm-scripts-autocomplete
 zfetch Aloxaf/fzf-tab
+zfetch alberti42/zsh-opencode-tab
 
 if [[ -x "$(command -v fnm)" ]]; then
     eval "$(fnm env --use-on-cd)"
@@ -204,7 +205,9 @@ fi
 
 eval "$(/usr/bin/mise activate zsh)"
 eval "$(mise activate zsh --shims)"
+eval "$(direnv hook zsh)"
 
+source <(git town completions zsh)
 # FZF with Git right in the shell by Junegunn : check out his github below
 # Keymaps for this is available at https://github.com/junegunn/fzf-git.sh
 source ~/.config/scripts/fzf-git.sh
