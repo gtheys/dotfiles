@@ -17,8 +17,13 @@ fi
 ########################################################
 
 # initialize autocomplete
-autoload -U compinit add-zsh-hook
-compinit
+# AIDEV-NOTE: Use cached compinit (-C) when dump is <24h old to skip slow fpath rescan
+autoload -Uz compinit add-zsh-hook
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C
+fi
 
 # source alias file if it exists
 [ -f "$ZDOTDIR/alias" ] && source "$ZDOTDIR/alias"
@@ -141,7 +146,14 @@ fi
 #
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 
-export LS_COLORS=$(vivid generate tokyonight-storm)
+# AIDEV-NOTE: Cache vivid output to avoid subprocess on every shell start
+_vivid_cache="$HOME/.cache/ls-colors.env"
+if [[ ! -f "$_vivid_cache" ]]; then
+    mkdir -p "$(dirname "$_vivid_cache")"
+    vivid generate tokyonight-storm > "$_vivid_cache"
+fi
+export LS_COLORS=$(< "$_vivid_cache")
+unset _vivid_cache
 
 export PLAYWRIGHT_MCP_BROWSER=firefox
 
@@ -195,19 +207,21 @@ fi
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 
-# Only run if docker is running
-if docker info &>/dev/null 2>&1; then
-    eval $(minikube -p minikube docker-env 2>/dev/null)
-fi
+# AIDEV-NOTE: Removed docker info check — it blocks startup (socket timeout) when Docker
+# is not running. Run `eval $(minikube -p minikube docker-env)` manually when needed.
 
 # AIDEV-NOTE: Removed `op signin` as it blocks shell startup. Modern 1Password CLI
 # prompts for biometric auth lazily when needed. Add back only if specific tools break.
 
+# AIDEV-NOTE: Single mise activation — --shims adds shims to PATH without full shell
+# integration overhead. Use first form (no --shims) if mise hooks (e.g. auto-install) are needed.
 eval "$(/usr/bin/mise activate zsh)"
-eval "$(mise activate zsh --shims)"
-eval "$(direnv hook zsh)"
 
-source <(git town completions zsh)
+# AIDEV-NOTE: Cache git town completions to file — avoids subprocess fork on every start
+_gt_comp="$HOME/.cache/git-town-completions.zsh"
+[[ -f "$_gt_comp" ]] || git town completions zsh > "$_gt_comp"
+source "$_gt_comp"
+unset _gt_comp
 # FZF with Git right in the shell by Junegunn : check out his github below
 # Keymaps for this is available at https://github.com/junegunn/fzf-git.sh
 source ~/.config/scripts/fzf-git.sh
