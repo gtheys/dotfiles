@@ -16,6 +16,11 @@ fi
 # Configuration
 ########################################################
 
+# Set this to the path of the opencode repo
+# Goal is to add the bin to the path
+
+prepend_path $HOME/Code/salaryhero/opencode/bin/
+
 # initialize autocomplete
 # AIDEV-NOTE: Use cached compinit (-C) when dump is <24h old to skip slow fpath rescan
 autoload -Uz compinit add-zsh-hook
@@ -37,7 +42,7 @@ prepend_path $HOME/bin
 prepend_path $HOME/.local/bin
 prepend_path $HOME/.cargo/bin
 prepend_path ${ASDF_DATA_DIR:-$HOME/.asdf}/shims
-prepend_path $HOME/.local/share/npm/bin
+# AIDEV-NOTE: npm/bin prepended after mise activation (see below) to ensure mise-managed npm overrides node-bundled npm
 prepend_path $HOME/.bun/bin
 prepend_path /opt/cuda/bin
 
@@ -206,6 +211,7 @@ fi
 
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
+eval "$(op signin)"
 
 # AIDEV-NOTE: Removed docker info check — it blocks startup (socket timeout) when Docker
 # is not running. Run `eval $(minikube -p minikube docker-env)` manually when needed.
@@ -216,6 +222,7 @@ eval "$(direnv hook zsh)"
 # AIDEV-NOTE: Single mise activation — --shims adds shims to PATH without full shell
 # integration overhead. Use first form (no --shims) if mise hooks (e.g. auto-install) are needed.
 eval "$(/usr/bin/mise activate zsh)"
+prepend_path $HOME/.local/share/npm/bin
 
 # AIDEV-NOTE: Cache git town completions to file — avoids subprocess fork on every start
 _gt_comp="$HOME/.cache/git-town-completions.zsh"
@@ -233,15 +240,37 @@ source ~/.config/scripts/fzf-git.sh
 __llm_keys_cache="$HOME/.cache/llm-keys.env"
 
 _load_llm_keys() {
+    # AIDEV-NOTE: Avoid creating an empty cache or exporting empty variables
+    # if the 1Password CLI is not available or not signed in.
     if [[ -f "$__llm_keys_cache" ]] && [[ -z "$(find "$__llm_keys_cache" -mtime +0 2>/dev/null)" ]]; then
         source "$__llm_keys_cache"
     elif command -v op &>/dev/null; then
+        # Check if op is signed in. If not, skip loading keys to avoid blocking
+        # or creating an empty cache file.
+        if ! op whoami &>/dev/null; then
+            return
+        fi
+
         mkdir -p "$(dirname "$__llm_keys_cache")"
+
+        # Read keys into variables first so we can detect if all are empty.
+        anth="$(op read "op://Personal/llm-keys/anthropic_key" 2>/dev/null)"
+        openai="$(op read "op://Personal/llm-keys/openai_key" 2>/dev/null)"
+        opencode="$(op read "op://Personal/llm-keys/opencode_key" 2>/dev/null)"
+        gemini="$(op read "op://Personal/llm-keys/gemini_key" 2>/dev/null)"
+        sonar="$(op read "op://Personal/llm-keys/sonar_key" 2>/dev/null)"
+
+        # If all reads failed or returned empty, do not write the cache.
+        if [[ -z "$anth" && -z "$openai" && -z "$opencode" && -z "$gemini" ]]; then
+            return
+        fi
+
         {
-            echo "export ANTHROPIC_API_KEY='$(op read "op://Personal/llm-keys/anthropic_key" 2>/dev/null)'"
-            echo "export OPENAI_API_KEY='$(op read "op://Personal/llm-keys/openai_key" 2>/dev/null)'"
-            echo "export OPENCODE_API_KEY='$(op read "op://Personal/llm-keys/opencode_key" 2>/dev/null)'"
-            echo "export GEMINI_API_KEY='$(op read "op://Personal/llm-keys/gemini_key" 2>/dev/null)'"
+            echo "export ANTHROPIC_API_KEY='$anth'"
+            echo "export OPENAI_API_KEY='$openai'"
+            echo "export OPENCODE_API_KEY='$opencode'"
+            echo "export GEMINI_API_KEY='$gemini'"
+            echo "export SONARQUBE_TOKEN='$sonar'"
         } > "$__llm_keys_cache"
         chmod 600 "$__llm_keys_cache"
         source "$__llm_keys_cache"
