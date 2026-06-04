@@ -56,6 +56,9 @@ elif [[ -d ~/Developer ]]; then
     export CODE_DIR=~/Developer
 fi
 
+export DEVCTL_INFRA_DIR=~/Code/salaryhero/infra
+export GH_TOKEN=$(gh auth token)
+
 # display how long all tasks over 10 seconds take
 export REPORTTIME=10
 export KEYTIMEOUT=1              # 10ms delay for key sequences
