@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# AIDEV-NOTE: taskwarrior sync wrapper. Injects AWS creds from 1Password at call
+# time so no long-lived secrets sit on disk. Required because Taskchampion's AWS
+# identity resolver has a 5s timeout that `credential_process` (which calls
+# `op read` twice, ~7s) exceeds. Env vars resolve fast enough.
+# 1Password item: op://Personal/ayqgik6yndwenjhnjiq7blvb7m (Personal AWS Access Key)
+# Taskwarrior S3 sync config lives in ~/.dotfiles/config/task/taskrc (sync.aws.*)
+set -euo pipefail
+
+ITEM="ayqgik6yndwenjhnjiq7blvb7m"
+
+AWS_ACCESS_KEY_ID="$(op read "op://Personal/${ITEM}/access key id")"
+export AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY="$(op read "op://Personal/${ITEM}/secret access key")"
+export AWS_SECRET_ACCESS_KEY
+
+exec task sync "$@"
