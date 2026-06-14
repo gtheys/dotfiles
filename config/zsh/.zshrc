@@ -77,15 +77,27 @@ setopt NO_HUP                    # don't kill background jobs when the shell exi
 setopt NO_LIST_BEEP
 setopt LOCAL_OPTIONS
 setopt LOCAL_TRAPS
+setopt AUTO_CD                   # type a dir name to cd into it
+setopt AUTO_PUSHD                # cd pushes the old dir onto the stack
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
+setopt EXTENDED_GLOB             # ^foo ~bar **/ etc in patterns
+setopt NUMERIC_GLOB_SORT
+setopt INTERACTIVE_COMMENTS      # allow # comments in the interactive REPL
+setopt NO_FLOW_CONTROL           # free Ctrl-S / Ctrl-Q for other uses
+setopt RC_EXPAND_PARAM           # a{b,c} -> ab ac
 
 # history
 HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=50000
+SAVEHIST=50000
 setopt EXTENDED_HISTORY          # write the history file in the ":start:elapsed;command" format.
 setopt HIST_REDUCE_BLANKS        # remove superfluous blanks before recording entry.
 setopt SHARE_HISTORY             # share history between all sessions.
 setopt HIST_IGNORE_ALL_DUPS      # delete old recorded entry if new entry is a duplicate.
+setopt HIST_IGNORE_SPACE         # commands with a leading space are not recorded (secrets!)
+setopt HIST_EXPIRE_DUPS_FIRST    # when trimming history, drop duplicates first
+setopt HIST_VERIFY               # history (!) expansion must be confirmed with Enter
 
 setopt COMPLETE_ALIASES
 
