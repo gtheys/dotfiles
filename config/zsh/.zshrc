@@ -140,6 +140,12 @@ zstyle ':completion:*:descriptions' format '%B%d%b'
 zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:warnings' format 'No matches for: %d'
 zstyle ':completion:*' group-name ''
+# AIDEV-NOTE: arrow-key navigable menu, on-disk completion cache (faster compinit),
+# and sane group ordering for common commands.
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$CACHEDIR/zsh/zcompcache"
+zstyle ':completion:*:ls:*' group-order 'directories' 'files' 'all-files'
 
 
 ########################################################
