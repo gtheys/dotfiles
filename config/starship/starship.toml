@@ -19,8 +19,8 @@ symbol = ' '
 [python]
 format = "via [🐍 $version](bold green) "
 symbol = "🐍 "
-pyenv_version_name = true
-pyenv_prefix = "pyenv"
+# AIDEV-NOTE: removed pyenv_version_name/pyenv_prefix — python is managed by mise now,
+# not pyenv. Starship auto-detects the active python from the venv or mise shim.
 
 [golang]
 symbol = " "
