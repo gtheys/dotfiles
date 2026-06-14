@@ -57,7 +57,15 @@ elif [[ -d ~/Developer ]]; then
 fi
 
 export DEVCTL_INFRA_DIR=~/Code/salaryhero/infra
-export GH_TOKEN=$(gh auth token)
+# AIDEV-NOTE: Cache GH_TOKEN — `gh auth token` forks on every startup otherwise.
+# Refreshed when the cache file is older than 24h.
+_gh_token_cache="$CACHEDIR/gh-token"
+if [[ ! -f "$_gh_token_cache" || -n "${_gh_token_cache}(#qN.mh+24)" ]]; then
+    mkdir -p "$(dirname "$_gh_token_cache")"
+    gh auth token > "$_gh_token_cache" 2>/dev/null
+fi
+[[ -s "$_gh_token_cache" ]] && export GH_TOKEN=$(< "$_gh_token_cache")
+unset _gh_token_cache
 
 # display how long all tasks over 10 seconds take
 export REPORTTIME=10
@@ -136,9 +144,8 @@ zfetch grigorii-zander/zsh-npm-scripts-autocomplete
 zfetch Aloxaf/fzf-tab
 zfetch alberti42/zsh-opencode-tab
 
-if [[ -x "$(command -v fnm)" ]]; then
-    eval "$(fnm env --use-on-cd)"
-fi
+# AIDEV-NOTE: fnm removed — mise is the sole node version manager (see activate below).
+# Re-add only if mise can't handle a workflow.
 
 [[ -e ~/.terminfo ]] && export TERMINFO_DIRS=~/.terminfo:/usr/share/terminfo
 
@@ -214,17 +221,14 @@ fi
 
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
-eval "$(op signin)"
 
-# AIDEV-NOTE: Removed docker info check — it blocks startup (socket timeout) when Docker
-# is not running. Run `eval $(minikube -p minikube docker-env)` manually when needed.
+# AIDEV-NOTE: No 1Password/Docker calls at startup — all are slow (op signin ~400ms,
+# op environment read ~6.5s, docker info times out when daemon is down). Modern `op`
+# auths lazily via biometrics; run `op-env` (bottom of file) to load secrets on demand.
 
-# AIDEV-NOTE: Removed `op signin` as it blocks shell startup. Modern 1Password CLI
-# prompts for biometric auth lazily when needed. Add back only if specific tools break.
-
-# AIDEV-NOTE: Single mise activation — --shims adds shims to PATH without full shell
-# integration overhead. Use first form (no --shims) if mise hooks (e.g. auto-install) are needed.
-eval "$(/usr/bin/mise activate zsh)"
+# AIDEV-NOTE: Single mise activation — this is the sole node version manager (fnm removed).
+# Activate without --shims to avoid full shell integration overhead; use hooks if auto-install needed.
+eval "$(command mise activate zsh)"
 prepend_path $HOME/.local/share/npm/bin
 
 # AIDEV-NOTE: Cache git town completions to file — avoids subprocess fork on every start
@@ -236,4 +240,6 @@ unset _gt_comp
 # Keymaps for this is available at https://github.com/junegunn/fzf-git.sh
 source ~/.config/scripts/fzf-git.sh
 
-export $(op environment read 27kxanp7phjmomdvyjvynbw57y)
+# AIDEV-NOTE: op secrets loaded lazily — `op environment read` takes ~6.5s per call.
+# Run `op-env` to export the item's secrets into the current shell when needed.
+op-env() { eval "$(op environment read 27kxanp7phjmomdvyjvynbw57y)"; }
