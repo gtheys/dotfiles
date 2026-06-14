@@ -8,7 +8,7 @@ if [[ -d $ZDOTDIR/functions ]]; then
     
     # Autoload all functions
     for func in $ZDOTDIR/functions/*(:t); do
-        autoload -U $func
+        autoload -Uz $func
     done
 fi
 
@@ -106,9 +106,11 @@ else
     bindkey "^[3;5~" delete-char
     bindkey "\e[3~" delete-char
 fi
-bindkey "^A" vi-beginning-of-line
-bindkey -M viins "^F" vi-forward-word               # [Ctrl-f] - move to next word
-bindkey -M viins "^E" vi-add-eol                    # [Ctrl-e] - move to end of line
+# AIDEV-NOTE: Moved Ctrl-e/Ctrl-f binds into the default keymap — the -M viins versions
+# were dead (vi mode is never enabled; no `bindkey -v`). Add `bindkey -v` to use vi mode.
+bindkey "^A" beginning-of-line
+bindkey "^E" end-of-line
+bindkey "^F" forward-word                          # [Ctrl-f] - move to next word
 bindkey "^J" history-beginning-search-forward
 bindkey "^K" history-beginning-search-backward
 
