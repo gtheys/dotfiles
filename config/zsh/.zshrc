@@ -203,7 +203,9 @@ export PLAYWRIGHT_MCP_BROWSER=firefox
   #source $HOME/.fzf.zsh
   export FZF_DEFAULT_COMMAND='fd --type f'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  export FZF_DEFAULT_OPTS="--color bg:-1,bg+:-1,fg:-1,fg+:#feffff,hl:#993f84,hl+:#d256b5,info:#676767,prompt:#676767,pointer:#676767"
+  # AIDEV-NOTE: compose opts — keep fzf's sane defaults (height/layout/border) and layer colors on top.
+  export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --info=inline --border --ansi"
+  export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color bg:-1,bg+:-1,fg:-1,fg+:#feffff,hl:#993f84,hl+:#d256b5,info:#676767,prompt:#676767,pointer:#676767"
 #fi
 
 # add color to man pages
