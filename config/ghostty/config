@@ -38,7 +38,9 @@ mouse-hide-while-typing = true
 # mouse-scroll-multiplier = 1
 
 # Theme
-theme = /home/geert/Code/personal/tokyonight.nvim/extras/ghostty/tokyonight_storm
+# AIDEV-NOTE: vendored the theme into config/ghostty/themes/ so this no longer depends
+# on the tokyonight.nvim repo path (broke if that repo moved).
+theme = tokyonight_storm
 # theme = Flexoki Dark
 cursor-invert-fg-bg = true
 background-opacity = 0.9
