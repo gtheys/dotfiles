@@ -20,12 +20,8 @@ alias tls='tmux ls'
 alias tat='tmux attach -t'
 alias tns='tmux new-session -s'
 
-# Applications
-alias ios='open -a /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app'
-
-# Hide/show all desktop icons (useful when presenting)
-alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
-alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+# AIDEV-NOTE: macOS aliases (ios, hidedesktop/showdesktop) removed — migrated to Arch.
+# Find them in the keep-windows branch if needed again.
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
@@ -33,10 +29,10 @@ alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
 alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
 
 
-# use exa if available
-if [[ -x "$(command -v exa)" ]]; then
-  alias ll="exa --icons --git --long"
-  alias l="exa --icons --git --all --long"
+# AIDEV-NOTE: use eza (active exa fork) if available, fall back to ls
+if [[ -x "$(command -v eza)" ]]; then
+  alias ll="eza --icons --git --long"
+  alias l="eza --icons --git --all --long"
 else
   alias l="ls -lah ${colorflag}"
   alias ll="ls -lFh ${colorflag}"
@@ -53,7 +49,8 @@ alias hhz="hyprctl dispatch setoutputmode eDP-2 3840x2400@120"
 # Show latest Arch Linux news before upgrading
 arch_news_check() {
     echo "🔔 Latest Arch Linux news:"
-    curl -s https://archlinux.org/news/ \
+    # AIDEV-NOTE: --max-time prevents hang when offline; --fail avoids piping 404 HTML through grep.
+    curl --max-time 5 --fail --silent --show-error https://archlinux.org/news/ \
       | grep -Eo 'href="/news/[^"]+"' \
       | cut -d'"' -f2 \
       | head -n 5 \
@@ -63,3 +60,14 @@ arch_news_check() {
 }
 
 alias pacnews="arch_news_check"
+
+# AIDEV-NOTE: pi needs node >=22 (undici markAsUncloneable) regardless of the current
+# project's .mise.toml. Resolve the highest installed node via mise so this survives
+# node version bumps (previously hardcoded to 23.11.1).
+pi() {
+    local pi_dir="$HOME/Code/personal/pi-my-rifle-ext"
+    local cli="$pi_dir/node_modules/@earendil-works/pi-coding-agent/dist/cli.js"
+    local node_bin="$HOME/.local/share/mise/installs/node/$(mise latest --installed node)/bin/node"
+    [[ -x "$node_bin" ]] || node_bin="node"
+    "$node_bin" "$cli" "$@"
+}
