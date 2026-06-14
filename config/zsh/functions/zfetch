@@ -54,7 +54,8 @@ else
 
   if [[ ! -d $dest ]]; then
       local url=git@github.com:$name
-      local ref=$3
+      # AIDEV-NOTE: ref is $4, not $3 — $3 is the dest dir. (bug: previously aliased both to $3)
+      local ref=$4
       echo -e "Missing plugin ${Yel}${name}${Rst}"
       echo -e "  Cloning from ${Blu}${url}${Rst}..."
       if [[ -n $ref ]]; then
