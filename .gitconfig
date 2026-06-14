@@ -3,7 +3,7 @@
     email = me@geerttheys.com
 [core]
     editor = nvim
-	  autocrlf = false
+    autocrlf = false
 [alias]
     co = checkout
     hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
@@ -14,18 +14,17 @@
     si = submodule init
     su = submodule update
     sub = "!git submodule sync && git submodule update"
-	dt = difftool -d
+    dt = difftool -d
 
     # list all aliases
     la = "!git config -l | grep alias | cut -c 7-"
-    delete-merged-branches = "!f() { git checkout --quiet master && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
+    delete-merged-branches = "!f() { git checkout --quiet main && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
     # diff = diff --ignore-space-at-eol -b -w --ignore-blank-lines
     d = "!git diff --ignore-space-at-eol -b -w --ignore-blank-lines -- ':!**/package-lock.json' ':!**/yarn.lock'"
 
     # push new branch - push a branch to origin and set upstream
     pnb = "!git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)"
 
-    co = checkout
     s = status --short --branch
     br = branch -v
     addnw = "!sh -c 'git diff -U0 -w --no-color \"$@\" | git apply --cached --ignore-whitespace --unidiff-zero -'"
@@ -38,10 +37,10 @@
     cont = rebase --continue
     conf = "!git s | grep ^U"
 
-    l = log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)%an%C(reset) - %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-
     # show what I did today
-    day = "!sh -c 'git log --reverse --no-merges --branches=* --date=local --after=\"yesterday 11:59PM\" --author=\"`git config --get user.name`\"'"
+    # AIDEV-NOTE: rewritten — old sh -c '...`...`...' had backticks inside single
+    # quotes (literal, never executed), so --author was always a literal string.
+    day = "!git log --reverse --no-merges --branches --date=local --after='yesterday 11:59PM' --author=\"$(git config user.name)\""
 
     # show the committers in the last 100 commits, sorted by who has commited the most
     review = "!git log --no-merges --pretty=%an | head -n 100 | sort | uniq -c | sort -nr"
@@ -61,11 +60,6 @@
 
     # current branch
     cbr = rev-parse --abbrev-ref HEAD
-
-    # submodule shortcuts
-    si = submodule init
-    su = submodule update
-    sub = "!git submodule sync && git submodule update"
 
     # show number of commits per contributer, sorted
     count = shortlog -sn
@@ -120,8 +114,8 @@
 [includeIf "gitdir:/home/geert/Code/sprinkel/"]
     path = /home/geert/.gitconfig-sprinkel
 [init]
-	defaultBranch = main
+    defaultBranch = main
 [diff]
-	tool = meld
+    tool = meld
 [git-town]
-	sync-feature-strategy = rebase
+    sync-feature-strategy = rebase
