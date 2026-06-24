@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Stop active minutes recording and restore WF-1000XM5 to A2DP (high quality audio).
+# Run after meeting-start once the meeting is done.
+
+BT_CARD="bluez_card.80_99_E7_69_A6_7C"
+BT_MIC="WF-1000XM5"
+A2DP_PROFILE="a2dp-sink"
+
+notify() {
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send -u low "$1" "$2" -t 3000 2>/dev/null || true
+    fi
+    echo "$1: $2"
+}
+
+# Stop minutes recording
+if ! minutes stop 2>/dev/null; then
+    echo "Warning: no active recording found (already stopped?)" >&2
+fi
+
+# Restore A2DP profile
+if pactl list cards short 2>/dev/null | grep -q "$BT_CARD"; then
+    pactl set-card-profile "$BT_CARD" "$A2DP_PROFILE" 2>/dev/null && \
+        notify "✅ Meeting ended" "Restored A2DP — audio quality back to normal"
+else
+    echo "Note: $BT_MIC not found, skipping profile restore." >&2
+fi
