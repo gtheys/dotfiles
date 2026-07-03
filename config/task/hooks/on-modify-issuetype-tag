@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+# AIDEV-NOTE: Taskwarrior on-modify hook — keeps jiraissuetype tag in sync on every modify.
+# Reads original+modified tasks; ensures the tag reflects current jiraissuetype.
+import json
+import sys
+
+ISSUETYPE_TAG_MAP = {
+    "Bug": "bug",
+    "Story": "story",
+    "Task": "task",
+    "Sub-task": "subtask",
+    "Epic": "epic",
+}
+
+lines = sys.stdin.read().splitlines()
+# on-modify receives two JSON lines: original, then modified
+original = json.loads(lines[0])  # noqa: F841 — available if needed
+modified = json.loads(lines[1])
+
+issue_type = modified.get("jiraissuetype")
+if issue_type:
+    tag = ISSUETYPE_TAG_MAP.get(issue_type, issue_type.lower().replace(" ", "_").replace("-", "_"))
+    tags = modified.get("tags", [])
+    if tag not in tags:
+        tags.append(tag)
+        modified["tags"] = tags
+
+print(json.dumps(modified))
+sys.exit(0)
