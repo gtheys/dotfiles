@@ -24,3 +24,6 @@ config/pgcli/log
 config/task/secret.taskrc
 config/tmux/plugins/
 config/tmux/.tmux/plugins/
+/config/herdr/herdr-client.log
+/config/herdr/herdr-server.log
+/config/herdr/session.json
