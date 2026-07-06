@@ -265,3 +265,5 @@ source ~/.config/scripts/fzf-git.sh
 # AIDEV-NOTE: op secrets loaded lazily — `op environment read` takes ~6.5s per call.
 # Run `op-env` to export the item's secrets into the current shell when needed.
 op-env() { eval "$(op environment read 27kxanp7phjmomdvyjvynbw57y)"; }
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
