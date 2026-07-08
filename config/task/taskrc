@@ -75,8 +75,9 @@ report.specs.labels=ID,St,State,Project,Tags,Due,Description
 report.specs.sort=work_state-,due+
 
 # AIDEV-NOTE: Modified list report to include Jira ID, Repository, and Work State
-report.list.columns=id,status.short,work_state,start.age,entry.age,depends,project,tags,recur,scheduled.countdown,due.relative,until.remaining,jiraid,repository,description
-report.list.labels=ID,St,WS,Active,Age,Deps,Project,Tag,Recur,S,Due,Until,Jira,Repo,Description
+report.list.columns=id,status.short,work_state,jirastatus,start.age,entry.age,depends,project,tags,recur,scheduled.countdown,due.relative,until.remaining,jiraid,repository,description
+report.list.labels=ID,St,WS,JiraStatus,Active,Age,Deps,Project,Tag,Recur,S,Due,Until,Jira,Repo,Description
+report.list.filter=status:pending jirastatus.not:Backlog jiraissuetype.not:Epic
 
 # AIDEV-NOTE: Custom report for dependency hierarchy view
 # Use `task tree` to see tasks grouped by dependency chains

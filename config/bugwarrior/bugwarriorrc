@@ -1,0 +1,12 @@
+[general]
+targets = salaryhero_jira
+taskrc = ~/.config/task/taskrc
+
+[salaryhero_jira]
+service = jira
+jira.base_uri = https://salaryhero.atlassian.net
+jira.username = geert@salary-hero.com
+jira.password = @oracle:eval:echo $JIRA_API_TOKEN
+jira.query = assignee = "geert@salary-hero.com" AND statusCategory != Done AND issuetype != Epic ORDER BY updated DESC
+jira.import_labels_as_tags = true
+jira.default_priority = M
