@@ -125,7 +125,7 @@ debug {
  spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP" "XAUTHORITY"
 // spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 spawn-at-startup "/usr/lib/mate-polkit/polkit-mate-authentication-agent-1"
-spawn-at-startup "dms" "run"
+spawn-sh-at-startup "for i in 1 2 3 4 5; do test -s /dev/shm/op-env-cache && break; op environment read 27kxanp7phjmomdvyjvynbw57y > /dev/shm/op-env-cache 2>/dev/null; test -s /dev/shm/op-env-cache && break; sleep 2; done; set -a; source /dev/shm/op-env-cache 2>/dev/null; exec dms run"
 spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
 // spawn-at-startup "wl-clip-persist" "--clipboard" "regular"
 //spawn-at-startup "udiskie"
@@ -225,7 +225,7 @@ binds {
     Print            { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot rc"; }
     Mod+Print        { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot rf"; }
     Ctrl+Print       { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot ri"; }
-    Mod+S            { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot ri"; }
+    Mod+Z            { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot ri"; }
     Shift+Print      { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot sc"; }
     Mod+Shift+Print  { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot sf"; }
     Ctrl+Shift+Print { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot si"; }
