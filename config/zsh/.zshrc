@@ -1,25 +1,11 @@
-export ZSH=$ZDOTDIR
-
-# Ensure functions directory is in fpath
-if [[ -d $ZDOTDIR/functions ]]; then
-    if [[ $fpath[(i)$ZDOTDIR/functions] -gt $#fpath ]]; then
-        fpath=($ZDOTDIR/functions $fpath)
-    fi
-    
-    # Autoload all functions
-    for func in $ZDOTDIR/functions/*(:t); do
-        autoload -Uz $func
-    done
-fi
+# Autoload custom functions (fpath set in zshenv)
+for func in $ZDOTDIR/functions/*(:t); do
+    autoload -Uz $func
+done
 
 ########################################################
 # Configuration
 ########################################################
-
-# Set this to the path of the opencode repo
-# Goal is to add the bin to the path
-
-prepend_path $HOME/Code/salaryhero/opencode/bin/
 
 # initialize autocomplete
 # AIDEV-NOTE: Use cached compinit (-C) when dump is <24h old to skip slow fpath rescan
@@ -35,18 +21,14 @@ fi
 
 # Use prepend_path
 prepend_path $HOME/.config/scripts
-prepend_path /usr/local/opt/grep/libexec/gnubin
-prepend_path /usr/local/sbin
 prepend_path $DOTFILES/bin
 prepend_path $HOME/bin
 prepend_path $HOME/.local/bin
 prepend_path $HOME/.cargo/bin
-prepend_path ${ASDF_DATA_DIR:-$HOME/.asdf}/shims
 # AIDEV-NOTE: npm/bin prepended after mise activation (see below) to ensure mise-managed npm overrides node-bundled npm
 prepend_path $HOME/.bun/bin
-prepend_path /opt/cuda/bin
-
-export LD_LIBRARY_PATH=/opt/cuda/lib64:$LD_LIBRARY_PATH
+[[ -d /opt/cuda/bin ]] && prepend_path /opt/cuda/bin
+[[ -d /opt/cuda/lib64 ]] && export LD_LIBRARY_PATH=/opt/cuda/lib64:$LD_LIBRARY_PATH
 
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
@@ -58,11 +40,10 @@ elif [[ -d ~/Developer ]]; then
     export CODE_DIR=~/Developer
 fi
 
-export DEVCTL_INFRA_DIR=~/Code/salaryhero/infra
 # AIDEV-NOTE: Cache GH_TOKEN — `gh auth token` forks on every startup otherwise.
 # Refreshed when the cache file is older than 24h.
 _gh_token_cache="$CACHEDIR/gh-token"
-if [[ ! -f "$_gh_token_cache" || -n "${_gh_token_cache}(#qN.mh+24)" ]]; then
+if [[ ! -f "$_gh_token_cache" || -n ${_gh_token_cache}(#qN.mh+24) ]]; then
     mkdir -p "$(dirname "$_gh_token_cache")"
     gh auth token > "$_gh_token_cache" 2>/dev/null
 fi
@@ -192,7 +173,6 @@ fi
 export LS_COLORS=$(< "$_vivid_cache")
 unset _vivid_cache
 
-export PLAYWRIGHT_MCP_BROWSER=firefox
 
 
 ########################################################
@@ -227,21 +207,8 @@ if [[ -x "$(command -v zoxide)" ]]; then
     eval "$(zoxide init zsh --hook pwd)"
 fi
 
-# Detect which `ls` flavor is in use
-if ls --color > /dev/null 2>&1; then # GNU `ls`
-    colorflag="--color"
-else # macOS `ls`
-    colorflag="-G"
-fi
-
-# if uwsm check may-start && uwsm select; then
-# 	exec uwsm start default
-# fi
-#
 # If a ~/.zshrc.local exists, source it
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
-# If a ~/.localrc zshrc exists, source it
-[[ -a ~/.localrc ]] && source ~/.localrc
 
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
