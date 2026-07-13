@@ -222,14 +222,14 @@ binds {
     Mod+X          { spawn "dms" "ipc" "call" "powermenu" "toggle"; }
     Mod+Y          { spawn "dms" "ipc" "call" "notepad" "open"; }
     // Screenshots
-    Print            { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot rc"; }
-    Mod+Print        { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot rf"; }
-    Ctrl+Print       { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot ri"; }
-    Mod+Z            { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot ri"; }
-    Shift+Print      { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot sc"; }
-    Mod+Shift+Print  { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot sf"; }
-    Ctrl+Shift+Print { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot si"; }
-    Alt+Print        { spawn "sh" "-c" "~/.config/hypr/scripts/screenshot p"; }
+    Print            { spawn "sh" "-c" "~/.config/scripts/screenshot rc"; }
+    Mod+Print        { spawn "sh" "-c" "~/.config/scripts/screenshot rf"; }
+    Ctrl+Print       { spawn "sh" "-c" "~/.config/scripts/screenshot ri"; }
+    Mod+Z            { spawn "sh" "-c" "~/.config/scripts/screenshot ri"; }
+    Shift+Print      { spawn "sh" "-c" "~/.config/scripts/screenshot sc"; }
+    Mod+Shift+Print  { spawn "sh" "-c" "~/.config/scripts/screenshot sf"; }
+    Ctrl+Shift+Print { spawn "sh" "-c" "~/.config/scripts/screenshot si"; }
+    Alt+Print        { spawn "sh" "-c" "~/.config/scripts/screenshot p"; }
     Mod+E          { spawn "thunar"; }
     //Mod+Z          { spawn "zen-browser"; }
     XF86Launch3    { spawn "dms" "ipc" "call" "mpris" "playPause"; }
