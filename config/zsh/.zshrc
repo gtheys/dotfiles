@@ -50,7 +50,9 @@ export LD_LIBRARY_PATH=/opt/cuda/lib64:$LD_LIBRARY_PATH
 
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
-if [[ -d ~/code ]]; then
+if [[ -d ~/Code ]]; then
+    export CODE_DIR=~/Code
+elif [[ -d ~/code ]]; then
     export CODE_DIR=~/code
 elif [[ -d ~/Developer ]]; then
     export CODE_DIR=~/Developer
@@ -262,8 +264,37 @@ unset _gt_comp
 # Keymaps for this is available at https://github.com/junegunn/fzf-git.sh
 source ~/.config/scripts/fzf-git.sh
 
-# AIDEV-NOTE: op secrets loaded lazily — `op environment read` takes ~6.5s per call.
-# Run `op-env` to export the item's secrets into the current shell when needed.
-op-env() { eval "$(op environment read 27kxanp7phjmomdvyjvynbw57y)"; }
+# AIDEV-NOTE: 1Password secrets via RAM-only cache (/dev/shm tmpfs).
+#
+# Strategy: cache `op environment read` output to tmpfs (RAM-backed, never touches disk).
+# - First load after reboot: 4-5s (op biometric unlock)
+# - All subsequent loads until reboot: instant (read cached file)
+# - Reboot clears cache (tmpfs is RAM-only); swap is zram (RAM), so no disk leakage.
+#
+# Threat model: no LUKS at rest, so storing plaintext secrets on disk would be worse
+# than `pass`-encrypted (the GPG key lives on the same unencrypted disk). tmpfs keeps
+# secrets in RAM only — disk forensics find nothing.
+#
+# Force refresh after rotating secrets in 1Password: `rm /dev/shm/op-env-cache && direnv reload`
+_op_cache=/dev/shm/op-env-cache
+
+if [[ ! -f "$_op_cache" ]]; then
+  # AIDEV-NOTE: op may prompt for biometric here. Failure leaves no cache (will retry next load).
+  if _out=$(op environment read 27kxanp7phjmomdvyjvynbw57y 2>/dev/null); then
+    printf '%s' "$_out" >"$_op_cache"
+    chmod 600 "$_op_cache"
+  fi
+fi
+
+# AIDEV-NOTE: export line-by-line (no eval) — secret values (URLs, tokens) contain
+# shell metachars like `&` that eval would execute instead of assign. `read` with
+# 2 vars dumps all remaining `=` back into val, so tokens with embedded `=` survive.
+if [[ -f "$_op_cache" ]]; then
+  while IFS='=' read -r _key _val; do
+    [[ -z "$_key" ]] && continue
+    export "$_key=$_val"
+  done <"$_op_cache"
+fi
+unset _op_cache _out _key _val
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

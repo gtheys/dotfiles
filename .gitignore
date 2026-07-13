@@ -22,6 +22,11 @@ config/btop/btop.log
 config/pgcli/history
 config/pgcli/log
 config/task/secret.taskrc
+config/task/taskrc.backup
+config/newsboat/cache.db
+config/newsboat/config.bak
+niri/config.kdl.backup*
+config/bugwarrior/bugwarriorrc
 config/tmux/plugins/
 config/tmux/.tmux/plugins/
 /config/herdr/herdr-client.log
