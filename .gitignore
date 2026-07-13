@@ -25,6 +25,8 @@ config/task/secret.taskrc
 config/task/taskrc.backup
 config/newsboat/cache.db
 config/newsboat/config.bak
+config/gtk-3.0/settings.ini
+config/gtk-4.0/settings.ini
 niri/config.kdl.backup*
 config/tmux/plugins/
 config/bugwarrior/bugwarriorrc
