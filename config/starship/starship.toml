@@ -1,6 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
-format = """$all $fill $cmd_duration
+format = """$all
 $character"""
+right_format = """$cmd_duration"""
 
 add_newline = false
 
@@ -12,9 +13,6 @@ error_symbol = "[❯](red)"
 min_time = 10
 show_milliseconds = true
 format = "[$duration](bright-black)"
-
-[fill]
-symbol = ' '
 
 [python]
 format = "via [🐍 $version](bold green) "
