@@ -30,6 +30,10 @@ input {
         scroll-method "two-finger"
         click-method "clickfinger"
     }
+    mouse {
+        accel-profile "flat"
+        accel-speed 0.0
+    }
 }
 
 environment {
