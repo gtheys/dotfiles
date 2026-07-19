@@ -200,6 +200,11 @@ customCommands:
   - key: "b"
     command: 'gh browse "{{.SelectedLocalCommit.Sha}}"'
     context: "commits"
+  - key: "<c-a>"
+    context: "files"
+    command: "~/.config/scripts/ai-commit.sh"
+    loadingText: "Generating commit message..."
+    output: terminal
 services: {}
 notARepository: skip
 promptToReturnFromSubprocess: true
