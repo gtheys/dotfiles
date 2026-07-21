@@ -1,3 +1,4 @@
+onboarding = false
 # herdr configuration
 # Place this file at ~/.config/herdr/config.toml
 
@@ -49,6 +50,7 @@
 
 # Check herdr.dev for remote agent-detection manifest updates in the background.
 # manifest_check = true
+
 
 [keys]
 # Prefix key to enter prefix mode (default: "ctrl+b")
@@ -116,7 +118,26 @@ prefix = "ctrl+a"
 # Custom commands use the same binding syntax.
 # type = "shell" runs detached in the background.
 # type = "pane" opens a temporary pane and closes it when the command exits.
-# [[keys.command]]
+
+[[keys.command]]
+key = "prefix+alt+o"
+type = "plugin_action"
+command = "herdr-zoxide.browse"
+description = "Browse zoxide directories"
+
+[[keys.command]]
+key = "prefix+alt+l"
+type = "pane"
+command = "lazygit"
+description = "run lazygit"
+
+[[keys.command]]
+key = "prefix+alt+b"
+type = "pane"
+command = "btop"
+description = "run btop"
+
+
 # key = "prefix+alt+g"
 # type = "pane"
 # command = "lazygit"
@@ -191,10 +212,11 @@ prefix = "ctrl+a"
 # off = disable pop-up notifications
 # herdr = show in-app toasts
 # terminal = ask the outer terminal to show a desktop notification
-system = ask the OS notification service directly
+# system = ask the OS notification service directly
 # delivery = "off"
 # delay_seconds = 1
 
+delivery = "off"
 [ui.toast.herdr]
 # position = "bottom-right"
 
@@ -218,7 +240,7 @@ system = ask the OS notification service directly
 [session]
 # Resume supported AI-agent panes into their native conversation sessions after
 # a Herdr server restart. Requires official integrations that report session refs.
-resume_agents_on_restore = true
+# resume_agents_on_restore = true
 
 [remote]
 # Whether herdr manages the ssh config used for the `herdr --remote` bridge.
@@ -237,7 +259,7 @@ resume_agents_on_restore = true
 # Requires a Kitty graphics-compatible outer terminal.
 # kitty_graphics = false
 # Save recent pane screen history across full server restarts.
-pane_history = false
+pane_history = true
 # While prefix mode is active, temporarily switch the macOS host input
 # source to an ASCII-capable keyboard layout so prefix commands register
 # even when a CJK IME is active, then restore the previous input source
