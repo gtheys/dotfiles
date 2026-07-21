@@ -200,7 +200,7 @@ customCommands:
   - key: "b"
     command: 'gh browse "{{.SelectedLocalCommit.Sha}}"'
     context: "commits"
-  - key: "<c-a>"
+  - key: "<c-i>"
     context: "files"
     command: "~/.config/scripts/ai-commit.sh"
     loadingText: "Generating commit message..."
