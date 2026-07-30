@@ -81,7 +81,13 @@ defaults:
         width: 20
         hidden: true
   refetchIntervalMinutes: 30
-keybindings: {}
+keybindings:
+  prs:
+    - key: C
+      name: code review
+      command: >
+        pane=$(herdr pane split --current --direction right | jq -r '.result.pane.pane_id');
+        herdr pane run "$pane" "tuicr pr {{.PrNumber}}"
 repoPaths: {}
 theme:
   ui:
