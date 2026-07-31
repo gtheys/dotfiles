@@ -1,0 +1,20 @@
+[Unit]
+Description=Populate 1Password env cache for niri session
+# AIDEV-NOTE: runs after 1Password desktop so op can use its socket (no prompt).
+# On boot the cache (/dev/shm/op-env-cache) is empty (tmpfs); this fills it so
+# DankMaterialShell plugin scripts inherit API keys without needing a terminal first.
+After=app-1password@autostart.service graphical-session.target
+Wants=app-1password@autostart.service
+
+[Service]
+Type=oneshot
+# Small delay — 1Password needs a moment to be ready for op socket connections.
+ExecStartPre=/bin/sleep 3
+ExecStart=/bin/bash -c '\
+  out=$(op environment read 27kxanp7phjmomdvyjvynbw57y 2>/dev/null) && \
+  printf "%%s" "$out" > /dev/shm/op-env-cache && \
+  chmod 600 /dev/shm/op-env-cache'
+RemainAfterExit=no
+
+[Install]
+WantedBy=graphical-session.target
