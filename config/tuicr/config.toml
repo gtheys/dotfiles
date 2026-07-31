@@ -1,0 +1,63 @@
+theme = "tokyo-night-storm"
+
+diff_view = "side-by-side"
+ignore_whitespace = false
+show_file_list = true
+mouse = true
+leader = ","
+comment_vim = false
+comment_tab_width = 4
+wrap = false
+cursor_line = true
+transparent_background = true
+scroll_offset = 5
+no_update_check = false
+review_watch_interval_ms = 1000
+
+backend = "libgit2"
+
+
+# Array order = Tab cycle order in comment mode, so this runs most-reached first.
+# Colors encode SEVERITY, not category:
+#   #f7768e / #db4b4b  blocking
+#   #ff9e64            should fix
+#   #7aa2f7            optional
+#   #e0af68            needs a reply
+#   #565f89            informational
+#   #9ece6a            good
+comment_types = [
+  # --- everyday ---
+  { id = "issue", definition = "should be fixed, but not merge-blocking", color = "#ff9e64" },
+  { id = "nit", label = "nitpick", definition = "small optional tweak, ignore freely", color = "#565f89" },
+  { id = "suggestion", definition = "optional improvement, take it or leave it", color = "#7aa2f7" },
+  { id = "question", definition = "I need an answer before I can judge this code", color = "#e0af68" },
+
+  # --- blocking ---
+  { id = "blocker", definition = "must be resolved before merge", color = "#f7768e" },
+  { id = "security", definition = "security or data-integrity risk, treat as urgent", color = "#db4b4b" },
+
+  # --- specific, self-contained asks ---
+  { id = "test", definition = "add or extend test coverage for this", color = "#ff9e64" },
+  { id = "types", definition = "add proper types", color = "#ff9e64" },
+  { id = "errors", label = "error handling", definition = "add or fix error handling on this path", color = "#ff9e64" },
+  { id = "scope", definition = "unrequested change or leftover debug code, revert unless justified", color = "#ff9e64" },
+
+  # --- positive ---
+  { id = "praise", definition = "this is good, keep it", color = "#9ece6a" },
+
+  { id = "delete", definition = "remove this", color = "#ff9e64" },
+  { id = "move", definition = "move this to a separate file", color = "#7aa2f7" },
+  { id = "extract", definition = "extract this into a separate function/component", color = "#7aa2f7" },
+  { id = "simplify", definition = "simplify this", color = "#7aa2f7" },
+]
+
+[forge]
+comment_type_prefix = true
+
+[export]
+intro = "I reviewed your code and have the following comments. Please address them."
+scope_line = true
+pr_metadata = true
+comments_header = "## Local tuicr Comments"
+remote_comments_header = "## Existing GitHub Comments"
+legend = true
