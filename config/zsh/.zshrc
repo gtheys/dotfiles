@@ -245,13 +245,14 @@ source ~/.config/scripts/fzf-git.sh
 # Force refresh after rotating secrets in 1Password: `rm /dev/shm/op-env-cache && direnv reload`
 _op_cache=/dev/shm/op-env-cache
 
-if [[ ! -f "$_op_cache" ]]; then
-  # AIDEV-NOTE: op may prompt for biometric here. Failure leaves no cache (will retry next load).
-  if _out=$(op environment read 27kxanp7phjmomdvyjvynbw57y 2>/dev/null); then
-    printf '%s' "$_out" >"$_op_cache"
-    chmod 600 "$_op_cache"
-  fi
-fi
+# AIDEV-NOTE: op-env-populate.service (systemd --user) is the SOLE writer of this
+# cache — it also fills it for DankMaterialShell/quickshell plugin scripts, which
+# read the file directly (not via zsh). zshrc only reads+exports into the
+# interactive shell env; it must NOT also call `op environment read` here, or a
+# terminal opened before the service finishes (~30s incl. biometric unlock) races
+# it -> 2x 1Password prompt. If cache isn't there yet, vars just aren't exported
+# in this shell; open a new terminal once the service completes.
+# Force refresh after rotating secrets: `rm /dev/shm/op-env-cache && systemctl --user restart op-env-populate.service`
 
 # AIDEV-NOTE: export line-by-line (no eval) — secret values (URLs, tokens) contain
 # shell metachars like `&` that eval would execute instead of assign. `read` with
@@ -262,6 +263,6 @@ if [[ -f "$_op_cache" ]]; then
     export "$_key=$_val"
   done <"$_op_cache"
 fi
-unset _op_cache _out _key _val
+unset _op_cache _op_lock _out _key _val
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
