@@ -53,12 +53,30 @@ done
 
 title "Symlinks: ~/.config"
 mkdir -p "$HOME/.config"
+# AIDEV-NOTE: skip `systemd` here — that dir is shared with systemctl-managed
+# .wants/ symlinks, so a whole-dir symlink would conflict. Files are copied in
+# a dedicated step below instead.
 for src in "$DOTFILES"/config/*/; do
+    [[ "$(basename "$src")" == "systemd" ]] && continue
     link "$src" "$HOME/.config/$(basename "$src")"
 done
 
 title "Symlinks: scripts"
 link "$DOTFILES/scripts" "$HOME/.config/scripts"
+
+# ─── systemd user units ───────────────────────────────────────────────────────
+# AIDEV-NOTE: ~/.config/systemd/user is also written by `systemctl --user
+# enable` (creates .wants/ symlinks), so we can't symlink the whole dir. Instead
+# copy individual unit files in, overwriting any existing copy. systemctl needs
+# `--user daemon-reload` afterwards to pick up changed units.
+title "systemd user units"
+mkdir -p "$HOME/.config/systemd/user"
+for src in "$DOTFILES"/config/systemd/user/*; do
+    [[ -f "$src" ]] || continue
+    dst="$HOME/.config/systemd/user/$(basename "$src")"
+    cp -f "$src" "$dst"
+    linked "$(basename "$src")"
+done
 
 # ─── Terminfo ─────────────────────────────────────────────────────────────────
 
