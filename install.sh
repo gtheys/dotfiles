@@ -72,9 +72,14 @@ link "$DOTFILES/scripts" "$HOME/.config/scripts"
 title "systemd user units"
 mkdir -p "$HOME/.config/systemd/user"
 for src in "$DOTFILES"/config/systemd/user/*; do
-    [[ -f "$src" ]] || continue
     dst="$HOME/.config/systemd/user/$(basename "$src")"
-    cp -f "$src" "$dst"
+    if [[ -d "$src" ]]; then
+        # drop-in dirs (e.g. dms.service.d/) — copy contents, not the whole tree
+        mkdir -p "$dst"
+        cp -f "$src"/*.conf "$dst"/ 2>/dev/null || true
+    else
+        cp -f "$src" "$dst"
+    fi
     linked "$(basename "$src")"
 done
 
