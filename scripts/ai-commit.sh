@@ -31,9 +31,7 @@ if [ "$has_commitlint" = false ] && [ -f "$repo_root/package.json" ]; then
   fi
 fi
 
-llm_args=(-t commit --model claude-haiku-4.5)
-[ -n "$jira" ] && llm_args+=(-p jira "$jira")
-[ -n "$rules" ] && llm_args+=(-p rules "$rules")
+llm_args=(-t commit --model claude-haiku-4.5 -p jira "$jira" -p rules "$rules")
 
 msg=$(echo "$diff" | llm "${llm_args[@]}")
 
