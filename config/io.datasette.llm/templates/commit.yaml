@@ -1,0 +1,18 @@
+prompt: |
+  Write a git commit message for the following staged diff.
+
+  Rules:
+  - Follow Conventional Commits format (type(scope): summary).
+  - Summary line max 72 chars, imperative mood, no trailing period.
+  - Add a body explaining why, if non-trivial.
+  - If a Jira ticket is given below, reference it (e.g. in footer as "Refs: $jira").
+  - If commitlint rules are given below, obey them exactly.
+  - Output ONLY the commit message, no markdown fences, no commentary.
+
+  Jira ticket: $jira
+
+  Commitlint config (if any):
+  $rules
+
+  Diff:
+  $input

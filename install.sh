@@ -58,11 +58,21 @@ mkdir -p "$HOME/.config"
 # a dedicated step below instead.
 for src in "$DOTFILES"/config/*/; do
     [[ "$(basename "$src")" == "systemd" ]] && continue
+    [[ "$(basename "$src")" == "io.datasette.llm" ]] && continue
     link "$src" "$HOME/.config/$(basename "$src")"
 done
 
 title "Symlinks: scripts"
 link "$DOTFILES/scripts" "$HOME/.config/scripts"
+
+# AIDEV-NOTE: io.datasette.llm holds real user data (keys.json, logs.db) next
+# to our tracked templates, so whole-dir symlink would conflict. Link the
+# template file individually instead, same pattern as systemd/user below.
+title "Symlinks: llm templates"
+mkdir -p "$HOME/.config/io.datasette.llm/templates"
+for src in "$DOTFILES"/config/io.datasette.llm/templates/*; do
+    link "$src" "$HOME/.config/io.datasette.llm/templates/$(basename "$src")"
+done
 
 # ─── systemd user units ───────────────────────────────────────────────────────
 # AIDEV-NOTE: ~/.config/systemd/user is also written by `systemctl --user
