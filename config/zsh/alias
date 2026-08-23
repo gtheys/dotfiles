@@ -69,3 +69,5 @@ pi() {
     [[ -x "$node_bin" ]] || node_bin="node"
     "$node_bin" "$cli" "$@"
 }
+
+alias lazydocker-chicken='DOCKER_HOST=unix://$HOME/.local/share/containers/chicken-podman.sock lazydocker'
