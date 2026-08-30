@@ -10,6 +10,16 @@ if [ -z "$diff" ]; then
   exit 1
 fi
 
+# ponytail: doc-only commits send headings + stat — 7b fixates on full doc body and reports described plan as done work
+staged_files=$(git diff --cached --name-only)
+if ! echo "$staged_files" | grep -qvE '\.(md|txt|rst|adoc|ad)$'; then
+  outline=$(git diff --cached -U0 -- . | grep -E '^(diff --git|@@|\+#{1,3} )' | head -80)
+  diff="Only these documentation files changed (describe the doc change — what was added/edited/removed — NOT the topic the docs discuss). Write a 2-4 line body listing what each file adds or edits:
+$outline
+
+$(git diff --cached --stat)"
+fi
+
 repo_root=$(git rev-parse --show-toplevel)
 has_commitlint=false
 rules=""
@@ -31,9 +41,46 @@ if [ "$has_commitlint" = false ] && [ -f "$repo_root/package.json" ]; then
   fi
 fi
 
-llm_args=(-t commit --model claude-haiku-4.5 -p jira "$jira" -p rules "$rules")
+llm_args=(-t commit -m coder -p jira "$jira" -p rules "$rules" -o temperature 0.1)
 
-msg=$(echo "$diff" | llm "${llm_args[@]}")
+clean_msg() {
+  sed -e '/^```/d' -e 's/^markdown$//' | sed -e '/./,$!d'
+}
+
+valid_subject() {
+  # ponytail: 7b flaky on format; regex-check subject AND require body so retries catch it before the editor does
+  local subj body
+  subj=$(head -1)
+  echo "$subj" | grep -qE '^(feat|fix|refactor|docs|test|chore|perf|ci|build|revert|style)(\([a-z0-9._/-]+\))?: .+' || return 1
+  body=$(tail -n +2 | sed '/^Refs:/d' | grep -c '.')
+  [ "$body" -ge 1 ]
+}
+
+# ponytail: retry up to 3x — small model ~50% format compliance on large doc diffs
+msg=""
+for attempt in 1 2 3; do
+  msg=$(echo "$diff" | llm "${llm_args[@]}" | clean_msg)
+  if echo "$msg" | valid_subject; then
+    break
+  fi
+  echo "attempt $attempt: bad format, retrying..." >&2
+done
+echo "$msg" | valid_subject || echo "⚠️ model output bad format after retries — fix in editor" >&2
+
+if [ -n "$jira" ] && ! echo "$msg" | grep -q "Refs: $jira"; then
+  msg="${msg}
+
+Refs: $jira"
+fi
+
+# ponytail: 7b drops body ~randomly even at temp 0.1; deterministic fallback — file list is always truthful
+body_lines=$(echo "$msg" | tail -n +2 | sed '/^Refs:/d' | grep -c '.' || true)
+if [ "$body_lines" -lt 1 ]; then
+  fallback=$(git diff --cached --name-status | sed -e 's/^A\t/- Added /' -e 's/^M\t/- Updated /' -e 's/^D\t/- Deleted /' -e 's/^R[0-9]*\t[^\t]*\t/- Renamed /')
+  msg="${msg}
+
+${fallback}"
+fi
 
 tmpfile=$(mktemp --suffix=.gitcommit)
 echo "$msg" >"$tmpfile"
