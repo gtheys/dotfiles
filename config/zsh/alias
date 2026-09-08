@@ -59,15 +59,4 @@ arch_news_check() {
 
 alias pacnews="arch_news_check"
 
-# AIDEV-NOTE: pi needs node >=22 (undici markAsUncloneable) regardless of the current
-# project's .mise.toml. Resolve the highest installed node via mise so this survives
-# node version bumps (previously hardcoded to 23.11.1).
-pi() {
-    local pi_dir="$HOME/Code/personal/pi-my-rifle-ext"
-    local cli="$pi_dir/node_modules/@earendil-works/pi-coding-agent/dist/cli.js"
-    local node_bin="$HOME/.local/share/mise/installs/node/$(mise latest --installed node)/bin/node"
-    [[ -x "$node_bin" ]] || node_bin="node"
-    "$node_bin" "$cli" "$@"
-}
-
 alias lazydocker-chicken='DOCKER_HOST=unix://$HOME/.local/share/containers/chicken-podman.sock lazydocker'

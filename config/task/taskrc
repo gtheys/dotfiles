@@ -103,3 +103,9 @@ report.ptree.sort=depends+,id+
 report.ptree.filter=status:pending
 
 include ~/.config/task/secret.taskrc
+
+# AIDEV-NOTE: local feature tickets (non-Jira flow) — quick uuid/desc lookup
+report.features.description=Local feature tickets (non-Jira flow)
+report.features.columns=id,uuid.short,description
+report.features.labels=ID,UUID,Feature
+report.features.filter=+feature

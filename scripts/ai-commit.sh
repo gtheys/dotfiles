@@ -41,7 +41,7 @@ if [ "$has_commitlint" = false ] && [ -f "$repo_root/package.json" ]; then
   fi
 fi
 
-llm_args=(-t commit -m coder -p jira "$jira" -p rules "$rules" -o temperature 0.1)
+llm_args=(-t commit -m qwen -p jira "$jira" -p rules "$rules" -o temperature 0.1)
 
 clean_msg() {
   sed -e '/^```/d' -e 's/^markdown$//' | sed -e '/./,$!d'

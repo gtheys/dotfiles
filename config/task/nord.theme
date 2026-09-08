@@ -41,7 +41,9 @@ color.project.none=
 #+ Priority +
 #+----------+
 color.uda.priority.H=bold
-color.uda.priority.M=bold yellow
+# AIDEV-NOTE: M as yellow fg clashes with blocking/blocked yellow bg (fg+bg merged from
+# different rules) -> invisible rows. Blue reads on both plain dark bg and yellow bg.
+color.uda.priority.M=bold blue
 color.uda.priority.L=
 
 #+------+
