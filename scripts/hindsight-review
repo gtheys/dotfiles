@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""Review pending epimetheus/hindsight flushes and decide what gets flushed.
+
+Pending = session has a queue entry (unflushed messages) in ~/.pi/agent/epimetheus/queue.
+Flush guard blocks sessions whose extraContext is null (unset).
+
+Usage:
+  hindsight-review list                    # pending sessions + first user message
+  hindsight-review mark <id|all> [text...] # set extraContext (empty = no caveats), allows flush
+  hindsight-review skip <id|all>           # retained=false, never flush (queue stays, ignored)
+  hindsight-review unskip <id>             # retained=true again
+
+After `mark`, quit pi (or run `/hindsight flush-pending` inside pi) to flush.
+"""
+import glob
+import json
+import os
+import sys
+
+EPI = os.path.expanduser("~/.pi/agent/epimetheus")
+SESS = os.path.expanduser("~/.pi/agent/sessions")
+STATE_DIR = os.path.join(EPI, "session-state")
+
+
+def state_path(sid):
+    return os.path.join(STATE_DIR, f"{sid}.json")
+
+
+def load_state(sid):
+    p = state_path(sid)
+    if os.path.exists(p):
+        try:
+            return json.load(open(p))
+        except json.JSONDecodeError:
+            pass
+    return {"retained": True, "extraContext": None}
+
+
+def save_state(sid, st):
+    import datetime
+
+    st["updatedAt"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    tmp = state_path(sid) + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(st, f)
+    os.replace(tmp, state_path(sid))
+
+
+def first_user_msg(sid):
+    for f in glob.glob(os.path.join(SESS, "**", f"*{sid}*.jsonl"), recursive=True):
+        try:
+            for line in open(f, errors="replace"):
+                try:
+                    e = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                msg = e.get("message") or {}
+                if e.get("type") == "message" and msg.get("role") == "user":
+                    txt = " ".join(
+                        p.get("text", "") for p in msg.get("content", []) if isinstance(p, dict)
+                    )
+                    return str(e.get("timestamp", "?"))[:10], " ".join(txt.split())[:90]
+        except OSError:
+            continue
+    return "?", "(session file not found)"
+
+
+def pending_ids():
+    for d in sorted(glob.glob(os.path.join(EPI, "queue", "*"))):
+        yield os.path.basename(d)
+
+
+def resolve(arg):
+    if arg == "all":
+        return list(pending_ids())
+    matches = [sid for sid in pending_ids() if sid.startswith(arg)]
+    if not matches:
+        sys.exit(f"no pending session matching {arg!r}")
+    return matches
+
+
+def cmd_list():
+    rows = list(pending_ids())
+    if not rows:
+        print("nothing pending")
+        return
+    for sid in rows:
+        st = load_state(sid)
+        guard = "READY " if st.get("extraContext") is not None else "BLOCKED"
+        keep = "retained" if st.get("retained", True) else "skipped "
+        date, summary = first_user_msg(sid)
+        print(f"{guard} {keep} {date} {sid[:13]}  {summary}")
+
+
+def cmd_mark(arg, context):
+    for sid in resolve(arg):
+        st = load_state(sid)
+        st["extraContext"] = " ".join(context)
+        st["retained"] = True
+        save_state(sid, st)
+        print(f"marked {sid} (context: {st['extraContext']!r})")
+
+
+def cmd_skip(arg):
+    for sid in resolve(arg):
+        st = load_state(sid)
+        st["retained"] = False
+        save_state(sid, st)
+        print(f"skipped {sid}")
+
+
+def cmd_unskip(arg):
+    for sid in resolve(arg):
+        st = load_state(sid)
+        st["retained"] = True
+        save_state(sid, st)
+        print(f"unskipped {sid}")
+
+
+if __name__ == "__main__":
+    args = sys.argv[1:]
+    if not args or args[0] == "list":
+        cmd_list()
+    elif args[0] == "mark" and len(args) >= 2:
+        cmd_mark(args[1], args[2:])
+    elif args[0] == "skip" and len(args) == 2:
+        cmd_skip(args[1])
+    elif args[0] == "unskip" and len(args) == 2:
+        cmd_unskip(args[1])
+    else:
+        sys.exit(__doc__)
