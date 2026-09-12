@@ -9,6 +9,7 @@ Usage:
   hindsight-review mark <id|all> [text...] # set extraContext (empty = no caveats), allows flush
   hindsight-review skip <id|all>           # retained=false, never flush (queue stays, ignored)
   hindsight-review unskip <id>             # retained=true again
+  hindsight-review review                  # interactive: ask per pending item
 
 After `mark`, quit pi (or run `/hindsight flush-pending` inside pi) to flush.
 """
@@ -109,6 +110,48 @@ def cmd_skip(arg):
         print(f"skipped {sid}")
 
 
+def cmd_review():
+    ids = list(pending_ids())
+    if not ids:
+        print("nothing pending")
+        return
+    for i, sid in enumerate(ids, 1):
+        st = load_state(sid)
+        if not st.get("retained", True):
+            print(f"[{i}/{len(ids)}] {sid[:13]} already skipped")
+            continue
+        if st.get("extraContext") is not None:
+            print(f"[{i}/{len(ids)}] {sid[:13]} already marked, skipping")
+            continue
+        date, summary = first_user_msg(sid)
+        print(f"\n[{i}/{len(ids)}] {date} {sid}")
+        print(f"  {summary}")
+        while True:
+            try:
+                ans = input("  [m]=keep (empty ctx)  [m text]=keep w/ caveats  [s]=skip  [q]=quit > ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print()
+                return
+            if ans == "q":
+                return
+            if ans == "m" or ans == "":
+                st["extraContext"] = ""
+                save_state(sid, st)
+                print("  marked (no caveats)")
+                break
+            if ans.startswith("m "):
+                st["extraContext"] = ans[2:].strip()
+                save_state(sid, st)
+                print(f"  marked (caveats: {st['extraContext']!r})")
+                break
+            if ans == "s":
+                st["retained"] = False
+                save_state(sid, st)
+                print("  skipped")
+                break
+            print("  ?")
+
+
 def cmd_unskip(arg):
     for sid in resolve(arg):
         st = load_state(sid)
@@ -125,6 +168,8 @@ if __name__ == "__main__":
         cmd_mark(args[1], args[2:])
     elif args[0] == "skip" and len(args) == 2:
         cmd_skip(args[1])
+    elif args[0] == "review":
+        cmd_review()
     elif args[0] == "unskip" and len(args) == 2:
         cmd_unskip(args[1])
     else:
