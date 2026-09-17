@@ -1,6 +1,6 @@
 # [Created by task 3.4.2 11/10/2025 11:52:01]
 data.location=/home/geert/.task
-news.version=3.4.2
+news.version=3.5.0
 
 # To use the default location of the XDG directories,
 # move this configuration file from ~/.taskrc to ~/.config/task/taskrc and update location config as follows:
@@ -83,8 +83,8 @@ report.list.filter=status:pending jirastatus.not:Backlog jiraissuetype.not:Epic
 # Use `task tree` to see tasks grouped by dependency chains
 # Sorts by description to leverage numbering scheme (1., 1.1., 2., 2.1., etc.)
 
-context.work.read=project:salaryhero
-context.work.write=project:salaryhero
+context.work.read=project:SalaryHero
+context.work.write=project:SalaryHero
 report.next.columns=id,status.short,work_state,start.age,entry.age,depends,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description
 report.next.labels=ID,St,WS,Active,Age,Deps,Project,Tag,Recur,S,Due,Until,Description
 report.byproject.description=Tasks grouped by project
@@ -103,6 +103,8 @@ report.ptree.sort=depends+,id+
 report.ptree.filter=status:pending
 
 include ~/.config/task/secret.taskrc
+context.personal.read=project:personal
+context.personal.write=project:personal
 
 # AIDEV-NOTE: local feature tickets (non-Jira flow) — quick uuid/desc lookup
 report.features.description=Local feature tickets (non-Jira flow)

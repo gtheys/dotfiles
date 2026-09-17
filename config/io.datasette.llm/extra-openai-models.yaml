@@ -1,0 +1,15 @@
+- model_id: llama3.1:8b
+  model_name: llama3.1:8b
+  api_base: http://100.108.226.64:8087/api/proxy/v1
+  api_key_name: localproxy
+  aliases: [local]
+- model_id: qwen2.5-coder:7b
+  model_name: qwen2.5-coder:7b
+  api_base: http://100.108.226.64:8087/api/proxy/v1
+  api_key_name: localproxy
+  aliases: [coder]
+- model_id: qwen3.5-16k
+  model_name: qwen3.5-16k
+  api_base: http://100.108.226.64:8087/api/proxy/v1
+  api_key_name: localproxy
+  aliases: [qwen]

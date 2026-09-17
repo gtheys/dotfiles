@@ -15,7 +15,7 @@ query = "issuetype IN (Story, Task, \"Sub-task\", Bug) AND assignee = currentUse
 #query = "assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC"
 
 description_template = "{{jiraid}} {{jirasummary}}"
-project_template = "salaryhero.jira.{{project.key | lower}}"
+project_template = "SalaryHero.jira.{{project.key | lower}}"
 priority_template = "{{priority.name | lower}}"
 
 import_labels_as_tags = true
