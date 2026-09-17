@@ -27,6 +27,9 @@ JQL = ('project="IN" AND issuetype=Epic '
        "AND customfield_10935 is not EMPTY AND customfield_10936 is not EMPTY")
 FIELDS = "summary,customfield_10935,customfield_10936"
 
+# AIDEV-NOTE: PI board = manual actions; counted by created month
+PI_JQL = 'project="PI"'
+
 AUTH = base64.b64encode(f"{EMAIL}:{TOKEN}".encode()).decode()
 
 
@@ -73,6 +76,23 @@ def fetch_epics():
             return epics
 
 
+def fetch_pi_created_months():
+    months = {}
+    token = None
+    while True:
+        q = ("?jql=" + urllib.parse.quote(PI_JQL) +
+             "&maxResults=100&fields=created")
+        if token:
+            q += f"&nextPageToken={token}"
+        data = api("/rest/api/3/search/jql" + q)
+        for i in data.get("issues", []):
+            m = i["fields"]["created"][:7]  # YYYY-MM
+            months[m] = months.get(m, 0) + 1
+        token = data.get("nextPageToken")
+        if not token:
+            return months
+
+
 def cell(content, header=False):
     return {"type": "tableHeader" if header else "tableCell",
             "content": [{"type": "paragraph", "content": [content]}]}
@@ -90,7 +110,7 @@ def row(cells, header=False):
     return {"type": "tableRow", "content": [cell(c, header) for c in cells]}
 
 
-def build_adf(epics):
+def build_adf(epics, pi_months):
     # quarterly averages (by Done date)
     quarters = {}
     for e in epics:
@@ -109,6 +129,10 @@ def build_adf(epics):
             link(e["key"], f"{SITE}/browse/{e['key']}"), txt(e["summary"][:80]),
             txt(e["start"]), txt(e["end"]), txt(e["days"])]))
 
+    m_rows = [row([txt("Month"), txt("Tickets created")], header=True)]
+    for m in sorted(pi_months):
+        m_rows.append(row([txt(m), txt(pi_months[m])]))
+
     days = [e["days"] for e in epics]
     now = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
     return {
@@ -124,6 +148,11 @@ def build_adf(epics):
             {"type": "table", "attrs": {"isNumberColumnEnabled": False,
                                         "layout": "default"},
              "content": q_rows},
+            {"type": "heading", "attrs": {"level": 2},
+             "content": [txt(f"Manual actions (PI board, {sum(pi_months.values())} tickets)")]},
+            {"type": "table", "attrs": {"isNumberColumnEnabled": False,
+                                        "layout": "default"},
+             "content": m_rows},
             {"type": "heading", "attrs": {"level": 2},
              "content": [txt(f"All epics ({len(epics)})")]},
             {"type": "paragraph", "content": [
@@ -146,8 +175,9 @@ def find_page():
 
 def main():
     epics = fetch_epics()
-    print(f"fetched {len(epics)} valid epics")
-    adf = json.dumps(build_adf(epics))
+    pi_months = fetch_pi_created_months()
+    print(f"fetched {len(epics)} valid epics, {sum(pi_months.values())} PI tickets")
+    adf = json.dumps(build_adf(epics, pi_months))
     page_id = find_page()
     if page_id:
         cur = api(f"/wiki/api/v2/pages/{page_id}")
