@@ -1,0 +1,4 @@
+#!/bin/sh
+# OSC 52 shim: sends text to the clipboard of the terminal you're SSH'd in from
+if [ -t 0 ]; then data="$*"; else data=$(cat); [ -n "$data" ] || data="$*"; fi
+printf '\033]52;c;%s\a' "$(printf '%s' "$data" | base64 | tr -d '\n')" > /dev/tty
