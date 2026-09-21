@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Remove epimetheus queue dirs for sessions whose .jsonl no longer exists.
+# Fixes recurring "Session file not found" warnings on pi quit (subagent
+# sessions are ephemeral but their pending markers persist in the shared queue).
+# Run manually or from cron.
+set -euo pipefail
+AGENT_DIR="${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}"
+cd "$AGENT_DIR"
+removed=0
+for d in epimetheus/queue/*/; do
+  id=$(basename "$d")
+  # -L: follow symlinks inside sessions/ (worktree/namespace dirs)
+  if ! find -L sessions -name "*_${id}.jsonl" -print -quit 2>/dev/null | grep -q .; then
+    rm -rf "epimetheus/queue/$id"
+    echo "removed orphan queue: $id"
+    removed=$((removed+1))
+  fi
+done
+echo "done, removed $removed"
