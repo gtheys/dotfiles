@@ -1,0 +1,4 @@
+/* AIDEV-NOTE: base theme adw-gtk3, then DMS per-mode colors last so they win.
+   DMS (matugen) rewrites dank-colors.css on dark/light toggle; GTK3 live-reloads imports. */
+@import url("/home/geert/.local/share/themes/adw-gtk3/gtk-3.0/gtk.css");
+@import url("dank-colors.css");
