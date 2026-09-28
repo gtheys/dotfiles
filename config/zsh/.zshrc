@@ -173,6 +173,12 @@ fi
 export LS_COLORS=$(< "$_vivid_cache")
 unset _vivid_cache
 
+# Colorize zsh tab-completion file listings with the same vivid palette
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# AIDEV-NOTE: vivid only themes file types; eza owner/perms/size/date come from EZA_COLORS (tokyonight-storm palette, kept in sync by hand)
+export EZA_COLORS="uu=38;2;122;162;247:gu=38;2;187;154;247:un=38;2;86;95;137:gn=38;2;86;95;137:ur=38;2;192;202;245:uw=38;2;224;175;104:ux=38;2;158;206;106:ue=38;2;158;206;106:gr=38;2;192;202;245:gw=38;2;224;175;104:gx=38;2;158;206;106:tr=38;2;192;202;245:tw=38;2;224;175;104:tx=38;2;158;206;106:sn=38;2;224;175;104:sb=38;2;86;95;137:da=38;2;86;95;137"
+
 
 
 ########################################################
@@ -268,3 +274,6 @@ unset _op_cache _op_lock _out _key _val
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
 
 export SSH_AUTH_SOCK=/run/user/1000/ssh-agent.socket
+
+# bun completions
+[ -s "/home/geert/.bun/_bun" ] && source "/home/geert/.bun/_bun"
