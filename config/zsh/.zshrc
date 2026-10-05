@@ -273,7 +273,7 @@ unset _op_cache _op_lock _out _key _val
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
 
-export SSH_AUTH_SOCK=/run/user/1000/ssh-agent.socket
+export SSH_AUTH_SOCK=/run/user/1000/gnupg/S.gpg-agent.ssh
 
 # bun completions
 [ -s "/home/geert/.bun/_bun" ] && source "/home/geert/.bun/_bun"
