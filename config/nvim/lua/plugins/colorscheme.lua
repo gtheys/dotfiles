@@ -1,3 +1,13 @@
+-- AIDEV-NOTE: transparent bg for any colorscheme (dms/base46 sets its own bg even
+-- with matugenTemplateNeovimSetBackground=false in DMS settings.json)
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    for _, grp in ipairs({ "Normal", "NormalNC", "NormalFloat", "EndOfBuffer" }) do
+      vim.api.nvim_set_hl(0, grp, { bg = "NONE" })
+    end
+  end,
+})
+
 return {
   -- AIDEV-NOTE: Set tokyonight-storm as the default LazyVim colorscheme
   -- lazy=false and priority ensure it loads before other plugins
