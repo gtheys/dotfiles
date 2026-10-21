@@ -38,3 +38,6 @@ config/tmux/.tmux/plugins/
 /config/herdr/release-notes.json
 /config/herdr/session-history.json
 /config/io.datasette.llm/logs.db
+/config/herdr/plugins
+/config/herdr/herdr.sock.agent
+/config/herdr/session-snapshots
