@@ -1,5 +1,362 @@
 [
   {
+    "plugin_id": "chmarax.gitview",
+    "name": "gitview",
+    "version": "0.4.0",
+    "min_herdr_version": "0.7.0",
+    "description": "Two-pane git view: changed files + diff, Enter opens nvim",
+    "manifest_path": "/home/geert/.dotfiles/config/herdr/plugins/github-installations/chmarax.gitview-57cd0959dba0/157787-0/checkout/herdr-plugin.toml",
+    "plugin_root": "/home/geert/.dotfiles/config/herdr/plugins/github-installations/chmarax.gitview-57cd0959dba0/157787-0/checkout",
+    "enabled": true,
+    "platforms": [
+      "macos",
+      "linux"
+    ],
+    "build": [
+      {
+        "command": [
+          "bash",
+          "herdr/install.sh"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "toggle",
+        "title": "gitview: toggle sidebar",
+        "contexts": [
+          "pane",
+          "workspace"
+        ],
+        "command": [
+          "sh",
+          "-c",
+          "exec sh \"$HERDR_PLUGIN_ROOT/herdr/run.sh\" toggle"
+        ]
+      },
+      {
+        "id": "toggle-tab",
+        "title": "gitview: toggle in own tab",
+        "contexts": [
+          "pane",
+          "workspace"
+        ],
+        "command": [
+          "sh",
+          "-c",
+          "exec sh \"$HERDR_PLUGIN_ROOT/herdr/run.sh\" toggle-tab"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "ask",
+        "title": "gitview: confirm",
+        "placement": "overlay",
+        "command": [
+          "sh",
+          "-c",
+          "exec sh \"$HERDR_PLUGIN_ROOT/herdr/run.sh\" ask"
+        ]
+      },
+      {
+        "id": "list",
+        "title": "gitview: files",
+        "placement": "split",
+        "command": [
+          "sh",
+          "-c",
+          "exec sh \"$HERDR_PLUGIN_ROOT/herdr/run.sh\" list"
+        ]
+      },
+      {
+        "id": "pick-agent",
+        "title": "gitview: send to agent",
+        "placement": "overlay",
+        "command": [
+          "sh",
+          "-c",
+          "exec sh \"$HERDR_PLUGIN_ROOT/herdr/run.sh\" pick-agent"
+        ]
+      },
+      {
+        "id": "preview",
+        "title": "gitview: diff",
+        "placement": "split",
+        "command": [
+          "sh",
+          "-c",
+          "exec sh \"$HERDR_PLUGIN_ROOT/herdr/run.sh\" preview"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "ChmaraX",
+      "repo": "herdr-gitview",
+      "resolved_commit": "e8e7d3a63606ea109e9618b4ba9e9a1b57d7efe2",
+      "managed_path": "/home/geert/.config/herdr/plugins/github-installations/chmarax.gitview-57cd0959dba0/157787-0/checkout",
+      "installed_unix_ms": 1792554230856
+    }
+  },
+  {
+    "plugin_id": "chmarax.herdr-nvim",
+    "name": "herdr-nvim",
+    "version": "1.2.1",
+    "min_herdr_version": "0.7.5",
+    "description": "Full-height nvim sidebar with agent annotations: toggle with one key, comment code, send to any agent.",
+    "manifest_path": "/home/geert/.dotfiles/config/herdr/plugins/github-installations/chmarax.herdr-nvim-178624809c23/189307-0/checkout/herdr-plugin.toml",
+    "plugin_root": "/home/geert/.dotfiles/config/herdr/plugins/github-installations/chmarax.herdr-nvim-178624809c23/189307-0/checkout",
+    "enabled": true,
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "build": [
+      {
+        "platforms": [
+          "macos",
+          "linux"
+        ],
+        "command": [
+          "bash",
+          "herdr/install.sh"
+        ]
+      },
+      {
+        "platforms": [
+          "windows"
+        ],
+        "command": [
+          "powershell.exe",
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "herdr/install.ps1"
+        ]
+      }
+    ],
+    "startup": [
+      {
+        "command": [
+          "bin/herdr-nvim",
+          "daemon-gc"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "open-link",
+        "title": "nvim sidebar: open clicked file",
+        "command": [
+          "bin/herdr-nvim",
+          "open-link"
+        ]
+      },
+      {
+        "id": "pick-file",
+        "title": "nvim sidebar: open file from agent output",
+        "contexts": [
+          "pane"
+        ],
+        "command": [
+          "bin/herdr-nvim",
+          "pick-file"
+        ]
+      },
+      {
+        "id": "toggle",
+        "title": "nvim sidebar: toggle",
+        "contexts": [
+          "pane",
+          "workspace"
+        ],
+        "command": [
+          "bin/herdr-nvim",
+          "toggle"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "on": "tab.closed",
+        "command": [
+          "bin/herdr-nvim",
+          "on-event"
+        ]
+      },
+      {
+        "on": "workspace.closed",
+        "command": [
+          "bin/herdr-nvim",
+          "on-event"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "picker",
+        "title": "open file",
+        "placement": "popup",
+        "command": [
+          "bin/herdr-nvim",
+          "picker"
+        ]
+      },
+      {
+        "id": "sidebar",
+        "title": "nvim sidebar",
+        "placement": "split",
+        "command": [
+          "bin/herdr-nvim",
+          "sidebar"
+        ]
+      }
+    ],
+    "link_handlers": [
+      {
+        "id": "file-path",
+        "title": "Open in nvim sidebar",
+        "pattern": "^(?:~|[A-Za-z]:)?[\\w.@/()\\[\\]\\\\+-]+[\\\\/][\\w.@()\\[\\]\\\\+-]+\\.[A-Za-z]\\w*(?::\\d+){0,2}$",
+        "action": "open-link"
+      },
+      {
+        "id": "file-url",
+        "title": "Open in nvim sidebar",
+        "pattern": "^file://",
+        "action": "open-link"
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "ChmaraX",
+      "repo": "herdr-nvim",
+      "resolved_commit": "3ca867153baad10d658f731ad8dcdd1d4a1fc1c2",
+      "managed_path": "/home/geert/.config/herdr/plugins/github-installations/chmarax.herdr-nvim-178624809c23/189307-0/checkout",
+      "installed_unix_ms": 1792554978995
+    }
+  },
+  {
+    "plugin_id": "gtheys.pi-my-rifle-ext",
+    "name": "pi-my-rifle-ext",
+    "version": "0.1.0",
+    "min_herdr_version": "0.7.0",
+    "description": "Open the RPIV flow run-state viewer for a ticket in a managed Herdr pane.",
+    "manifest_path": "/home/geert/Code/personal/pi-my-rifle-ext/herdr-plugin.toml",
+    "plugin_root": "/home/geert/Code/personal/pi-my-rifle-ext",
+    "enabled": true,
+    "platforms": [
+      "linux",
+      "macos"
+    ],
+    "panes": [
+      {
+        "id": "flow",
+        "title": "flow",
+        "placement": "split",
+        "command": [
+          "node",
+          "plugins/herdr/flow-viewer.mjs"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "local"
+    }
+  },
+  {
+    "plugin_id": "herdr-navigator",
+    "name": "Herdr Navigator",
+    "version": "0.3.6",
+    "min_herdr_version": "0.7.3",
+    "description": "Jump to any Herdr workspace, agent, project, session, remote, directory, or action from one fuzzy navigator.",
+    "manifest_path": "/home/geert/.dotfiles/config/herdr/plugins/github-installations/herdr-navigator-3a5a6fa5dfb5/621337-0/checkout/herdr-plugin.toml",
+    "plugin_root": "/home/geert/.dotfiles/config/herdr/plugins/github-installations/herdr-navigator-3a5a6fa5dfb5/621337-0/checkout",
+    "enabled": true,
+    "platforms": [
+      "linux",
+      "macos"
+    ],
+    "build": [
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--release"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "jump-back",
+        "title": "Herdr Navigator: jump back",
+        "contexts": [
+          "workspace",
+          "global"
+        ],
+        "command": [
+          "./target/release/herdr-navigator",
+          "jump-back"
+        ]
+      },
+      {
+        "id": "open",
+        "title": "Herdr Navigator: open",
+        "contexts": [
+          "workspace",
+          "global"
+        ],
+        "command": [
+          "./target/release/herdr-navigator",
+          "open"
+        ]
+      },
+      {
+        "id": "open-side",
+        "title": "Herdr Navigator: side pane",
+        "contexts": [
+          "workspace",
+          "global"
+        ],
+        "command": [
+          "./target/release/herdr-navigator",
+          "open-side"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "picker",
+        "title": "Herdr Navigator",
+        "placement": "overlay",
+        "command": [
+          "./target/release/herdr-navigator",
+          "ui"
+        ]
+      },
+      {
+        "id": "picker-side",
+        "title": "Navigator Side",
+        "placement": "split",
+        "command": [
+          "./target/release/herdr-navigator",
+          "ui",
+          "--side"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "thanhdat77",
+      "repo": "herdr-navigator",
+      "resolved_commit": "313b753b1f98f802b7d861430a13cb95a86e8dd3",
+      "managed_path": "/home/geert/.config/herdr/plugins/github-installations/herdr-navigator-3a5a6fa5dfb5/621337-0/checkout",
+      "installed_unix_ms": 1792565102389
+    }
+  },
+  {
     "plugin_id": "herdr-zoxide",
     "name": "Zoxide Navigator",
     "version": "0.1.0",
@@ -43,6 +400,89 @@
       "resolved_commit": "642313e791a1b5ccb618527d83e239cb952e520d",
       "managed_path": "/home/geert/.config/herdr/plugins/github/herdr-zoxide-f7b96c313637",
       "installed_unix_ms": 1784612688164
+    }
+  },
+  {
+    "plugin_id": "herdr.auto-title",
+    "name": "Auto Title",
+    "version": "0.14.0",
+    "min_herdr_version": "0.8.2",
+    "description": "Automatically generates contextual tab titles",
+    "manifest_path": "/home/geert/.dotfiles/config/herdr/plugins/github-installations/herdr.auto-title-4b7d61f48ce8/325739-0/checkout/herdr-plugin.toml",
+    "plugin_root": "/home/geert/.dotfiles/config/herdr/plugins/github-installations/herdr.auto-title-4b7d61f48ce8/325739-0/checkout",
+    "enabled": true,
+    "platforms": [
+      "linux",
+      "macos",
+      "windows"
+    ],
+    "build": [
+      {
+        "platforms": [
+          "linux",
+          "macos"
+        ],
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "herdr-auto-title",
+          "./cmd/herdr-auto-title"
+        ]
+      },
+      {
+        "platforms": [
+          "windows"
+        ],
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "herdr-auto-title.exe",
+          "./cmd/herdr-auto-title"
+        ]
+      }
+    ],
+    "startup": [
+      {
+        "platforms": [
+          "linux",
+          "macos"
+        ],
+        "command": [
+          "./herdr-auto-title"
+        ]
+      },
+      {
+        "platforms": [
+          "windows"
+        ],
+        "command": [
+          "./herdr-auto-title.exe"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "restart",
+        "title": "Auto Title: restart",
+        "description": "Start a fresh Auto Title in place of the running one",
+        "contexts": [
+          "global"
+        ],
+        "command": [
+          "./herdr-auto-title",
+          "restart"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "kryptamine",
+      "repo": "herdr-auto-title",
+      "resolved_commit": "5afc43c91bb9559e68a06defcfaf0b2a1fcf5e3c",
+      "managed_path": "/home/geert/.config/herdr/plugins/github-installations/herdr.auto-title-4b7d61f48ce8/325739-0/checkout",
+      "installed_unix_ms": 1792558303447
     }
   },
   {

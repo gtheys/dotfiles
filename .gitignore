@@ -41,3 +41,6 @@ config/tmux/.tmux/plugins/
 /config/herdr/plugins
 /config/herdr/herdr.sock.agent
 /config/herdr/session-snapshots
+/config/herdr/plugins.json
+/config/scripts
+/config/task/.pi/guard
