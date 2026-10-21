@@ -35,7 +35,12 @@ local function deepGet(t, k)
 	return t
 end
 
-local mode = vim.system({ "dms", "ipc", "call", "theme", "getMode" }, { text = true }):wait().stdout
+-- AIDEV-NOTE: dms binary may be absent on machines without DankMaterialShell;
+-- vim.system throws ENOENT instead of returning an error object, so guard first.
+local mode = nil
+if vim.fn.executable("dms") == 1 then
+	mode = vim.system({ "dms", "ipc", "call", "theme", "getMode" }, { text = true }):wait().stdout
+end
 if mode ~= nil then
 	if mode:match("light") then
 		vim.o.background = "light"
