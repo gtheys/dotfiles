@@ -137,6 +137,29 @@ type = "pane"
 command = "btop"
 description = "run btop"
 
+[[keys.command]]
+key = "alt+shift+g"
+type = "plugin_action"
+command = "chmarax.gitview.toggle" # sidebar in the current tab
+description = "git view sidebar"
+
+[[keys.command]]
+key = "alt+g"
+type = "plugin_action"
+command = "chmarax.gitview.toggle-tab" # dedicated gitview tab
+description = "git view tab"
+
+[[keys.command]]
+key = "prefix+e"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.toggle"
+description = "nvim sidebar"
+
+[[keys.command]]
+key = "prefix+o"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.pick-file"
+description = "open file from agent output"
 
 # key = "prefix+alt+g"
 # type = "pane"
@@ -208,6 +231,7 @@ description = "run btop"
 # accent = "cyan"
 
 # Background notification popup delivery
+agent_panel_sort = "spaces"
 [ui.toast]
 # off = disable pop-up notifications
 # herdr = show in-app toasts
