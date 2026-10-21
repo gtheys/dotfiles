@@ -1,0 +1,370 @@
+{
+  "currentThemeName": "custom",
+  "customThemeFile": "/home/geert/.config/DankMaterialShell/themes/tokyoNight/theme.json",
+  "radiusStrength": 38,
+  "clockFormat": "24h",
+  "showSeconds": true,
+  "animationDuration": 500,
+  "useAutoLocation": true,
+  "fontFamily": "FiraCode Nerd Font",
+  "monoFontFamily": "JetBrainsMono Nerd Font",
+  "powerMenuActions": [
+    "reboot",
+    "logout",
+    "poweroff",
+    "lock",
+    "restart",
+    "suspend",
+    "hibernate"
+  ],
+  "dockConfigs": [
+    {
+      "id": "dock",
+      "name": "Dock",
+      "enabled": false,
+      "screenPreferences": [
+        "all"
+      ],
+      "showOnLastDisplay": true,
+      "position": 1,
+      "mode": "compact",
+      "taskbarAlign": "center",
+      "widgetExpansion": "popout",
+      "iconSize": 40,
+      "spacing": 8,
+      "itemSpacing": 4,
+      "margin": 0,
+      "bottomGap": 0,
+      "transparency": 1,
+      "followInterfaceStyle": false,
+      "autoHide": false,
+      "smartAutoHide": false,
+      "useOverlayLayer": false,
+      "editOnRightClick": false,
+      "showOnFullscreen": false,
+      "openOnOverview": false,
+      "groupByApp": false,
+      "separatePinnedAndRunningApps": false,
+      "restoreSpecialWorkspaceOnClick": false,
+      "isolateDisplays": false,
+      "indicatorStyle": "circle",
+      "borderEnabled": false,
+      "borderColor": "surfaceText",
+      "borderOpacity": 1,
+      "borderThickness": 1,
+      "launcherEnabled": false,
+      "launcherLogoMode": "apps",
+      "launcherLogoCustomPath": "",
+      "launcherLogoColorOverride": "",
+      "launcherLogoSizeOffset": 0,
+      "launcherLogoBrightness": 0.5,
+      "launcherLogoContrast": 1,
+      "maxVisibleApps": 0,
+      "maxVisibleRunningApps": 0,
+      "showOverflowBadge": true,
+      "showTrash": false,
+      "trashFileManager": "default",
+      "trashCustomCommand": "",
+      "order": [],
+      "widgets": [
+        {
+          "id": "dock_launcher",
+          "widgetId": "dockLauncher",
+          "enabled": true
+        },
+        {
+          "id": "dock_apps",
+          "widgetId": "appsDock",
+          "enabled": true
+        },
+        {
+          "id": "dock_trash",
+          "widgetId": "dockTrash",
+          "enabled": true
+        }
+      ]
+    }
+  ],
+  "currentThemeCategory": "registry",
+  "matugenScheme": "scheme-expressive",
+  "popupTransparency": 0.8,
+  "firstDayOfWeek": 1,
+  "showWeekNumber": true,
+  "calendarBackend": "dankcal",
+  "defaultTaskCalendarId": "3c489e33-a4f7-4346-81e6-0d2ce3a30308",
+  "systemTrayIconTintMode": "secondary",
+  "workspaceNameIcons": {
+    "main": {
+      "type": "icon",
+      "value": "home"
+    },
+    "dev": {
+      "type": "icon",
+      "value": "terminal"
+    },
+    "comms": {
+      "type": "icon",
+      "value": "forum"
+    }
+  },
+  "networkPreference": "wifi",
+  "cursorSettings": {
+    "theme": "System Default",
+    "size": 24,
+    "niri": {
+      "hideWhenTyping": false,
+      "hideAfterInactiveMs": 0
+    },
+    "hyprland": {
+      "hideOnKeyPress": false,
+      "hideOnTouch": false,
+      "inactiveTimeout": 0
+    },
+    "dwl": {
+      "cursorHideTimeout": 0
+    }
+  },
+  "launcherLogoMode": "os",
+  "notepadFontSize": 16,
+  "acProfileName": "1",
+  "batteryMonitorTimeout": 600,
+  "batteryLockTimeout": 300,
+  "batterySuspendTimeout": 900,
+  "batteryProfileName": "0",
+  "batteryChargeLimit": 80,
+  "batteryNotifyChargeLimit": true,
+  "fadeToLockEnabled": false,
+  "matugenTemplateNeovim": true,
+  "matugenTemplateNeovimSettings": {
+    "dark": {
+      "baseTheme": "tokyodark",
+      "harmony": 0.5
+    },
+    "light": {
+      "baseTheme": "tokyonight",
+      "harmony": 0.5
+    }
+  },
+  "matugenTemplateNeovimSetBackground": false,
+  "lockScreenPowerOffMonitorsOnLock": true,
+  "maxFprintTries": 3,
+  "notificationTimeoutLow": 1000,
+  "notificationTimeoutNormal": 3000,
+  "notificationTimeoutCritical": 5000,
+  "osdAlwaysShowValue": true,
+  "osdPowerProfileEnabled": true,
+  "screenPreferences": {
+    "notepad": [
+      "all"
+    ],
+    "dankBar": [
+      "all"
+    ],
+    "systemTray": [
+      "all"
+    ]
+  },
+  "barConfigs": [
+    {
+      "id": "default",
+      "name": "Main Bar",
+      "enabled": true,
+      "position": 0,
+      "screenPreferences": [
+        {
+          "name": "HDMI-A-1",
+          "model": "DELL P2423D"
+        }
+      ],
+      "showOnLastDisplay": true,
+      "leftWidgets": [
+        {
+          "id": "launcherButton",
+          "enabled": true
+        },
+        {
+          "id": "systemTray",
+          "enabled": true
+        },
+        {
+          "id": "systemMonitorPlus",
+          "enabled": true
+        },
+        {
+          "id": "focusedWindow",
+          "enabled": true
+        }
+      ],
+      "centerWidgets": [
+        {
+          "id": "music",
+          "enabled": true
+        },
+        {
+          "id": "clock",
+          "enabled": true
+        },
+        {
+          "id": "weather",
+          "enabled": true
+        }
+      ],
+      "rightWidgets": [
+        {
+          "id": "githubNotifier",
+          "enabled": true
+        },
+        {
+          "id": "vpn",
+          "enabled": true
+        },
+        {
+          "id": "dankscale",
+          "enabled": true
+        },
+        {
+          "id": "warpToggle",
+          "enabled": true
+        },
+        {
+          "id": "batteryPlus",
+          "enabled": true
+        },
+        {
+          "id": "easyEffects",
+          "enabled": true
+        },
+        {
+          "id": "aiOverviewControl",
+          "enabled": true
+        },
+        {
+          "id": "controlCenterButton",
+          "enabled": true
+        },
+        {
+          "id": "dmsLenovoBatterySettings",
+          "enabled": true
+        },
+        {
+          "id": "codeburn",
+          "enabled": true
+        }
+      ],
+      "spacing": 0,
+      "innerPadding": 4,
+      "bottomGap": 0,
+      "transparency": 1,
+      "widgetTransparency": 1,
+      "squareCorners": false,
+      "noBackground": false,
+      "gothCornersEnabled": false,
+      "gothCornerRadiusOverride": false,
+      "gothCornerRadiusValue": 12,
+      "borderEnabled": false,
+      "borderColor": "surfaceText",
+      "borderOpacity": 1,
+      "borderThickness": 1,
+      "fontScale": 1.25,
+      "autoHide": false,
+      "autoHideDelay": 250,
+      "openOnOverview": false,
+      "visible": true,
+      "popupGapsAuto": true,
+      "popupGapsManual": 4,
+      "widgetPadding": 8,
+      "shadowIntensity": 0,
+      "attachToScreenEdge": false,
+      "maximizeWidgetIcons": false,
+      "maximizeWidgetText": false,
+      "widgetOutlineEnabled": false,
+      "island": true,
+      "islandNotificationBadgeClearOnOpen": true,
+      "islandNotificationExpand": true,
+      "islandHomeLayout": [
+        {
+          "id": "media",
+          "enabled": false
+        },
+        {
+          "id": "clock",
+          "enabled": true
+        },
+        {
+          "id": "weather",
+          "enabled": true
+        },
+        {
+          "id": "status",
+          "enabled": false
+        },
+        {
+          "id": "volume",
+          "enabled": false
+        },
+        {
+          "id": "brightness",
+          "enabled": false
+        },
+        {
+          "id": "notifications",
+          "enabled": true
+        }
+      ],
+      "islandSatelliteBackground": true,
+      "followInterfaceStyle": false
+    }
+  ],
+  "desktopWidgetInstances": [
+    {
+      "id": "dw_1768876902808_yycjcklqz",
+      "widgetType": "systemMonitor",
+      "name": "System Monitor",
+      "enabled": false,
+      "config": {
+        "showHeader": true,
+        "transparency": 0.8,
+        "colorMode": "primary",
+        "customColor": "#ffffff",
+        "showCpu": true,
+        "showCpuGraph": true,
+        "showCpuTemp": true,
+        "showGpuTemp": false,
+        "gpuPciId": "1002:1114",
+        "showMemory": true,
+        "showMemoryGraph": true,
+        "showNetwork": true,
+        "showNetworkGraph": true,
+        "showDisk": true,
+        "showTopProcesses": false,
+        "topProcessCount": 3,
+        "topProcessSortBy": "cpu",
+        "layoutMode": "auto",
+        "graphInterval": 60,
+        "displayPreferences": [
+          "all"
+        ],
+        "showOnOverlay": true,
+        "showOnOverview": true
+      }
+    }
+  ],
+  "builtInPluginSettings": {
+    "dms_settings_search": {
+      "trigger": "?"
+    },
+    "dms_notepad": {
+      "enabled": true
+    },
+    "dms_clipboard_search": {
+      "trigger": "cb"
+    },
+    "dms_power": {
+      "trigger": "pw"
+    },
+    "dms_qr_generator": {
+      "trigger": "qrg"
+    }
+  },
+  "configVersion": 28
+}
