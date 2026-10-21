@@ -5,6 +5,12 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     for _, grp in ipairs({ "Normal", "NormalNC", "NormalFloat", "EndOfBuffer" }) do
       vim.api.nvim_set_hl(0, grp, { bg = "NONE" })
     end
+    -- AIDEV-NOTE: dms theme leaves snacks explorer groups linked to NonText (near-black),
+    -- making dotfiles and git-untracked/ignored entries invisible on dark backgrounds
+    vim.api.nvim_set_hl(0, "SnacksPickerPathHidden", { link = "Special" })
+    vim.api.nvim_set_hl(0, "SnacksPickerPathIgnored", { link = "Special" })
+    vim.api.nvim_set_hl(0, "SnacksPickerGitStatusUntracked", { link = "Special" })
+    vim.api.nvim_set_hl(0, "SnacksPickerGitStatusIgnored", { link = "Special" })
   end,
 })
 
