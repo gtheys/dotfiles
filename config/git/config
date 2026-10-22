@@ -16,6 +16,10 @@
     pnb = "!git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)"
 
     co = checkout
+    # salvaged from the old root .gitconfig (deleted; it was never installed)
+    hist = log --pretty=format:"%h %ad | %s%d [%an]" --graph --date=short
+    whoami = "!f() { git log --author="$1" --pretty=format:'%Cred%h%Creset %Cgreen(%cr)%Creset - %s %C(yellow)%d%Creset' --abbrev-commit; }; f"
+    dt = difftool -d
     s = status --short --branch
     br = branch -v
     addnw = "!sh -c 'git diff -U0 -w --no-color \"$@\" | git apply --cached --ignore-whitespace --unidiff-zero -'"
