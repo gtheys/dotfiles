@@ -44,3 +44,5 @@ config/tmux/.tmux/plugins/
 /config/herdr/plugins.json
 /config/scripts
 /config/task/.pi/guard
+/.aislop
+/config/herdr/plugins.json
