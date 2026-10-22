@@ -30,6 +30,19 @@ prepend_path $HOME/.bun/bin
 [[ -d /opt/cuda/bin ]] && prepend_path /opt/cuda/bin
 [[ -d /opt/cuda/lib64 ]] && export LD_LIBRARY_PATH=/opt/cuda/lib64:$LD_LIBRARY_PATH
 
+# AIDEV-NOTE: cache GOPATH — `go env` forks ~4ms (worse cold) on every shell.
+# Delete ~/.cache/go-gopath if the Go install moves.
+_gopath_cache="$HOME/.cache/go-gopath"
+[[ -f "$_gopath_cache" ]] || go env GOPATH > "$_gopath_cache"
+export PATH="$PATH:$(<"$_gopath_cache")/bin"
+unset _gopath_cache
+
+export LLM_NOTES_ROOT=$HOME/Code/salaryhero/llm-notes
+
+# grafana has no PublishPort — served via caddy (:3000 dial refused since the
+# port publish was removed; gcx reads GRAFANA_SERVER). Token lives in ~/.zshrc.local.
+export GRAFANA_SERVER=https://chicken.tail4250d0.ts.net:4443/grafana
+
 # define the code directory
 # This is where my code exists and where I want the `c` autocomplete to work from exclusively
 if [[ -d ~/Code ]]; then
@@ -198,19 +211,23 @@ export EZA_COLORS="uu=38;2;122;162;247:gu=38;2;187;154;247:un=38;2;86;95;137:gn=
 
 # add color to man pages
 export MANROFFOPT='-c'
-export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
-export LESS_TERMCAP_md=$(tput bold; tput setaf 6)
-export LESS_TERMCAP_me=$(tput sgr0)
-export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4)
-export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
-export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7)
-export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
-export LESS_TERMCAP_mr=$(tput rev)
-export LESS_TERMCAP_mh=$(tput dim)
+# AIDEV-NOTE: hardcoded ANSI escapes — 9 tput forks measured ~11ms per shell start.
+# Standard xterm values; all terminals in this repo (ghostty/kitty/wezterm) support them.
+export LESS_TERMCAP_mb=$'\e[1;32m'
+export LESS_TERMCAP_md=$'\e[1;36m'
+export LESS_TERMCAP_me=$'\e[0m'
+export LESS_TERMCAP_so=$'\e[1;33;44m'
+export LESS_TERMCAP_se=$'\e[0m'
+export LESS_TERMCAP_us=$'\e[4;1;37m'
+export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_mr=$'\e[7m'
+export LESS_TERMCAP_mh=$'\e[2m'
 
 # prefer zoxide over z.sh
 if [[ -x "$(command -v zoxide)" ]]; then
-    eval "$(zoxide init zsh --hook pwd)"
+    # AIDEV-NOTE: default precmd hook — --hook pwd fired on every cd including
+    # zfetch's plugin loop; precmd updates the db once per prompt instead.
+    eval "$(zoxide init zsh)"
 fi
 
 # If a ~/.zshrc.local exists, source it

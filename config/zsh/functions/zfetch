@@ -20,13 +20,13 @@ git_clone_error_msg() {
 
 # Simplest dependency fetcher known to mankind
 if [[ $1 == "update" ]]; then
+    # AIDEV-NOTE: no `cd` into plugin dirs — zsh fires chpwd hooks even on a
+    # no-op cd, and each one triggers mise/zoxide/direnv (measured ~110ms over
+    # 6 plugins at shell startup). git -C avoids the cd entirely.
     for name in ${(@k)plugins}; do
-        local cwd=$(pwd)
         local dest=$plugins[$name]
-        cd $dest
         echo -e "Updating ${Yel}${name}${Rst}..."
-        git pull --quiet --recurse-submodules
-        cd $cwd
+        git -C $dest pull --quiet --recurse-submodules
     done
 elif [[ $1 == "ls" ]]; then
     for name in ${(@k)plugins}; do
@@ -49,7 +49,6 @@ else
       dest=$dest/$name
   fi
 
-  local cwd=$(pwd)
   plugins[$name]=$dest
 
   if [[ ! -d $dest ]]; then
@@ -59,22 +58,11 @@ else
       echo -e "Missing plugin ${Yel}${name}${Rst}"
       echo -e "  Cloning from ${Blu}${url}${Rst}..."
       if [[ -n $ref ]]; then
-          git clone --quiet $url $dest
-          if [[ $? != 0 ]]; then
-              git_clone_error_msg $?
-              cd $cwd
-              return $?
-          fi
-
-          git checkout --quiet $ref
+          git clone --quiet $url $dest || { git_clone_error_msg $?; return $?; }
+          git -C $dest checkout --quiet $ref
           echo -e "  Checked out branch ${ref}"
       else
-          git clone --quiet --depth 1 $url $dest
-          if [[ $? != 0 ]]; then
-              git_clone_error_msg $?
-              cd $cwd
-              return $?
-          fi
+          git clone --quiet --depth 1 $url $dest || { git_clone_error_msg $?; return $?; }
           echo -e "  Checked out default branch"
       fi
   fi
@@ -82,5 +70,4 @@ else
   if [ -f "$plugin" ]; then
       source "$plugin"
   fi
-  cd $cwd
 fi
