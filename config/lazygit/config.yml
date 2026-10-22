@@ -27,7 +27,7 @@ git:
   diffRenderers:
     - colorArg: always
       command: delta --dark --paging=never
-      useConfig: false
+      useConfig: true
   commit:
     signOff: false
   merging:
