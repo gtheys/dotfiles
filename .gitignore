@@ -46,3 +46,4 @@ config/tmux/.tmux/plugins/
 /config/task/.pi/guard
 /.aislop
 /config/herdr/plugins.json
+.codegraph/
