@@ -290,7 +290,16 @@ unset _op_cache _op_lock _out _key _val
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
 
-export SSH_AUTH_SOCK=/run/user/1000/gnupg/S.gpg-agent.ssh
+# AIDEV-NOTE: systemd ssh-agent.service socket. gpg-agent's SSH socket refuses
+# ssh-add and holds no identities, so all SSH now goes through ssh-agent.
+# Must match config/niri/config.kdl and config/environment.d/ssh-agent.conf.
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$UID}/ssh-agent.socket"
+
+# AIDEV-NOTE: key is passphrase-protected; load once per boot, prompt happens
+# in the first interactive shell. Skips silently if agent already has a key.
+if [[ -o interactive ]] && ! ssh-add -l >/dev/null 2>&1; then
+  ssh-add ~/.ssh/id_ed25519
+fi
 
 # bun completions
 [ -s "/home/geert/.bun/_bun" ] && source "/home/geert/.bun/_bun"
