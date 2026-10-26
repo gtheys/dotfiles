@@ -71,6 +71,7 @@ agent_panel_sort = "spaces"
 
 delivery = "off"
 [ui.toast.herdr]
+position = "bottom-right"
 
 [ui.toast.clipboard]
 
