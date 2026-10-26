@@ -7,6 +7,10 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     end
     -- AIDEV-NOTE: dms theme leaves snacks explorer groups linked to NonText (near-black),
     -- making dotfiles and git-untracked/ignored entries invisible on dark backgrounds
+    -- AIDEV-NOTE: SnacksPickerDir links to NonText by default, so the directory
+    -- prefix of every file entry renders near-black under dms/base46
+    vim.api.nvim_set_hl(0, "SnacksPickerDir", { fg = "#a9b1d6" })
+    vim.api.nvim_set_hl(0, "SnacksPickerTotals", { fg = "#a9b1d6" })
     vim.api.nvim_set_hl(0, "SnacksPickerPathHidden", { link = "Special" })
     vim.api.nvim_set_hl(0, "SnacksPickerPathIgnored", { link = "Special" })
     vim.api.nvim_set_hl(0, "SnacksPickerGitStatusUntracked", { link = "Special" })
@@ -45,7 +49,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "dms",
+      colorscheme = "tokyonight-storm",
     },
   },
 }
