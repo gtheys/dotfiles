@@ -53,16 +53,6 @@ elif [[ -d ~/Developer ]]; then
     export CODE_DIR=~/Developer
 fi
 
-# AIDEV-NOTE: Cache GH_TOKEN — `gh auth token` forks on every startup otherwise.
-# Refreshed when the cache file is older than 24h.
-_gh_token_cache="$CACHEDIR/gh-token"
-if [[ ! -f "$_gh_token_cache" || -n ${_gh_token_cache}(#qN.mh+24) ]]; then
-    mkdir -p "$(dirname "$_gh_token_cache")"
-    gh auth token > "$_gh_token_cache" 2>/dev/null
-fi
-[[ -s "$_gh_token_cache" ]] && export GH_TOKEN=$(< "$_gh_token_cache")
-unset _gh_token_cache
-
 # display how long all tasks over 10 seconds take
 export REPORTTIME=10
 export KEYTIMEOUT=1              # 10ms delay for key sequences
