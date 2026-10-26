@@ -24,6 +24,14 @@ window-rule {
 
 layer-rule {
     exclude namespace="^dms:bar$"
+    exclude namespace="^dms:dankisland$"
+    background-effect {
+        xray false
+    }
+}
+
+window-rule {
+    match app-id="^(dev.duxlabs.shell|com.danklinux.dms)$"
     background-effect {
         xray false
     }
