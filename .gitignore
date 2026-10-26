@@ -47,3 +47,7 @@ config/tmux/.tmux/plugins/
 /.aislop
 /config/herdr/plugins.json
 .codegraph/
+/config/io.datasette.llm/keys.json
+/config/niri/.aislop
+/scripts/.aislop
+/scripts/__pycache__
