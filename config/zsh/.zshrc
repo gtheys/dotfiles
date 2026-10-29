@@ -145,12 +145,20 @@ typeset -A plugins
 
 # AIDEV-NOTE: zfetch sources at call time, so this order matters:
 # fzf-tab BEFORE widget-wrapping plugins (per its README), syntax-highlighting
-# LAST (per its INSTALL.md). Wrong order = interleaved/duplicated chars while
-# typing with async autosuggestions.
+# LAST (per its INSTALL.md).
 zfetch mafredri/zsh-async async.plugin.zsh
 zfetch grigorii-zander/zsh-npm-scripts-autocomplete
 zfetch Aloxaf/fzf-tab
-zfetch zsh-users/zsh-autosuggestions
+# AIDEV-NOTE: autosuggestions disabled on remote/SSH shells — its multi-line
+# ghost redraw gets mangled by herdr-remote's terminal emulation (deterministic
+# bisect via herdr pane API: typed "sudo" renders "sudoc"; highlighter alone
+# clean, autosuggest alone corrupt, sync or async). Local shells unaffected.
+# Re-enable remotely only after herdr fixes its redraw handling.
+[[ -z $SSH_CONNECTION ]] && zfetch zsh-users/zsh-autosuggestions
+# AIDEV-NOTE: sync mode locally (fetch ~0.1ms; async's zle -F refresh is a
+# race class on slow links). Plugin tests ${+var} set-ness and re-sets the var
+# at load, so it must be UNSET here, after sourcing — not emptied.
+unset ZSH_AUTOSUGGEST_USE_ASYNC
 zfetch alberti42/zsh-opencode-tab
 zfetch zsh-users/zsh-syntax-highlighting
 
