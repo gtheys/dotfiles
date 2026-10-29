@@ -143,12 +143,16 @@ export ZPLUGDIR="$CACHEDIR/zsh/plugins"
 # array containing plugin information (managed by zfetch)
 typeset -A plugins
 
+# AIDEV-NOTE: zfetch sources at call time, so this order matters:
+# fzf-tab BEFORE widget-wrapping plugins (per its README), syntax-highlighting
+# LAST (per its INSTALL.md). Wrong order = interleaved/duplicated chars while
+# typing with async autosuggestions.
 zfetch mafredri/zsh-async async.plugin.zsh
-zfetch zsh-users/zsh-syntax-highlighting
-zfetch zsh-users/zsh-autosuggestions
 zfetch grigorii-zander/zsh-npm-scripts-autocomplete
 zfetch Aloxaf/fzf-tab
+zfetch zsh-users/zsh-autosuggestions
 zfetch alberti42/zsh-opencode-tab
+zfetch zsh-users/zsh-syntax-highlighting
 
 # AIDEV-NOTE: fnm removed — mise is the sole node version manager (see activate below).
 # Re-add only if mise can't handle a workflow.
