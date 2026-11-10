@@ -1,0 +1,10 @@
+# AIDEV-NOTE: verified working with Teams-for-linux 2026-11-10: fuzzel picker
+# offers screens AND windows (window capture needs mangowc's
+# ext_foreign_toplevel_image_capture_source_manager_v1). fuzzel must be
+# installed; without any chooser, xdpw logs "wlroots: no output found".
+# If sharing ever dies in an Electron app that doesn't wait for the chooser
+# reply, fall back to: output_name=DP-2 + chooser_type=none.
+# Config is only read at portal start:
+# systemctl --user restart xdg-desktop-portal-wlr
+[screencast]
+chooser_type=default
