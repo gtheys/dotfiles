@@ -3,8 +3,11 @@ Description=Populate 1Password env cache for niri session
 # AIDEV-NOTE: runs after 1Password desktop so op can use its socket (no prompt).
 # On boot the cache (/dev/shm/op-env-cache) is empty (tmpfs); this fills it so
 # DankMaterialShell plugin scripts inherit API keys without needing a terminal first.
-After=app-1password@autostart.service graphical-session.target
-Wants=app-1password@autostart.service
+# AIDEV-NOTE: the generated autostart unit is named after the desktop file,
+# com.onepassword.OnePassword.desktop (an earlier app-1password@... name never
+# existed, making this ordering a silent no-op).
+After=app-com.onepassword.OnePassword@autostart.service graphical-session.target
+Wants=app-com.onepassword.OnePassword@autostart.service
 
 [Service]
 Type=oneshot

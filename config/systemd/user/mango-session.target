@@ -1,8 +1,8 @@
 [Unit]
-# AIDEV-NOTE: mango has no native systemd session support (unlike niri).
-# Started from ~/.config/mango/config.conf via
-#   exec_once=systemctl --user start mango-session.target
-# Pulling in graphical-session.target also starts dms.service (enabled there).
+# AIDEV-NOTE: STALE - mango now ships /usr/lib/systemd/user/mango-session.target
+# (BindsTo=graphical-session.target) and this copy is not linked anywhere. Kept
+# for reference; the XDG-autostart gap is fixed via the drop-in in
+# mango-session.target.d/autostart.conf instead of overriding the whole unit.
 Description=Mango Session Target
 Requires=graphical-session.target
 After=graphical-session.target
