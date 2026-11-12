@@ -1,4 +1,69 @@
 [[mgr.prepend_keymap]]
-on = "!"
-run = 'shell "$SHELL" --block'
+on   = "!"
+run  = 'shell "$SHELL" --block'
 desc = "Open shell here"
+
+# smart-enter.yazi: `l` enters a directory or opens the file under the cursor
+[[mgr.prepend_keymap]]
+on   = "l"
+run  = "plugin smart-enter"
+desc = "Enter the child directory, or open the file"
+
+# lazygit.yazi (Lil-Dank)
+[[mgr.prepend_keymap]]
+on   = [ "g", "i" ]
+run  = "plugin lazygit"
+desc = "Run lazygit"
+
+# fg.yazi (DreamMaoMao): ripgrep + fzf content search
+# AIDEV-NOTE: `f` was the built-in "filter" key — it is now a prefix for these two bindings; use `/` to filter.
+[[mgr.prepend_keymap]]
+on   = [ "f", "g" ]
+run  = "plugin fg"
+desc = "Find file by content (fzf fuzzy match)"
+
+[[mgr.prepend_keymap]]
+on   = [ "f", "G" ]
+run  = "plugin fg -- rg"
+desc = "Find file by content (ripgrep match)"
+
+# yamb.yazi: persistent bookmarks under the `u` prefix
+[[mgr.prepend_keymap]]
+on   = [ "u", "a" ]
+run  = "plugin yamb -- save"
+desc = "Add bookmark"
+
+[[mgr.prepend_keymap]]
+on   = [ "u", "g" ]
+run  = "plugin yamb -- jump_by_key"
+desc = "Jump to bookmark by key"
+
+[[mgr.prepend_keymap]]
+on   = [ "u", "G" ]
+run  = "plugin yamb -- jump_by_fzf"
+desc = "Jump to bookmark by fzf"
+
+[[mgr.prepend_keymap]]
+on   = [ "u", "d" ]
+run  = "plugin yamb -- delete_by_key"
+desc = "Delete bookmark by key"
+
+[[mgr.prepend_keymap]]
+on   = [ "u", "D" ]
+run  = "plugin yamb -- delete_by_fzf"
+desc = "Delete bookmark by fzf"
+
+[[mgr.prepend_keymap]]
+on   = [ "u", "A" ]
+run  = "plugin yamb -- delete_all"
+desc = "Delete all bookmarks"
+
+[[mgr.prepend_keymap]]
+on   = [ "u", "r" ]
+run  = "plugin yamb -- rename_by_key"
+desc = "Rename bookmark by key"
+
+[[mgr.prepend_keymap]]
+on   = [ "u", "R" ]
+run  = "plugin yamb -- rename_by_fzf"
+desc = "Rename bookmark by fzf"

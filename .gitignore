@@ -54,3 +54,6 @@ config/tmux/.tmux/plugins/
 /config/mango/.aislop
 *.backup*
 *.dmsbackup*
+
+# yazi plugins are managed by `ya pkg` (restore with: ya pkg install)
+config/yazi/plugins/
