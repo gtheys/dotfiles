@@ -1,5 +1,5 @@
 [Unit]
-Description=Populate 1Password env cache for niri session
+Description=Populate 1Password env cache for graphical session
 # AIDEV-NOTE: runs after 1Password desktop so op can use its socket (no prompt).
 # On boot the cache (/dev/shm/op-env-cache) is empty (tmpfs); this fills it so
 # DankMaterialShell plugin scripts inherit API keys without needing a terminal first.
@@ -11,10 +11,15 @@ Wants=app-com.onepassword.OnePassword@autostart.service
 
 [Service]
 Type=oneshot
-# Small delay — 1Password needs a moment to be ready for op socket connections.
-ExecStartPre=/bin/sleep 3
+# AIDEV-NOTE: retry, not one-shot sleep — 1Password's Core DB took ~5s to open
+# after the app started (first mango boot: op ran at +3s, socket ready at +5s,
+# single attempt lost the race). A cold `op environment read` can itself take ~9s.
 ExecStart=/bin/bash -c '\
-  out=$(op environment read 27kxanp7phjmomdvyjvynbw57y 2>/dev/null) && \
+  for i in $(seq 1 8); do \
+    out=$(op environment read 27kxanp7phjmomdvyjvynbw57y 2>/dev/null) && break; \
+    sleep 3; \
+  done; \
+  [ -n "$out" ] && \
   printf "%%s" "$out" > /dev/shm/op-env-cache && \
   chmod 600 /dev/shm/op-env-cache'
 RemainAfterExit=no
