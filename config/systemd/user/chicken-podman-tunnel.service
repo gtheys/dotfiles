@@ -1,0 +1,17 @@
+[Unit]
+Description=SSH tunnel: local unix socket -> chicken podman.sock
+After=ssh-agent.service
+Requires=ssh-agent.service
+
+[Service]
+ExecStartPre=/bin/rm -f %h/.local/share/containers/chicken-podman.sock
+ExecStart=/usr/bin/ssh -o IdentityAgent=%t/ssh-agent.socket -o BatchMode=yes -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -N -L %h/.local/share/containers/chicken-podman.sock:/run/podman/podman.sock chicken
+# AIDEV-NOTE: exponential backoff (10s -> 300s cap) — gremlin is a laptop; a chicken
+# outage used to hammer chicken's sshd every ~10s (3s RestartSec + connect timeout).
+Restart=on-failure
+RestartSec=10
+RestartSteps=5
+RestartMaxDelaySec=300
+
+[Install]
+WantedBy=default.target
